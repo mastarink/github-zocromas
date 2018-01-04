@@ -4,6 +4,7 @@
 
 #include <unistd.h>
 #include <sys/stat.h>
+#include <limits.h>
 #include <fcntl.h>
 
 /* #include <mastar/wrap/mas_memory.h> */
@@ -35,7 +36,8 @@
 
 /* TODO move to qstd */
 static int
-masxfs_levinfo_db_prepare_execute_store( mysqlpfs_mstmt_t ** pmstmt, const char *name, unsigned long long node_id )
+masxfs_levinfo_db_prepare_execute_store( mysqlpfs_mstmt_t ** pmstmt, const char *name, unsigned long long node_id,
+                                         masxfs_entry_filter_t * entry_pfilter _uUu_ )
 {
   rDECLBAD;
   if ( pmstmt )
@@ -64,14 +66,27 @@ masxfs_levinfo_db_prepare_execute_store( mysqlpfs_mstmt_t ** pmstmt, const char 
         assert( np == ( name ? STD_MSTMT_SELECT_EVERYTHINGX_NFIELDS_PN : STD_MSTMT_SELECT_EVERYTHINGX_NFIELDS_P ) );
 #else
       /* TODO add atim,ctim,mtim,nlink,parent_id (via parent path),uid,gid,dev */
-        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, 0, FALSE ) ); /* min_nsamesize */
-        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, 0x7fffffffLL, FALSE ) ); /* max_nsamesize */
-        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, 0, FALSE ) ); /* min_nsamesha1 */
-        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, 0x7fffffffLL, FALSE ) ); /* max_nsamesha1 */
-        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, 0, FALSE ) ); /* min_size */
-        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, 0x7fffffffLL, FALSE ) ); /* max_size */
-        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, 0, FALSE ) ); /* min_inode */
-        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, 0x7fffffffLL, FALSE ) ); /* max_inode */
+        unsigned long min_nsamesize = ( entry_pfilter && entry_pfilter->min_nsamesize ) ? entry_pfilter->min_nsamesize : 0;
+        unsigned long max_nsamesize = ( entry_pfilter && entry_pfilter->max_nsamesize ) ? entry_pfilter->max_nsamesize : LONG_MAX;
+        unsigned long min_nsame_digest = ( entry_pfilter && entry_pfilter->min_nsame_digest ) ? entry_pfilter->min_nsame_digest : 0;
+        unsigned long max_nsame_digest = ( entry_pfilter && entry_pfilter->max_nsame_digest ) ? entry_pfilter->max_nsame_digest : LONG_MAX;
+        unsigned long min_size = ( entry_pfilter && entry_pfilter->min_size ) ? entry_pfilter->min_size : 0;
+        unsigned long max_size = ( entry_pfilter && entry_pfilter->max_size ) ? entry_pfilter->max_size : LONG_MAX;
+        unsigned long min_inode = ( entry_pfilter && entry_pfilter->min_inode ) ? entry_pfilter->min_inode : 0;
+        unsigned long max_inode = ( entry_pfilter && entry_pfilter->max_inode ) ? entry_pfilter->max_inode : LONG_MAX;
+        unsigned long min_sha1id _uUu_ = ( entry_pfilter && entry_pfilter->min_digid ) ? entry_pfilter->min_digid : 0;
+        unsigned long max_sha1id _uUu_ = ( entry_pfilter && entry_pfilter->max_digid ) ? entry_pfilter->max_digid : LONG_MAX;
+
+        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, min_nsamesize, FALSE ) ); /* min_nsamesize */
+        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, max_nsamesize, FALSE ) ); /* max_nsamesize */
+        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, min_nsame_digest, FALSE ) ); /* min_nsamesha1 */
+        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, max_nsame_digest, FALSE ) ); /* max_nsamesha1 */
+        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, min_size, FALSE ) ); /* min_size */
+        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, max_size, FALSE ) ); /* max_size */
+        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, min_inode, FALSE ) ); /* min_inode */
+        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, max_inode, FALSE ) ); /* max_inode */
+        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, min_sha1id, FALSE ) ); /* min_sha1id */
+        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, max_sha1id, FALSE ) ); /* max_sha1id */
         rC( mas_qstd_mstmt_set_param_string( ( *pmstmt ), np++, "" /* "^.*\\.(sh|conf)$" */  ) ); /* regexp */
         assert( np == ( name ? STD_MSTMT_SELECT_EVERYTHINGXX_NFIELDS_PN : STD_MSTMT_SELECT_EVERYTHINGXX_NFIELDS_P ) );
 #endif
@@ -114,6 +129,7 @@ masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_st
     unsigned long long ctim_tv_sec = 0;
     unsigned long long nsamesize = 0;
     unsigned long long nsamesha1 = 0;
+    unsigned long long sha1id = 0;
 
     const char *hex_sha1 = NULL;
 
@@ -142,6 +158,7 @@ masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_st
       rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &ctim_tv_sec, &is_null ) );
       rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &nsamesize, &is_null ) );
       rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &nsamesha1, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &sha1id, &is_null ) );
       rC( mas_qstd_mstmt_get_result_string_na( mstmt, nr++, &hex_sha1 ) );
       assert( nr == STD_MSTMT_SELECT_EVERYTHINGX_NRESULTS );
 
@@ -167,6 +184,7 @@ masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_st
       {
         xstat->nsamesize = nsamesize;
         xstat->nsamesha1 = nsamesha1;
+        xstat->sha1id = sha1id;
         xstat->hex_sha1 = hex_sha1;
       }
       if ( pname )
@@ -183,7 +201,7 @@ masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_st
 }
 
 int
-masxfs_levinfo_db_opendir( masxfs_levinfo_t * li )
+masxfs_levinfo_db_opendir( masxfs_levinfo_t * li, masxfs_entry_filter_t * entry_pfilter )
 {
   rDECLBAD;
 
@@ -203,7 +221,7 @@ masxfs_levinfo_db_opendir( masxfs_levinfo_t * li )
     /* FIXME */
     /* assert( li->db.node_id ); */
     /* WARN("prepare '%s'", li[1].name); */
-      rC( masxfs_levinfo_db_prepare_execute_store( &li->db.scan.mstmt, li[1].name, ( long long ) li->db.node_id ) );
+      rC( masxfs_levinfo_db_prepare_execute_store( &li->db.scan.mstmt, li[1].name, ( long long ) li->db.node_id, entry_pfilter ) );
     }
   }
   else
@@ -229,11 +247,11 @@ masxfs_levinfo_db_closedir( masxfs_levinfo_t * li )
 }
 
 int
-masxfs_levinfo_db_rewinddir( masxfs_levinfo_t * li )
+masxfs_levinfo_db_rewinddir( masxfs_levinfo_t * li, masxfs_entry_filter_t * entry_pfilter )
 {
   rDECLBAD;
 
-  rC( masxfs_levinfo_db_opendir( li ) );
+  rC( masxfs_levinfo_db_opendir( li, entry_pfilter ) );
   if ( li )
     rC( mas_qstd_mstmt_data_seek( li->db.scan.mstmt, 0 ) );
   rRET;
@@ -261,7 +279,7 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_entry_filter_t * entry_
       {
         rC( masxfs_levinfo_db_fetch( li->db.scan.mstmt, &dename, &stat, &xstat, &node_id, &has_data ) );
         detype = dename && rGOOD ? masxfs_levinfo_stat2entry( &stat ) : MASXFS_ENTRY_UNKNOWN_NUM;
-      } while ( dename && has_data && !( masxfs_levinfo_name_valid( dename, detype, entry_pfilter ) ) );
+      } while ( rGOOD && dename && has_data && !( masxfs_levinfo_name_valid( dename, detype, entry_pfilter ) ) );
       if ( rGOOD )
       {
         validx = 1;
@@ -292,7 +310,7 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_entry_filter_t * entry_
         /* WARN( "[%p] NO DATA for %s", li->db.scan.mstmt, dename ); */
         }
       }
-    } while ( has_data && !validx );
+    } while ( rGOOD && has_data && !validx );
   }
   else
     QRLI( li, rCODE );

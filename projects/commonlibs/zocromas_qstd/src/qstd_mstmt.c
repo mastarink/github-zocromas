@@ -24,6 +24,9 @@ mas_qstd_mstmt_prepare_param_longlong( mysqlpfs_mstmt_t * mstmt, int pos )
 {
   rDECLBAD;
   rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, pos ) );
+  if ( !rGOOD )
+    WARN( "%s", mas_mysqlpfs_mstmt_error( mstmt ) );
+  
   rRET;
 }
 
@@ -32,6 +35,8 @@ mas_qstd_mstmt_prepare_result_longlong( mysqlpfs_mstmt_t * mstmt, int pos )
 {
   rDECLBAD;
   rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, pos ) );
+  if ( !rGOOD )
+    WARN( "%s", mas_mysqlpfs_mstmt_error( mstmt ) );
 
   rRET;
 }
@@ -41,6 +46,8 @@ mas_qstd_mstmt_prepare_param_string( mysqlpfs_mstmt_t * mstmt, int pos )
 {
   rDECLBAD;
   rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, pos, ( mysqlpfs_s_length_t ) 255 ) );
+  if ( !rGOOD )
+    WARN( "%s", mas_mysqlpfs_mstmt_error( mstmt ) );
 
   rRET;
 }
@@ -48,7 +55,11 @@ mas_qstd_mstmt_prepare_param_string( mysqlpfs_mstmt_t * mstmt, int pos )
 int
 mas_qstd_mstmt_prepare_result_string( mysqlpfs_mstmt_t * mstmt, int pos )
 {
-  return mas_mysqlpfs_mstmt_prepare_result_string( mstmt, pos, ( mysqlpfs_s_length_t ) 255 );
+  rDECLBAD;
+  rC( mas_mysqlpfs_mstmt_prepare_result_string( mstmt, pos, ( mysqlpfs_s_length_t ) 255 ));
+  if ( !rGOOD )
+    WARN( "%s", mas_mysqlpfs_mstmt_error( mstmt ) );
+  rRET;
 }
 
 int
@@ -109,13 +120,21 @@ mas_qstd_mstmt_get_result_string_na( mysqlpfs_mstmt_t * mstmt, int pos, const ch
 int
 mas_qstd_mstmt_bind_param( mysqlpfs_mstmt_t * mstmt )
 {
-  return mas_mysqlpfs_mstmt_bind_param( mstmt );
+  rDECLBAD;
+  rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
+  if ( !rGOOD )
+    WARN( "%s", mas_mysqlpfs_mstmt_error( mstmt ) );
+  rRET;
 }
 
 int
 mas_qstd_mstmt_bind_result( mysqlpfs_mstmt_t * mstmt )
 {
-  return mas_mysqlpfs_mstmt_bind_result( mstmt );
+  rDECLBAD;
+  rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
+  if ( !rGOOD )
+    WARN( "%s", mas_mysqlpfs_mstmt_error( mstmt ) );
+  rRET;
 }
 
 int

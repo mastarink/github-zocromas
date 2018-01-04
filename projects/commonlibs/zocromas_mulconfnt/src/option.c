@@ -357,11 +357,7 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x, mucs_optsca
     else if ( opt->s.restype & MUCS_RTYP_BW_OR )                     // set bits
       opt->d.nvalue.v_ulong |= ( unsigned long ) v_x.v_ulong_long;
     else if ( opt->s.restype & MUCS_RTYP_BW_NOR )                    // reset bits
-    {
-      WARN("F1: %llx : %lx", v_x.v_long_long, opt->d.nvalue.v_ulong);
       opt->d.nvalue.v_ulong &= ( unsigned long ) ( ~v_x.v_long_long );
-      WARN("F2: %llx : %lx", v_x.v_long_long, opt->d.nvalue.v_ulong);
-    }
     else if ( opt->s.restype & MUCS_RTYP_BW_XOR )
       opt->d.nvalue.v_ulong ^= ( unsigned long ) v_x.v_ulong_long;
     else

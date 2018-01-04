@@ -112,18 +112,18 @@ masxfs_levinfo_db_close( masxfs_levinfo_t * li )
 }
 
 static int
-masxfs_levinfo__db_stat( masxfs_levinfo_t * li,  masxfs_stat_t ** pstat )
+masxfs_levinfo__db_stat( masxfs_levinfo_t * li, masxfs_entry_filter_t * entry_pfilter, masxfs_stat_t ** pstat )
 {
   rDECLBAD;
 
   if ( li->lidepth )
   {
-    rC( masxfs_levinfo_db_opendir( li - 1 ) );
+    rC( masxfs_levinfo_db_opendir( li - 1, entry_pfilter ) );
     if ( !li->db.stat )
     {
       int has_data = 0;                                              /* or just pass NULL instead of &has_data */
 
-      rC( masxfs_levinfo_db_readdir( li - 1, NULL /* filter */ ,  &has_data ) );
+      rC( masxfs_levinfo_db_readdir( li - 1, entry_pfilter, &has_data ) );
     }
     if ( pstat )
       *pstat = li->db.stat;
@@ -132,11 +132,11 @@ masxfs_levinfo__db_stat( masxfs_levinfo_t * li,  masxfs_stat_t ** pstat )
 }
 
 int
-masxfs_levinfo_db_stat( masxfs_levinfo_t * li,  masxfs_stat_t ** pstat )
+masxfs_levinfo_db_stat( masxfs_levinfo_t * li, masxfs_entry_filter_t * entry_pfilter, masxfs_stat_t ** pstat )
 {
   rDECLBAD;
 
-  rC( masxfs_levinfo__db_stat( li,  pstat ) );
+  rC( masxfs_levinfo__db_stat( li, entry_pfilter, pstat ) );
 #if 0
   if ( !li->db.stat )
   {

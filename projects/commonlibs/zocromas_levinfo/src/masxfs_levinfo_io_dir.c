@@ -25,26 +25,26 @@ exiternal functions used:
 */
 
 int
-masxfs_levinfo_rewinddir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
+masxfs_levinfo_rewinddir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, masxfs_entry_filter_t * entry_pfilter )
 {
   rDECLGOOD;
 
   if ( flags & MASXFS_CB_MODE_FS )
     rC( masxfs_levinfo_fs_rewinddir( li ) );
   if ( flags & MASXFS_CB_MODE_DB )
-    rC( masxfs_levinfo_db_rewinddir( li ) );
+    rC( masxfs_levinfo_db_rewinddir( li, entry_pfilter ) );
   rRET;
 }
 
 int
-masxfs_levinfo_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
+masxfs_levinfo_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, masxfs_entry_filter_t * entry_pfilter )
 {
   rDECLGOOD;
 
   if ( flags & MASXFS_CB_MODE_FS )
     rC( masxfs_levinfo_fs_opendir( li ) );
   if ( flags & MASXFS_CB_MODE_DB )
-    rC( masxfs_levinfo_db_opendir( li ) );
+    rC( masxfs_levinfo_db_opendir( li, entry_pfilter ) );
   rRET;
 }
 

@@ -47,6 +47,12 @@ struct masxfs_entry_filter_s
   off_t max_size;
   unsigned long min_nsame_digest;
   unsigned long max_nsame_digest;
+  unsigned long min_nsamesize;
+  unsigned long max_nsamesize;
+  unsigned long min_inode;
+  unsigned long max_inode;
+  unsigned long min_digid;
+  unsigned long max_digid;
   char *glob;
   char *regexp;
 };
@@ -72,6 +78,7 @@ struct masxfs_xstatc_s
 {
   unsigned long nsamesize;
   unsigned long nsamesha1;
+  unsigned long sha1id;
   const char *hex_sha1;
 };
 struct masxfs_xstat_s

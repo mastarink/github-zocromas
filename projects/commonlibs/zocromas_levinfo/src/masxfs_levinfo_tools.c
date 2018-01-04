@@ -212,43 +212,49 @@ masxfs_levinfo_name_valid( const char *name, masxfs_entry_type_t detype, masxfs_
   int b = 0;
 
   b = name && !( name[0] == '.' && ( ( name[1] == '.' && name[2] == 0 ) || name[1] == 0 ) );
-  if ( b && ( detype == MASXFS_ENTRY_REG_NUM || detype == MASXFS_ENTRY_LNK_NUM ) && entry_pfilter->glob )
+  if ( entry_pfilter )
   {
-    int m = fnmatch( entry_pfilter->glob, name, FNM_PATHNAME | FNM_PERIOD );
-
-    if ( m == FNM_NOMATCH )
-      b = 0;
-    else if ( m == 0 )
-      b = 1;
-    else
+    if ( b && ( detype == MASXFS_ENTRY_REG_NUM || detype == MASXFS_ENTRY_LNK_NUM ) && entry_pfilter->glob )
     {
-      WARN( "fnmatch error %d for %s : %s", b, entry_pfilter->glob, name );
+      int m = fnmatch( entry_pfilter->glob, name, FNM_PATHNAME | FNM_PERIOD );
+
+      if ( m == FNM_NOMATCH )
+        b = 0;
+      else if ( m == 0 )
+        b = 1;
+      else
+      {
+        WARN( "fnmatch error %d for %s : %s", b, entry_pfilter->glob, name );
+      }
     }
   }
   return b;
 }
 
 int
-masxfs_levinfo_stat_valid( masxfs_levinfo_t * li _uUu_, masxfs_entry_filter_t * entry_pfilter _uUu_, masxfs_levinfo_flags_t flags )
+masxfs_levinfo_stat_valid( masxfs_levinfo_t * li _uUu_, masxfs_entry_filter_t * entry_pfilter, masxfs_levinfo_flags_t flags )
 {
   rDECLBAD;
   int b = 1;
 
-  if ( masxfs_levinfo_detype( li, flags ) != MASXFS_ENTRY_DIR_NUM && ( entry_pfilter->min_size || entry_pfilter->max_size ) )
+  if ( entry_pfilter )
   {
-    struct stat *st = NULL;
-
-    b = 0;
-    rC( masxfs_levinfo_stat( li, flags, &st /* stat */  ) );
-    if ( rGOOD )
+    if ( masxfs_levinfo_detype( li, flags ) != MASXFS_ENTRY_DIR_NUM && ( entry_pfilter->min_size || entry_pfilter->max_size ) )
     {
-      off_t size = masxfs_levinfo_size_ref( li, flags );
+      struct stat *st = NULL;
 
-      b = 1;
-      if ( entry_pfilter->min_size && size < entry_pfilter->min_size )
-        b = 0;
-      if ( entry_pfilter->max_size && size > entry_pfilter->max_size )
-        b = 0;
+      b = 0;
+      rC( masxfs_levinfo_stat( li, flags, entry_pfilter, &st /* stat */  ) );
+      if ( rGOOD )
+      {
+        off_t size = masxfs_levinfo_size_ref( li, flags );
+
+        b = 1;
+        if ( entry_pfilter->min_size && size < entry_pfilter->min_size )
+          b = 0;
+        if ( entry_pfilter->max_size && size > entry_pfilter->max_size )
+          b = 0;
+      }
     }
   }
   return b;
@@ -259,15 +265,18 @@ masxfs_levinfo_xstat_valid( masxfs_levinfo_t * li _uUu_, masxfs_entry_filter_t *
 {
   int b = 1;
 
-  if ( masxfs_levinfo_detype( li, flags ) != MASXFS_ENTRY_DIR_NUM && ( entry_pfilter->min_nsame_digest || entry_pfilter->max_nsame_digest ) )
+  if ( entry_pfilter )
   {
-    unsigned long ns = masxfs_levinfo_nsamesha1_ref( li, flags );
+    if ( masxfs_levinfo_detype( li, flags ) != MASXFS_ENTRY_DIR_NUM && ( entry_pfilter->min_nsame_digest || entry_pfilter->max_nsame_digest ) )
+    {
+      unsigned long ns = masxfs_levinfo_nsamesha1_ref( li, flags );
 
-    b = 1;
-    if ( entry_pfilter->min_nsame_digest && ns < entry_pfilter->min_nsame_digest )
-      b = 0;
-    if ( entry_pfilter->max_nsame_digest && ns > entry_pfilter->max_nsame_digest )
-      b = 0;
+      b = 1;
+      if ( entry_pfilter->min_nsame_digest && ns < entry_pfilter->min_nsame_digest )
+        b = 0;
+      if ( entry_pfilter->max_nsame_digest && ns > entry_pfilter->max_nsame_digest )
+        b = 0;
+    }
   }
   return b;
 }

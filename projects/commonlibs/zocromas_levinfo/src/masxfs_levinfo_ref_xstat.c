@@ -53,7 +53,7 @@ masxfs_levinfo_nsamesize_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tfla
 
   if ( li && ( tflags & MASXFS_CB_MODE_DB ) )
   {
-    rC( masxfs_levinfo_stat( li, tflags, NULL /* stat */  ) );
+    rC( masxfs_levinfo_stat( li, tflags, NULL /* stat */ , NULL /* entry_pfilter */ ) );
     if ( rGOOD )
       nsamesize = masxfs_levinfo_nsamesize_val( li, 0, tflags );
   }
@@ -81,7 +81,7 @@ masxfs_levinfo_nsamesha1_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tfla
 
   if ( li && ( tflags & MASXFS_CB_MODE_DB ) )
   {
-    rC( masxfs_levinfo_stat( li, tflags, NULL /* stat */  ) );
+    rC( masxfs_levinfo_stat( li, tflags, NULL /* stat */, NULL /* entry_pfilter */  ) );
     if ( rGOOD )
       nsamesha1 = masxfs_levinfo_nsamesha1_val( li, 0, tflags );
   }
@@ -91,7 +91,7 @@ masxfs_levinfo_nsamesha1_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tfla
 const char *
 masxfs_levinfo_hexsha1_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags )
 {
-  const char *hex_sha1 = 0;
+  const char *hex_sha1 = NULL;
 
   li = masxfs_levinfo_offset( li, offset );
   const masxfs_xstat_t *xstat = masxfs_levinfo_xstat_val( li, 0, tflags );
@@ -105,11 +105,11 @@ const char *
 masxfs_levinfo_hexsha1_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
 {
   rDECLBAD;
-  const char *hex_sha1 = 0;
+  const char *hex_sha1 = NULL;
 
   if ( li && ( tflags & MASXFS_CB_MODE_DB ) )
   {
-    rC( masxfs_levinfo_stat( li, tflags, NULL /* stat */  ) );
+    rC( masxfs_levinfo_stat( li, tflags, NULL /* stat */, NULL /* entry_pfilter */  ) );
     if ( rGOOD )
       hex_sha1 = masxfs_levinfo_hexsha1_val( li, 0, tflags );
   }

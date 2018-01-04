@@ -193,7 +193,7 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
             "  , fp.atim AS atim, fp.mtim AS mtim, fp.ctim AS ctim " /* */
             "  , fs.nsame AS nsamesize"                              /* */
             "  , fd.dev, fp.mode, fd.nlink, fp.uid, fp.gid, fp.size, fp.blksize, fp.blocks, fp.rdev " /* */
-            "  , sha.nsame AS nsamesha1, LOWER(HEX(sha.sum)) AS hex_sha1" /* */
+            "  , sha.nsame AS nsamesha1, sha.id AS sha1id, LOWER(HEX(sha.sum)) AS hex_sha1" /* */
             "        , GREATEST(fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS latest_updated " /* */
             "        , LEAST(   fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS least_updated " /* */
             "      FROM " QSTD_TABLE_NAMES "    AS fn "              /* */
@@ -210,7 +210,7 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
             "  , fp.atim AS atim, fp.mtim AS mtim, fp.ctim AS ctim " /* */
             "  , fs.nsame AS nsamesize"                              /* */
             "  , fd.dev, fp.mode, fd.nlink, fp.uid, fp.gid, fp.size, fp.blksize, fp.blocks, fp.rdev " /* */
-            "  , sha.nsame AS nsamesha1, LOWER(HEX(sha.sum)) AS hex_sha1" /* */
+            "  , sha.nsame AS nsamesha1, sha.id AS sha1id, LOWER(HEX(sha.sum)) AS hex_sha1" /* */
             "        , GREATEST(fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS latest_updated " /* */
             "        , LEAST(   fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS least_updated " /* */
             "   FROM " QSTD_TABLE_NAMES " AS fn "                    /* */
@@ -363,6 +363,7 @@ mas_qstd_mstmt_init_prepare_results_everything( mysqlpfs_mstmt_t * mstmt, int *p
  *   +  blocks
  *   +  rdev
  *      nsamesha1
+ *      sha1id
  *      hex_sha1
  */
 
@@ -393,6 +394,7 @@ mas_qstd_mstmt_init_prepare_results_everythingx( mysqlpfs_mstmt_t * mstmt, int *
   rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* ctim */
   rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* nsamesize */
   rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* nsamesha1 */
+  rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* sha1id */
   rC( mas_qstd_mstmt_prepare_result_string( mstmt, ( *pnr )++ ) );   /* hex_sha1 */
 /*
  *   +  name
@@ -416,6 +418,7 @@ mas_qstd_mstmt_init_prepare_results_everythingx( mysqlpfs_mstmt_t * mstmt, int *
  *   +  blocks
  *   +  rdev
  *   +  nsamesha1
+ *   +  sha1id
  *   +  hex_sha1
  */
 
@@ -752,8 +755,11 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* parent_id */
         assert( np == STD_MSTMT_SELECT_EVERYTHING_NFIELDS_P );
 
+        if ( !rGOOD )
+          WARN( "%s", mas_mysqlpfs_mstmt_error( mstmt ) );
+
 #if 1
-        mas_qstd_mstmt_init_prepare_results_everything( mstmt, &nr );
+        rC( mas_qstd_mstmt_init_prepare_results_everything( mstmt, &nr ) );
 #else
         rC( mas_qstd_mstmt_bind_param( mstmt ) );
         rC( mas_qstd_mstmt_prepare_result_string( mstmt, nr++ ) );   /* name */
@@ -783,7 +789,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         char *selop = "SELECT "                                      /* */
                 "  name, inode, node_id "                            /* */
                 ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev, atim, mtim, ctim" /* */
-                ", nsamesize, nsamesha1, hex_sha1 "                  /* */
+                ", nsamesize, nsamesha1, sha1id, hex_sha1 "          /* */
                 "   FROM " QSTD_VIEW_ALL                             /* */
                 "    WHERE parent_id=? AND name=? "                  /* */
               /* "     AND (detype!='REG' OR (nsamesha1>10 AND nsamesize>1)) "              (* *) */
@@ -793,6 +799,8 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* parent_id */
         rC( mas_qstd_mstmt_prepare_param_string( mstmt, np++ ) );    /* name */
         assert( np == STD_MSTMT_SELECT_EVERYTHINGX_NFIELDS_PN );
+        if ( !rGOOD )
+          WARN( "%s", mas_mysqlpfs_mstmt_error( mstmt ) );
 
         rC( mas_qstd_mstmt_init_prepare_results_everythingx( mstmt, &nr ) );
         assert( nr == STD_MSTMT_SELECT_EVERYTHINGX_NRESULTS );
@@ -806,7 +814,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         char *selop = "SELECT "                                      /* */
                 "  name, inode, node_id "                            /* */
                 ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev, atim, mtim, ctim" /* */
-                ", nsamesize, nsamesha1, hex_sha1 "                  /* */
+                ", nsamesize, nsamesha1, sha1id, hex_sha1 "          /* */
                 "   FROM " QSTD_VIEW_ALL                             /* */
                 "    WHERE parent_id=? "                             /* */
               /* "     AND (detype!='REG' OR (nsamesha1>10 AND nsamesize>1)) "              (* *) */
@@ -815,8 +823,10 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_EVERYTHINGX_NFIELDS_P, STD_MSTMT_SELECT_EVERYTHINGX_NRESULTS, selop );
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* parent_id */
         assert( np == STD_MSTMT_SELECT_EVERYTHINGX_NFIELDS_P );
+        if ( !rGOOD )
+          WARN( "%s", mas_mysqlpfs_mstmt_error( mstmt ) );
 
-        mas_qstd_mstmt_init_prepare_results_everythingx( mstmt, &nr );
+        rC( mas_qstd_mstmt_init_prepare_results_everythingx( mstmt, &nr ) );
         assert( nr == STD_MSTMT_SELECT_EVERYTHINGX_NRESULTS );
       }
       break;
@@ -827,7 +837,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         char *selop = "SELECT "                                      /* */
                 "  name, inode, node_id "                            /* */
                 ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev, atim, mtim, ctim" /* */
-                ", nsamesize, nsamesha1, hex_sha1 "                  /* */
+                ", nsamesize, nsamesha1, sha1id, hex_sha1 "          /* */
                 "   FROM " QSTD_VIEW_ALL                             /* */
                 "    WHERE parent_id=? AND name=? "                  /* */
                 "     AND (detype IN ('DIR','LNK') "                 /* */
@@ -836,7 +846,8 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
                 "          ( nsamesize>? AND nsamesize<=? ) "        /* */
                 "         AND ( nsamesha1>? AND nsamesha1<=? ) "     /* */
                 "         AND ( size>? AND size<=? ) "               /* */
-                "         AND ( inode>? AND inode<=? ) "               /* */
+                "         AND ( inode>? AND inode<=? ) "             /* */
+                "         AND ( sha1id>? AND sha1id<=? ) "           /* */
                 "         AND ( name REGEXP ? )  "                   /* */
                 "      ) "                                           /* */
                 "     ) "                                            /* */
@@ -853,11 +864,15 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* max_size */
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* min_inode */
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* max_inode */
+        rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* min_sha1id */
+        rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* max_sha1id */
         rC( mas_qstd_mstmt_prepare_param_string( mstmt, np++ ) );    /* regexp */
         if ( rGOOD )
         {
           assert( np == STD_MSTMT_SELECT_EVERYTHINGXX_NFIELDS_PN );
         }
+        if ( !rGOOD )
+          WARN( "%s", mas_mysqlpfs_mstmt_error( mstmt ) );
 
         rC( mas_qstd_mstmt_init_prepare_results_everythingx( mstmt, &nr ) );
 
@@ -870,7 +885,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         char *selop = "SELECT "                                      /* */
                 "  name, inode, node_id "                            /* */
                 ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev, atim, mtim, ctim" /* */
-                ", nsamesize, nsamesha1, hex_sha1 "                  /* */
+                ", nsamesize, nsamesha1, sha1id, hex_sha1 "          /* */
                 "   FROM " QSTD_VIEW_ALL                             /* */
                 "    WHERE parent_id=? "                             /* */
                 "     AND (detype IN ('DIR','LNK') "                 /* */
@@ -879,7 +894,8 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
                 "          ( nsamesize>? AND nsamesize<=? ) "        /* */
                 "         AND ( nsamesha1>? AND nsamesha1<=? ) "     /* */
                 "         AND ( size>? AND size<=? ) "               /* */
-                "         AND ( inode>? AND inode<=? ) "               /* */
+                "         AND ( inode>? AND inode<=? ) "             /* */
+                "         AND ( sha1id>? AND sha1id<=? ) "           /* */
                 "         AND ( name REGEXP ? )  "                   /* */
                 "      ) "                                           /* */
                 "     ) "                                            /* */
@@ -895,10 +911,14 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* max_size */
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* min_inode */
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* max_inode */
+        rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* min_sha1id */
+        rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* max_sha1id */
         rC( mas_qstd_mstmt_prepare_param_string( mstmt, np++ ) );    /* regexp */
         assert( np == STD_MSTMT_SELECT_EVERYTHINGXX_NFIELDS_P );
+        if ( !rGOOD )
+          WARN( "%s", mas_mysqlpfs_mstmt_error( mstmt ) );
 
-        mas_qstd_mstmt_init_prepare_results_everythingx( mstmt, &nr );
+        rC( mas_qstd_mstmt_init_prepare_results_everythingx( mstmt, &nr ) );
       }
       break;
     case STD_MSTMT_MAX:
