@@ -11,7 +11,8 @@
 #include <mastar/regerr/masregerr.h>
 #include <mastar/regerr/masregerr_defs.h>
 
-#include "masxfs_levinfo_structs.h"
+/* #include "masxfs_levinfo_structs.h" */
+#include "masxfs_levinfo_digest_structs.h"
 
 /* #include "masxfs_levinfo_db.h" */
 /* #include "masxfs_levinfo_fs.h" */

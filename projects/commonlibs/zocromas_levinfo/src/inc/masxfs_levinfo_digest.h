@@ -1,7 +1,8 @@
 #ifndef MASXFS_LEVINFO_DIGEST_H
 # define MASXFS_LEVINFO_DIGEST_H
 
-#include "masxfs_levinfo_types.h"
+/* #include "masxfs_levinfo_types.h" */
+#include "masxfs_levinfo_digest_types.h"
 
 masxfs_digests_t *masxfs_digests_create( void );
 masxfs_digests_t *masxfs_digests_create_setup( int fd, size_t readbufsize, off_t from, off_t max_blocks );
