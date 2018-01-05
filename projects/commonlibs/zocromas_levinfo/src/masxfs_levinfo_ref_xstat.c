@@ -61,57 +61,57 @@ masxfs_levinfo_nsamesize_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tfla
 }
 
 unsigned long
-masxfs_levinfo_nsamesha1_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags )
+masxfs_levinfo_nsamedigest_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags )
 {
-  unsigned long nsamesha1 = 0;
+  unsigned long nsamedigest = 0;
 
   li = masxfs_levinfo_offset( li, offset );
   const masxfs_xstat_t *xstat = masxfs_levinfo_xstat_val( li, 0, tflags );
 
   if ( xstat )
-    nsamesha1 = xstat->nsamesha1;
-  return nsamesha1;
+    nsamedigest = xstat->nsamedigest;
+  return nsamedigest;
 }
 
 unsigned long
-masxfs_levinfo_nsamesha1_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
+masxfs_levinfo_nsamedigest_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
 {
   rDECLBAD;
-  unsigned long nsamesha1 = 0;
+  unsigned long nsamedigest = 0;
 
   if ( li && ( tflags & MASXFS_CB_MODE_DB ) )
   {
     rC( masxfs_levinfo_stat( li, tflags, NULL /* stat */, NULL /* entry_pfilter */  ) );
     if ( rGOOD )
-      nsamesha1 = masxfs_levinfo_nsamesha1_val( li, 0, tflags );
+      nsamedigest = masxfs_levinfo_nsamedigest_val( li, 0, tflags );
   }
-  return nsamesha1;
+  return nsamedigest;
 }
 
 const char *
-masxfs_levinfo_hexsha1_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags )
+masxfs_levinfo_hexdigest_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags )
 {
-  const char *hex_sha1 = NULL;
+  const char *hex_digest = NULL;
 
   li = masxfs_levinfo_offset( li, offset );
   const masxfs_xstat_t *xstat = masxfs_levinfo_xstat_val( li, 0, tflags );
 
   if ( xstat )
-    hex_sha1 = xstat->hex_sha1;
-  return hex_sha1;
+    hex_digest = xstat->hex_digest;
+  return hex_digest;
 }
 
 const char *
-masxfs_levinfo_hexsha1_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
+masxfs_levinfo_hexdigest_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
 {
   rDECLBAD;
-  const char *hex_sha1 = NULL;
+  const char *hex_digest = NULL;
 
   if ( li && ( tflags & MASXFS_CB_MODE_DB ) )
   {
     rC( masxfs_levinfo_stat( li, tflags, NULL /* stat */, NULL /* entry_pfilter */  ) );
     if ( rGOOD )
-      hex_sha1 = masxfs_levinfo_hexsha1_val( li, 0, tflags );
+      hex_digest = masxfs_levinfo_hexdigest_val( li, 0, tflags );
   }
-  return hex_sha1;
+  return hex_digest;
 }

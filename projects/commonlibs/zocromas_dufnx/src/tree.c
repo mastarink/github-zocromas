@@ -46,8 +46,8 @@ treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, uns
   masxfs_depth_t depth = masxfs_levinfo_depth_ref( li, flags );
   ino_t inode = masxfs_levinfo_inode_ref( li, flags );
   const char *ename = masxfs_levinfo_name_ref( li, flags );
-  const char *sha1 = masxfs_levinfo_hexsha1_ref( li, flags );
-  unsigned long nsamesha1 = masxfs_levinfo_nsamesha1_ref( li, flags );
+  const char *digest = masxfs_levinfo_hexdigest_ref( li, flags );
+  unsigned long nsamedigest = masxfs_levinfo_nsamedigest_ref( li, flags );
 
 /*const char *epath _uUu_ = masxfs_levinfo_path_ref( li, flags );*/
 
@@ -75,12 +75,12 @@ treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, uns
     char hh[32] = "";
 
     memset( hh, 0, sizeof( hh ) );
-    if ( nsamesha1 == 0 )
+    if ( nsamedigest == 0 )
       hh[0] = 0;
-    else if ( nsamesha1 > 31 )
-      sprintf( hh, "# %lu", nsamesha1 );
+    else if ( nsamedigest > 31 )
+      sprintf( hh, "# %lu", nsamedigest );
     else
-      for ( unsigned long i = 0; i < nsamesha1; i++ )
+      for ( unsigned long i = 0; i < nsamedigest; i++ )
         hh[i] = '+';
 /* /usr/bin/tree -U --inodes -s -a mastest | nl -ba -nrn -w4 > tree-U--inodes-s-a.tree */
     if ( li->detype == MASXFS_ENTRY_DIR_NUM )
@@ -93,9 +93,9 @@ treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, uns
       fprintf( fil, "%4ld\t%s[%-10ld %10ld]  %-30s", serial, treeprefix ? treeprefix : "", inode, size,
                ename ? ename : "" /*, epath ? epath : "" */  );
     }
-    if ( sha1 )
-      fprintf( fil, "  \t## %-40s", sha1 ? sha1 : "" );
-    if ( nsamesha1 )
+    if ( digest )
+      fprintf( fil, "  \t## %-40s", digest ? digest : "" );
+    if ( nsamedigest )
       fprintf( fil, " \t%s", hh );
     fprintf( fil, "\n" );
 //  fprintf(fil, "#(%5ld) %s\n", li->leaf_count, li->name);

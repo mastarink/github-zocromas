@@ -64,8 +64,8 @@ masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char
     }
     if ( li->db.xstat )
     {
-      if ( li->db.xstat->hex_sha1 )
-        mas_free( li->db.xstat->hex_sha1 );
+      if ( li->db.xstat->hex_digest )
+        mas_free( li->db.xstat->hex_digest );
       mas_free( li->db.xstat );
       li->db.xstat = NULL;
     }
@@ -73,8 +73,8 @@ masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char
     {
       li->db.xstat = mas_malloc( sizeof( masxfs_xstat_t ) );
       li->db.xstat->nsamesize = xstat->nsamesize;
-      li->db.xstat->nsamesha1 = xstat->nsamesha1;
-      li->db.xstat->hex_sha1 = mas_strdup( xstat->hex_sha1 );
+      li->db.xstat->nsamedigest = xstat->nsamedigest;
+      li->db.xstat->hex_digest = mas_strdup( xstat->hex_digest );
     }
   }
   else
@@ -114,8 +114,8 @@ masxfs_levinfo_reset( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _uUu_ 
         li->db.stat = NULL;
         if ( li->db.xstat )
         {
-          if ( li->db.xstat->hex_sha1 )
-            mas_free( li->db.xstat->hex_sha1 );
+          if ( li->db.xstat->hex_digest )
+            mas_free( li->db.xstat->hex_digest );
           mas_free( li->db.xstat );
           li->db.xstat = NULL;
         }

@@ -269,7 +269,7 @@ masxfs_levinfo_xstat_valid( masxfs_levinfo_t * li _uUu_, masxfs_entry_filter_t *
   {
     if ( masxfs_levinfo_detype( li, flags ) != MASXFS_ENTRY_DIR_NUM && ( entry_pfilter->min_nsame_digest || entry_pfilter->max_nsame_digest ) )
     {
-      unsigned long ns = masxfs_levinfo_nsamesha1_ref( li, flags );
+      unsigned long ns = masxfs_levinfo_nsamedigest_ref( li, flags );
 
       b = 1;
       if ( entry_pfilter->min_nsame_digest && ns < entry_pfilter->min_nsame_digest )

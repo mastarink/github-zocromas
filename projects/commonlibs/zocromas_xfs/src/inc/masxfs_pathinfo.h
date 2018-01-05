@@ -3,7 +3,7 @@
 
 # include "masxfs_types.h"
 
-int masxfs_pathinfo_open( masxfs_pathinfo_t * pi, masxfs_levinfo_flags_t flags );
+/* int masxfs_pathinfo_open( masxfs_pathinfo_t * pi, masxfs_levinfo_flags_t flags ); */
 
 char *masxfs_pathinfo_pi2path( masxfs_pathinfo_t * pi );
 int masxfs_pathinfo_scan_cbs( masxfs_pathinfo_t * pi, masxfs_type_flags_t typeflags, masxfs_entry_callback_t * callbacks, void *udata,

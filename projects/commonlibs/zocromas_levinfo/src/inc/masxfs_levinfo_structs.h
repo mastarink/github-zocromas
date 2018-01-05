@@ -77,15 +77,15 @@ struct masxfs_scanner_s
 struct masxfs_xstatc_s
 {
   unsigned long nsamesize;
-  unsigned long nsamesha1;
-  unsigned long sha1id;
-  const char *hex_sha1;
+  unsigned long nsamedigest;
+  unsigned long digestid;
+  const char *hex_digest;
 };
 struct masxfs_xstat_s
 {
   unsigned long nsamesize;
-  unsigned long nsamesha1;
-  char *hex_sha1;
+  unsigned long nsamedigest;
+  char *hex_digest;
 };
 
 struct masxfs_levinfo_s

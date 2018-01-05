@@ -19,7 +19,7 @@
 /* #include <mastar/qstd/qstd_mstmt_sizes.h> */
 /* #include <mastar/qstd/qstd_mstmt_datas.h> */
 /* #include <mastar/qstd/qstd_mstmt_props.h> */
-/* #include <mastar/qstd/qstd_mstmt_sha1.h> */
+/* #include <mastar/qstd/qstd_mstmt_digest.h> */
 /* #include <mastar/qstd/qstd_mstmt_names.h> */
 /* #include <mastar/qstd/qstd_mstmt_parents.h> */
 
@@ -74,19 +74,19 @@ masxfs_levinfo_db_prepare_execute_store( mysqlpfs_mstmt_t ** pmstmt, const char 
         unsigned long max_size = ( entry_pfilter && entry_pfilter->max_size ) ? entry_pfilter->max_size : LONG_MAX;
         unsigned long min_inode = ( entry_pfilter && entry_pfilter->min_inode ) ? entry_pfilter->min_inode : 0;
         unsigned long max_inode = ( entry_pfilter && entry_pfilter->max_inode ) ? entry_pfilter->max_inode : LONG_MAX;
-        unsigned long min_sha1id _uUu_ = ( entry_pfilter && entry_pfilter->min_digid ) ? entry_pfilter->min_digid : 0;
-        unsigned long max_sha1id _uUu_ = ( entry_pfilter && entry_pfilter->max_digid ) ? entry_pfilter->max_digid : LONG_MAX;
+        unsigned long min_digestid _uUu_ = ( entry_pfilter && entry_pfilter->min_digid ) ? entry_pfilter->min_digid : 0;
+        unsigned long max_digestid _uUu_ = ( entry_pfilter && entry_pfilter->max_digid ) ? entry_pfilter->max_digid : LONG_MAX;
 
         rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, min_nsamesize, FALSE ) ); /* min_nsamesize */
         rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, max_nsamesize, FALSE ) ); /* max_nsamesize */
-        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, min_nsame_digest, FALSE ) ); /* min_nsamesha1 */
-        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, max_nsame_digest, FALSE ) ); /* max_nsamesha1 */
+        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, min_nsame_digest, FALSE ) ); /* min_nsamedigest */
+        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, max_nsame_digest, FALSE ) ); /* max_nsamedigest */
         rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, min_size, FALSE ) ); /* min_size */
         rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, max_size, FALSE ) ); /* max_size */
         rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, min_inode, FALSE ) ); /* min_inode */
         rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, max_inode, FALSE ) ); /* max_inode */
-        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, min_sha1id, FALSE ) ); /* min_sha1id */
-        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, max_sha1id, FALSE ) ); /* max_sha1id */
+        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, min_digestid, FALSE ) ); /* min_digestid */
+        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, max_digestid, FALSE ) ); /* max_digestid */
         rC( mas_qstd_mstmt_set_param_string( ( *pmstmt ), np++, "" /* "^.*\\.(sh|conf)$" */  ) ); /* regexp */
         assert( np == ( name ? STD_MSTMT_SELECT_EVERYTHINGXX_NFIELDS_PN : STD_MSTMT_SELECT_EVERYTHINGXX_NFIELDS_P ) );
 #endif
@@ -128,10 +128,10 @@ masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_st
     unsigned long long mtim_tv_sec = 0;
     unsigned long long ctim_tv_sec = 0;
     unsigned long long nsamesize = 0;
-    unsigned long long nsamesha1 = 0;
-    unsigned long long sha1id = 0;
+    unsigned long long nsamedigest = 0;
+    unsigned long long digestid = 0;
 
-    const char *hex_sha1 = NULL;
+    const char *hex_digest = NULL;
 
     rC( mas_qstd_mstmt_fetch( mstmt, &has_data ) );
     if ( phas_data )
@@ -157,9 +157,9 @@ masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_st
       rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &mtim_tv_sec, &is_null ) );
       rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &ctim_tv_sec, &is_null ) );
       rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &nsamesize, &is_null ) );
-      rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &nsamesha1, &is_null ) );
-      rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &sha1id, &is_null ) );
-      rC( mas_qstd_mstmt_get_result_string_na( mstmt, nr++, &hex_sha1 ) );
+      rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &nsamedigest, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &digestid, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_string_na( mstmt, nr++, &hex_digest ) );
       assert( nr == STD_MSTMT_SELECT_EVERYTHINGX_NRESULTS );
 
       if ( rGOOD && stat )
@@ -183,9 +183,9 @@ masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_st
       if ( rGOOD && xstat )
       {
         xstat->nsamesize = nsamesize;
-        xstat->nsamesha1 = nsamesha1;
-        xstat->sha1id = sha1id;
-        xstat->hex_sha1 = hex_sha1;
+        xstat->nsamedigest = nsamedigest;
+        xstat->digestid = digestid;
+        xstat->hex_digest = hex_digest;
       }
       if ( pname )
         *pname = name;

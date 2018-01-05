@@ -22,16 +22,17 @@ masxfs_pathinfo_pi2path( masxfs_pathinfo_t * pi )
 {
   return masxfs_levinfo_lia2path( pi->levinfo, pi->pidepth, 0 );
 }
-
+#if 0
 int
 masxfs_pathinfo_open( masxfs_pathinfo_t * pi, masxfs_levinfo_flags_t flags )
 {
   rDECLBAD;
   masxfs_levinfo_t *li = masxfs_pathinfo_last_li( pi );
 
-  rC( masxfs_levinfo_opendir( li, flags ) );
+  rC( masxfs_levinfo_opendir( li, flags, NULL ) );
   rRET;
 }
+#endif
 
 int
 masxfs_pathinfo_scanf_scanner( masxfs_pathinfo_t * pi, masxfs_scanner_t * scanner, void *userdata )

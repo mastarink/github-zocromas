@@ -14,21 +14,23 @@
 
 #include "masxfs_pathinfo_base.h"
 
-void
+static void
 masxfs_pathinfo_set_flags( masxfs_pathinfo_t * pi, masxfs_levinfo_flags_t flags )
 {
   if ( pi )
     pi->flags |= flags;
 }
 
+#if 0
 void
 masxfs_pathinfo_clear_flags( masxfs_pathinfo_t * pi, masxfs_levinfo_flags_t flags )
 {
   if ( pi )
     pi->flags &= ~flags;
 }
+#endif
 
-masxfs_pathinfo_t *
+static masxfs_pathinfo_t *
 masxfs_pathinfo_create( void )
 {
 #if 0
@@ -42,7 +44,7 @@ masxfs_pathinfo_create( void )
   return pi;
 }
 
-void
+static void
 masxfs_pathinfo_init( masxfs_pathinfo_t * pi, const char *path, masxfs_depth_t depth_limit, masxfs_levinfo_flags_t flags )
 {
   if ( pi )
