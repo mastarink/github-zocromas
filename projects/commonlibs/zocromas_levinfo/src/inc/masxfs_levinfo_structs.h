@@ -5,6 +5,7 @@
 //# include <mastar/mysqlpfs/mysqlpfs_types.h>
 typedef struct mysqlpfs_mstmt_s mysqlpfs_mstmt_t;
 
+# include "masxfs_levinfo_digest_types.h"
 # include "masxfs_levinfo_types.h"
 # include "masxfs_levinfo_enums.h"
 

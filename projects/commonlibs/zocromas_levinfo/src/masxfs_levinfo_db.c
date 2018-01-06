@@ -2,9 +2,9 @@
 #include "masxfs_levinfo_defs.h"
 #include <string.h>
 
-#include <unistd.h>
-#include <sys/stat.h>
-#include <fcntl.h>
+/* #include <unistd.h> */
+/* #include <sys/stat.h> */
+/* #include <fcntl.h> */
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/minierr/minierr.h>
@@ -22,6 +22,7 @@
 #include <mastar/qstd/qstd_mstmt_names.h>
 #include <mastar/qstd/qstd_mstmt_parents.h>
 
+#include "masxfs_levinfo_digest_enums.h"
 #include "masxfs_levinfo_structs.h"
 
 #include "masxfs_levinfo_tools.h"

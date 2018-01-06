@@ -1,7 +1,7 @@
 #define R_GOOD(_r) ((_r)>=0)
 #include "masxfs_levinfo_defs.h"
 #include <string.h>
-#include <unistd.h>
+/* #include <unistd.h> */
 #include <errno.h>
 
 #include <mastar/wrap/mas_memory.h>
@@ -14,6 +14,7 @@
 #include "masxfs_levinfo_io.h"
 
 #include "masxfs_levinfo_fs.h"
+
 #include "masxfs_levinfo_fs_dir.h"
 
 /*

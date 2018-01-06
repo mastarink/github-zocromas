@@ -34,7 +34,7 @@ mucs_config_option_interface_callback( mucs_option_t * opt, void *userdata _uUu_
     free( t1 );
     free( t );
 
-    mucs_source_list_add_source( source_list, MUCS_SOURCE_FILE, fpath /* name */ , 0, fpath, 0 /* min_pass */, 0 /* npasses */  );
+    mucs_source_list_add_source( source_list, MUCS_SOURCE_FILE, fpath /* name */ , 0, fpath, 0 /* min_pass */ , 0 /* npasses */  );
 
     mucs_source_list_lookup_all( source_list, opt->d.extra_cb.tablist, NULL );
 
@@ -66,6 +66,15 @@ mucs_config_option_interface_create( void )
   return option_interface;
 }
 
+mucs_option_interface_t *
+mucs_config_option_interface_source_create( void )
+{
+  mucs_option_interface_t *interface = mucs_config_option_interface_create(  );
+
+  interface->source_list = mucs_source_list_create(  );
+  return interface;
+}
+
 /* mucs_option_interface_t *                                                                                                                         */
 /* mucs_config_option_interface_create_setup_o( const char *name, const mucs_option_t * options, int special_options )                               */
 /* {                                                                                                                                                 */
@@ -83,16 +92,13 @@ mucs_config_option_interface_create( void )
 mucs_option_interface_t *
 mucs_config_soption_interface_create_setup( const char *name, const mucs_option_static_t * soptions, int special_options, mucs_flags_t more_flags )
 {
-  mucs_option_interface_t *interface = mucs_config_option_interface_create(  );
+  mucs_option_interface_t *interface = mucs_config_option_interface_source_create(  );
 
-  interface->source_list = mucs_source_list_create(  );
   if ( special_options )
-  {
-    interface->tablist =
-            mucs_config_soption_tabnode_add( interface->tablist, "interface-table", mucs_interface_options, 0 /* count=<auto> */ ,
-                                              more_flags   );
-  }
-  interface->tablist = mucs_config_soption_tabnode_add( interface->tablist, name, soptions, 0 /* count=<auto> */ , more_flags  );
+    interface->tablist = mucs_config_soption_tabnode_add( interface->tablist, "interface-table", mucs_interface_options, 0 /* count=<auto> */ ,
+                                                          more_flags );
+  if ( soptions )
+    interface->tablist = mucs_config_soption_tabnode_add( interface->tablist, name, soptions, 0 /* count=<auto> */ , more_flags );
   return interface;
 }
 

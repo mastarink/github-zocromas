@@ -29,7 +29,6 @@
 
 #include "mastest.h"
 
-
 int
 test_manual( int argc, const char *argv[], int nseries _uUu_, const char *series_suffix _uUu_, int variant _uUu_ )
 {
@@ -38,19 +37,20 @@ test_manual( int argc, const char *argv[], int nseries _uUu_, const char *series
   unsigned long app_uflags = 0x0L;
 
   mucs_option_static_t soptions[] = {
-    {"xor", 'X', .restype=MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR, .p=&app_flags,.def_string_value = "0xfffe0101",.val = 0, "app_flags",.argdesc = "value",.flags = MUCS_FLAG_OPTIONAL_VALUE | MUCS_FLAG_USE_DEF_SVALUE}, /* */
-    {"or1", 'O', .restype=MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR, .p=&app_uflags,.def_nvalue.v_ulong = 0x101,.val = 0, "app_uflags",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
-    {"or2", 'o', .restype=MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR, .p=&app_uflags,.def_nvalue.v_ulong = 0x404,.val = 0, "app_uflags",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
+    {"xor", 'X',.restype = MUCS_RTYP_LONG | MUCS_RTYP_BW_XOR,.p = &app_flags,.def_string_value = "0xfffe0101",.val = 0, "app_flags",.argdesc = "value",.flags = MUCS_FLAG_OPTIONAL_VALUE | MUCS_FLAG_USE_DEF_SVALUE}, /* */
+    {"or1", 'O',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.p = &app_uflags,.def_nvalue.v_ulong = 0x101,.val = 0, "app_uflags",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
+    {"or2", 'o',.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.p = &app_uflags,.def_nvalue.v_ulong = 0x404,.val = 0, "app_uflags",.argdesc = "value",.flags = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE}, /* */
     {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
   mucs_set_global_flag( MUCS_FLAG_CONTINUE_ON_UNRECOGNIZED /* | MUCS_FLAG_USE_TTY */  );
-  mucs_option_interface_t *interface = mucs_config_soption_interface_create_setup( "table-manual", soptions, TRUE , 0 /* more_flags */  );
+  mucs_option_interface_t *interface = mucs_config_soption_interface_create_setup( "table-manual", soptions, TRUE, 0 /* more_flags */  );
 
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_LIBCONFIG, NULL /* name */ , 0, NULL, 0 /* min_pass */, 0 /* npasses */ );
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_CONFIG, MULCONFNT_ETC_CONFIG /* name */ , 0, MULCONFNT_ETC_CONFIG, 0 /* min_pass */, 0 /* npasses */ );
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_ENV, NULL /* name */ , 0, "MAS_TEST_ENV", 0 /* min_pass */, 0 /* npasses */ );
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_STDIN, NULL /* name */ , 0, NULL, 0 /* min_pass */, 0 /* npasses */ );
-  mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, NULL /* name */ , argc, argv, 0 /* min_pass */, 0 /* npasses */ );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_LIBCONFIG, NULL /* name */ , 0, NULL, 0 /* min_pass */ , 0 /* npasses */  );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_CONFIG, MULCONFNT_ETC_CONFIG /* name */ , 0, MULCONFNT_ETC_CONFIG, 0 /* min_pass */ ,
+                                    0 /* npasses */  );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_ENV, NULL /* name */ , 0, "MAS_TEST_ENV", 0 /* min_pass */ , 0 /* npasses */  );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_STDIN, NULL /* name */ , 0, NULL, 0 /* min_pass */ , 0 /* npasses */  );
+  mucs_option_interface_add_source( interface, MUCS_SOURCE_ARGV, NULL /* name */ , argc, argv, 0 /* min_pass */ , 0 /* npasses */  );
 
   mucs_option_interface_lookup_all( interface, NULL );
 
@@ -70,7 +70,7 @@ test_manual( int argc, const char *argv[], int nseries _uUu_, const char *series
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
   masregerr_print_simple_all_default( NULL, NULL, 0 );
   masregerrs_delete_default( NULL );
-  WARN("### FDs:%d" ,mastest_fds(  ));
+  WARN( "### FDs:%d", mastest_fds(  ) );
   EXAM( mastest_fds(  ), ifds, "ifds=%d ? %d" );
   return 0;
 }

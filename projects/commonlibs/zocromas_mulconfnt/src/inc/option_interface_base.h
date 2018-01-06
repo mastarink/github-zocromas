@@ -5,6 +5,7 @@
 
 void mucs_config_option_interface_init( mucs_option_interface_t * option_interface );
 mucs_option_interface_t *mucs_config_option_interface_create( void );
+mucs_option_interface_t *mucs_config_option_interface_source_create( void );
 
 mucs_option_interface_t *mucs_config_soption_interface_create_setup( const char *name, const mucs_option_static_t * soptions, int special_options,
                                                                      mucs_flags_t more_flags );

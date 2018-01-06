@@ -24,7 +24,8 @@
 #include <mastar/masxfs/masxfs_pathinfo_base.h>
 #include <mastar/masxfs/masxfs_pathinfo.h>
 
-#include <mastar/levinfo/masxfs_levinfo_enums.h>
+#include <mastar/levinfo/masxfs_levinfo_digest_enums.h>
+/* #include <mastar/levinfo/masxfs_levinfo_enums.h> */
 
 #include <mastar/qstd/qstd_query.h>
 #include <mastar/qstd/qstd_mstmt_base.h>
@@ -216,11 +217,11 @@ dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
  * .cb same as .callback
  */
 
-  /*
-   * run    --treefs mastest/  --no-empty-dirs --name='*.sh' --cb-up-root --min-size=5000
-   * run    --treedb mastest/  --no-empty-dirs --name='*.sh' --cb-up-root --max-size=100
-   * run    --treedb mastest/  --no-empty-dirs  --cb-up-root --min-nsame=13
-   * */
+/*
+ * run    --treefs mastest/  --no-empty-dirs --name='*.sh' --cb-up-root --min-size=5000
+ * run    --treedb mastest/  --no-empty-dirs --name='*.sh' --cb-up-root --max-size=100
+ * run    --treedb mastest/  --no-empty-dirs  --cb-up-root --min-nsame=13
+ * */
 #define FDV MUCS_FLAG_ONLY_DEF_NVALUE
   mucs_option_static_t soptions[] = {
     {.name = "treedb",.rt = 'O',.p = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_DB,.f = FDV}
@@ -228,10 +229,6 @@ dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
     , {.name = "treefs",.rt = 'O',.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_FS,.flags = FDV}
     , {.name = "no-empty-dirs",.rt = 'O',.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_SKIP_EMPTY,.flags = FDV}
     , {.name = "empty-dirs",.rt = MUCS_RTYP_ULONG_NOR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_SKIP_EMPTY,.flags = FDV}
-    , {.name = "cb-self",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_SELF,.flags = FDV}
-    , {.name = "cb-up",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_UP,.flags = FDV}
-    , {.name = "cb-from-root",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_FROM_ROOT,.flags = FDV}
-    , {.name = "cb-up-root",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_UP_ROOT,.flags = FDV}
     , {.name = "max-depth",.restype = 'u',.p = &d->entry_filter.maxdepth}
     , {.name = "min-size",.restype = 'u',.p = &d->entry_filter.min_size}
     , {.name = "max-size",.restype = 'u',.p = &d->entry_filter.max_size}
@@ -246,9 +243,26 @@ dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
   /*  .def_nvalue.v_ulong = MASXFS_CB_CAN_UPDATE_DB,.f = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE},                   */
     , {NULL}
   };
+#undef FDV
   mucs_option_interface_t *interface =
           mucs_config_soption_interface_create_setup( "main-table", soptions, TRUE /* special_options */ , MUCS_FLAG_AUTOFREE );
   return interface;
+}
+
+void
+dufnx_config_cb_plus( mucs_option_interface_t * interface, mas_dufnx_data_t * pdufnx_data )
+{
+  mas_dufnx_data_t *d = pdufnx_data;
+
+#define FDV MUCS_FLAG_ONLY_DEF_NVALUE
+  mucs_option_static_t soptions_cbplus[] = {
+    {.name = "cb-self",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_SELF,.flags = FDV}
+    , {.name = "cb-up",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_UP,.flags = FDV}
+    , {.name = "cb-from-root",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_FROM_ROOT,.flags = FDV}
+    , {.name = "cb-up-root",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_UP_ROOT,.flags = FDV}
+  };
+#undef FDV
+  mucs_config_soption_interface_tabnode_add( interface, "cb-plus-table", soptions_cbplus );
 }
 
 int
@@ -262,6 +276,7 @@ dufnx( int argc, char *argv[] )
   mucs_option_interface_t *interface = dufnx_config_interface( &dufnx_data );
 
   dufnx_config_mysql( interface, &dufnx_data );
+  dufnx_config_cb_plus( interface, &dufnx_data );
 
 /* mucs_option_interface_add_source( interface, MUCS_SOURCE_LIBCONFIG, 0, NULL ); */
   mucs_option_interface_add_source( interface, MUCS_SOURCE_CONFIG, MULCONFNT_ETC_CONFIG /* name */ , 0, MULCONFNT_ETC_CONFIG, 0 /* min_pass */ , 0 );

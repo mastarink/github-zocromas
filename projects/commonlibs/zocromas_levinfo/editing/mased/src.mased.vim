@@ -4,6 +4,7 @@ sfind masxfs_levinfo_digest_types.h
 sfind masxfs_levinfo_structs.h
 sfind masxfs_levinfo_digest_structs.h
 sfind masxfs_levinfo_enums.h
+sfind masxfs_levinfo_digest_enums.h
 sfind masxfs_levinfo_mode.h
 
 tab sfind mastest.h

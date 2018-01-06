@@ -47,7 +47,7 @@ int masexam_fds( void );
 # include <mastar/tools/mas_arg_tools.h>
 
 # define EXAMX( _q, _fmt, ... ) masexam_exam(__func__, __LINE__, __FILE__, \
-    		(_q), "OK", "Error", _fmt, __VA_ARGS__ )
+    		(_q), "Test OK", "Test Error", _fmt, __VA_ARGS__ )
 
 # define EXAMT( _cond, _var, _val, _fmt ) \
 	{ \

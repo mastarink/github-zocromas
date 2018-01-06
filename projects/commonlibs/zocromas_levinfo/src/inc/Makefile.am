@@ -6,6 +6,7 @@ libzocromas_xfsinclude_HEADERS =  \
 	masxfs_levinfo_structs.h \
 	masxfs_levinfo_digest_structs.h \
 	masxfs_levinfo_mode.h \
+	masxfs_levinfo_digest_enums.h \
 	masxfs_levinfo_enums.h \
 	masxfs_levinfo_base.h \
 	masxfs_levinfo_io.h \

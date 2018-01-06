@@ -3,11 +3,6 @@
 
 # include <dirent.h>
 
-typedef struct masxfs_digests_s masxfs_digests_t;
-typedef struct masxfs_digest_s masxfs_digest_t;
-typedef union masxfs_digest_ctx_u masxfs_digest_ctx_t;
-typedef enum masxfs_digest_type_e masxfs_digest_type_t;
-
 typedef struct stat masxfs_stat_t;
 typedef struct dirent masxfs_dirent_t;
 typedef DIR masxfs_dir_t;
