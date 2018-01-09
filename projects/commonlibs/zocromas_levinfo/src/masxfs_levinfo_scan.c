@@ -89,7 +89,7 @@ masxfs_levinfo_scanf_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxf
           if ( cb && cb->fun_simple )
           {
             masxfs_scan_fun_simple_t fun_simple = cb->fun_simple;
-
+/* WARN("file: %s", lithis->name); */
 //            const char *prefix = NULL;
 //            prefix = masxfs_levinfo_prefix_ref( lithis, "    ", "└── ", "│   ", "├── ", cb->fun_top_depth + 1, tflags );
 

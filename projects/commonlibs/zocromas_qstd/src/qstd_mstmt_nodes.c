@@ -50,7 +50,7 @@ mas_qstd_mstmt_selget_node_id( mas_qstd_t * qstd, unsigned long long parent_id, 
     }
     else
     {
-      WARN( "NO DATA for %lld, '%s'", parent_id, name );
+      WARN( "NO DATA for parent_id: %lld, name: '%s'", parent_id, name );
     }
 
     mas_mysqlpfs_mstmt_free_result( mstmt_s );

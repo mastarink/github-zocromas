@@ -212,6 +212,8 @@ masxfs_levinfo_name_valid( const char *name, masxfs_entry_type_t detype, masxfs_
   int b = 0;
 
   b = name && !( name[0] == '.' && ( ( name[1] == '.' && name[2] == 0 ) || name[1] == 0 ) );
+  /* if ( b && detype == MASXFS_ENTRY_DIR_NUM ) */
+  /*   WARN( "name: %s", name );                */
   if ( entry_pfilter )
   {
     if ( b && ( detype == MASXFS_ENTRY_REG_NUM || detype == MASXFS_ENTRY_LNK_NUM ) && entry_pfilter->glob )

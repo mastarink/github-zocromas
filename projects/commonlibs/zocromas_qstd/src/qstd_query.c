@@ -96,7 +96,10 @@ mas_qstd_update_summary( mas_qstd_t * qstd )
 int
 mas_qstd_start_transaction( mas_qstd_t * qstd )
 {
-  return mas_qstd_query( qstd, "START TRANSACTION" );
+  rDECLBAD;
+  rC( mas_qstd_query( qstd, "START TRANSACTION" ));
+  rC( mas_qstd_query( qstd, "SET autocommit = 1" ));
+  rRET;
 }
 
 int

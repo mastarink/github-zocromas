@@ -17,6 +17,7 @@
 
 #include <mastar/levinfo/masxfs_levinfo_structs.h>
 #include <mastar/levinfo/masxfs_levinfo_tools.h>
+#include <mastar/levinfo/masxfs_levinfo_path.h>
 #include <mastar/levinfo/masxfs_levinfo_ref.h>
 #include <mastar/levinfo/masxfs_levinfo_digest.h>
 #include <mastar/levinfo/masxfs_levinfo_db.h>
@@ -50,7 +51,7 @@
  * run   --store=mastest --disable-warn
  * run   --drop-tables
  * */
-
+static int test_num = 0;
 static int
 fillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv _uUu_, unsigned long serial _uUu_, masxfs_depth_t reldepth _uUu_ )
 {
@@ -75,7 +76,6 @@ fillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv _uUu_, 
     /* rC( masxfs_digests_add( li->digests, MASXFS_DIGEST_MAGIC ) ); */
     /* rC( masxfs_digests_add( li->digests, MASXFS_DIGEST_SHA1 ) ); */
       rC( masxfs_digests_compute( li->digests ) );
-
       sz = masxfs_digests_getn( li->digests, 0, &dg );
       if ( sz )
       {
@@ -95,6 +95,14 @@ fillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv _uUu_, 
       }
     /* masxfs_digests_delete( li->digests ); */
     }
+  }
+  ++test_num;
+  if ( 0 )
+  {
+    char *path = masxfs_levinfo_li2path( li );
+
+    WARN( "db_store %d : %s", test_num, path );
+    mas_free( path );
   }
   masxfs_levinfo_db_store( li, flags );
   rRET;
@@ -117,7 +125,7 @@ dufnx_config_store_fs2db( mucs_option_t * opt, void *userdata, void *extradata _
 
     if ( rGOOD )
     {
-      rC( mas_qstd_start_transaction( qstd ) );
+      /*20180109.1418 rC( mas_qstd_start_transaction( qstd ) ); */
       {
         masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 /* depth limit */ , 0 );
         masxfs_levinfo_flags_t flagsfs _uUu_ = MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS | MASXFS_CB_SINGLE_CB;
@@ -138,11 +146,11 @@ dufnx_config_store_fs2db( mucs_option_t * opt, void *userdata, void *extradata _
         rC( masxfs_pathinfo_scanf_cbs( pi, &entry_filter, &callback, qstd, flagsfs | xflags1, 0 ) );
         WARN( "******** /fill scan *******" );
         rC( mas_qstd_end_transaction( qstd ) );
-
+/* TODO commit !! */
         rC( mas_qstd_update_summary( qstd ) );
         masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_ALL );
       }
-      rC( mas_qstd_end_transaction( qstd ) );
+      /*20180109.1418 rC( mas_qstd_end_transaction( qstd ) ); */
     }
   }
   rRET;
@@ -230,8 +238,8 @@ dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
     , {.name = "no-empty-dirs",.rt = 'O',.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_SKIP_EMPTY,.flags = FDV}
     , {.name = "empty-dirs",.rt = MUCS_RTYP_ULONG_NOR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_SKIP_EMPTY,.flags = FDV}
     , {.name = "max-depth",.restype = 'u',.p = &d->entry_filter.maxdepth}
-    , {.name = "min-size",.restype = 'u',.p = &d->entry_filter.min_size}
-    , {.name = "max-size",.restype = 'u',.p = &d->entry_filter.max_size}
+    , {.name = "min-size",.restype = MUCS_RTYP_ULONG_LONG,.p = &d->entry_filter.min_size}
+    , {.name = "max-size",.restype = MUCS_RTYP_ULONG_LONG,.p = &d->entry_filter.max_size}
     , {.name = "min-nsame",.restype = 'u',.p = &d->entry_filter.min_nsame_digest}
     , {.name = "max-nsame",.restype = 'u',.p = &d->entry_filter.max_nsame_digest}
     , {.name = MUCS_NONOPT_NAME,.restype = 'T',.p = &d->targv,.callback = dufnx_config_arg_process,.cb_pass = 1}
