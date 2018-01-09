@@ -18,6 +18,8 @@ struct mysqlpfs_s
 {
   MYSQL mysql;
   mysqlpfs_s_result_t *result;
+  char *table_prefix;
+  int inited;
 };
 
 /* TODO rename myq_bind_s */
@@ -39,6 +41,7 @@ struct mysqlpfs_mstmt_s
     mysqlpfs_mbind_t param;
     mysqlpfs_mbind_t result;
   } binds;
+  const mysqlpfs_t *pfs;
 };
 
 #endif

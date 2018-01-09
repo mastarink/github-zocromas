@@ -25,11 +25,11 @@
 static mas_qstd_t *instance = NULL;
 
 void
-mas_qstd_init( mas_qstd_t * qstd, const char *host, const char *user, const char *passwd, const char *db, int port )
+mas_qstd_init( mas_qstd_t * qstd, const char *host, const char *user, const char *passwd, const char *db, int port, const char *table_prefix )
 {
   if ( qstd )
   {
-    qstd->pfs = mysqlpfs_create_setup( host, user, passwd, db, port );
+    qstd->pfs = mysqlpfs_create_setup( host, user, passwd, db, port, table_prefix );
     qstd->std_mstmts = mas_qstd_mstmt_create_array(  );
   }
 }
@@ -41,19 +41,19 @@ mas_qstd_create( void )
 }
 
 mas_qstd_t *
-mas_qstd_create_setup( const char *host, const char *user, const char *passwd, const char *db, int port )
+mas_qstd_create_setup( const char *host, const char *user, const char *passwd, const char *db, int port, const char *table_prefix )
 {
   mas_qstd_t *qstd = mas_qstd_create(  );
 
-  mas_qstd_init( qstd, host, user, passwd, db, port );
+  mas_qstd_init( qstd, host, user, passwd, db, port, table_prefix );
   return qstd;
 }
 
 mas_qstd_t *
-mas_qstd_instance_setup( const char *host, const char *user, const char *passwd, const char *db, int port )
+mas_qstd_instance_setup( const char *host, const char *user, const char *passwd, const char *db, int port, const char *table_prefix )
 {
   if ( !instance )
-    instance = mas_qstd_create_setup( host, user, passwd, db, port );
+    instance = mas_qstd_create_setup( host, user, passwd, db, port, table_prefix );
   return instance;
 }
 

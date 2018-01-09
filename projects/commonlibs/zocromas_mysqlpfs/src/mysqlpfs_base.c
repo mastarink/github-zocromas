@@ -23,16 +23,21 @@ mysqlpfs_create( void )
 }
 
 int
-mysqlpfs_init( mysqlpfs_t * pfs, const char *host, const char *user, const char *passwd, const char *db, int port )
+mysqlpfs_init( mysqlpfs_t * pfs, const char *host, const char *user, const char *passwd, const char *db, int port, const char *table_prefix )
 {
   int r = 0;
   MYSQL *mysql = NULL;
 
-  /* client_flag |= CLIENT_MULTI_STATEMENTS; */
+/* client_flag |= CLIENT_MULTI_STATEMENTS; */
 
   mysql = mysql_real_connect( &pfs->mysql, host, user, passwd, db, port, NULL /* unix_socket */ , 0 /* client_flag */  );
   QRGSP( mysql );
-  if ( !mysql )
+  if ( mysql )
+  {
+    pfs->inited = 1;
+    pfs->table_prefix = mas_strdup( table_prefix );
+  }
+  else
   {
     mysqlpfs_reset( pfs );
     r = -1;
@@ -43,16 +48,17 @@ mysqlpfs_init( mysqlpfs_t * pfs, const char *host, const char *user, const char 
 }
 
 mysqlpfs_t *
-mysqlpfs_create_setup( const char *host, const char *user, const char *passwd, const char *db, int port )
+mysqlpfs_create_setup( const char *host, const char *user, const char *passwd, const char *db, int port, const char *table_prefix )
 {
   rDECLBAD;
   mysqlpfs_t *pfs = mysqlpfs_create(  );
 
-  rC( mysqlpfs_init( pfs, host, user, passwd, db, port ) );
+  rC( mysqlpfs_init( pfs, host, user, passwd, db, port, table_prefix ) );
 
   if ( rCODE < 0 )
   {
-    mas_free( pfs );
+  /* mas_free( pfs ); */
+    mysqlpfs_delete( pfs );
     pfs = NULL;
   }
   return pfs;
@@ -63,7 +69,9 @@ mysqlpfs_reset( mysqlpfs_t * pfs )
 {
   if ( pfs )
   {
-    mysql_close( &pfs->mysql );
+    if ( pfs->inited )
+      mysql_close( &pfs->mysql );
+    mas_free( pfs->table_prefix );
     memset( pfs, 0, sizeof( mysqlpfs_t ) );
   }
 }

@@ -59,7 +59,7 @@ testtreefromdb( const char *path, masxfs_depth_t maxdepth, FILE * fil )
   WARN( "******** start *******" );
 
   {
-  /* mas_qstd_t *qstd = */ mas_qstd_instance_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
+  /* mas_qstd_t *qstd = */ mas_qstd_instance_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306, "qstd_" );
   /* if ( qstd->pfs ) */
     {
     /* const char *path0 = "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs/zocromas_xfs/mastest"; */

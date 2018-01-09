@@ -69,7 +69,7 @@ test_create_tables( void )
             " WHERE fp.detype='REG'",
     "COMMIT",
   };
-  mysqlpfs_t *pfs = mysqlpfs_create_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
+  mysqlpfs_t *pfs = mysqlpfs_create_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306, NULL );
 
   if ( pfs )
   {

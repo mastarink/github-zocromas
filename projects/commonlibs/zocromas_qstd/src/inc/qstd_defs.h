@@ -1,7 +1,9 @@
 #ifndef MAS_QSTD_DEFS_H
 # define MAS_QSTD_DEFS_H
 
-# define QSTD_TABPREF "qstd_"
+/* # define QSTD_TABPREF "${QSTD_PREFIX}" */
+# define QSTD_TABPREF "${PFS_PREFIX}"
+/* # define QSTD_TABPREF "qstd_" */
 
 // \<\(file\(sizes\|datas\|props\|names\)parents\|\(all\|dir\|file\)full\)\> //
 # define QSTD_TABLE_SIZES     QSTD_TABPREF "filesizes"

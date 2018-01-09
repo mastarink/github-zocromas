@@ -23,7 +23,7 @@ test_drop_tables( void )
     "DROP TABLE IF EXISTS qstd_test_filesizes",
     "COMMIT",
   };
-  mysqlpfs_t *pfs = mysqlpfs_create_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
+  mysqlpfs_t *pfs = mysqlpfs_create_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306, NULL );
 
   if ( pfs )
   {

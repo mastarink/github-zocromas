@@ -34,7 +34,7 @@ testdropcreate( const char *path _uUu_ )
 
   WARN( "******** testcreate *******" );
   {
-    mas_qstd_t *qstd = mas_qstd_instance_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306 );
+    mas_qstd_t *qstd = mas_qstd_instance_setup( "mysql.mastar.lan", "masdufnt", "i2xV9KrTA54HRpj4e", "masdufntdb", 3306, "qstd_" );
 
     rC( mas_qstd_drop_tables( qstd ) );
     rC( mas_qstd_create_tables( qstd ) );

@@ -15,6 +15,8 @@
 #include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
 
+#include <mastar/tools/mas_arg_tools.h>
+
 #include "mysqlpfs_structs.h"
 #include "mysqlpfs.h"
 
@@ -29,7 +31,12 @@ mas_mysqlpfs_query( mysqlpfs_t * pfs, const char *sqlop )
   QRGP( sqlop );
   if ( pfs && sqlop && *sqlop )
   {
-    r = mysql_query( &pfs->mysql, sqlop );
+    {
+      char *sqlopx = mas_expand_string_cb_arg( sqlop, mas_mysqlpfs_expand_sqlop, pfs->table_prefix );
+
+      r = mysql_query( &pfs->mysql, sqlopx );
+      mas_free( sqlopx );
+    }
     if ( r )
       WARN( "(%d) --- '%s'\n", r, sqlop );
     QRGS( r );

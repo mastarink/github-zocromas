@@ -3,6 +3,7 @@
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_utils_path.h>
+#include <mastar/tools/mas_arg_tools.h>
 
 #include <mastar/minierr/minierr.h>
 #include <mastar/regerr/masregerr.h>
@@ -125,7 +126,7 @@ dufnx_config_store_fs2db( mucs_option_t * opt, void *userdata, void *extradata _
 
     if ( rGOOD )
     {
-      /*20180109.1418 rC( mas_qstd_start_transaction( qstd ) ); */
+    /*20180109.1418 rC( mas_qstd_start_transaction( qstd ) ); */
       {
         masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 /* depth limit */ , 0 );
         masxfs_levinfo_flags_t flagsfs _uUu_ = MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS | MASXFS_CB_SINGLE_CB;
@@ -150,7 +151,7 @@ dufnx_config_store_fs2db( mucs_option_t * opt, void *userdata, void *extradata _
         rC( mas_qstd_update_summary( qstd ) );
         masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_ALL );
       }
-      /*20180109.1418 rC( mas_qstd_end_transaction( qstd ) ); */
+    /*20180109.1418 rC( mas_qstd_end_transaction( qstd ) ); */
     }
   }
   rRET;

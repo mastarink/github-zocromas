@@ -12,6 +12,7 @@ struct mas_dufnx_mysql_data_s
   char *password;
   char *db;
   unsigned port;
+  char *table_prefix;
   mas_qstd_t *qstd;
 };
 

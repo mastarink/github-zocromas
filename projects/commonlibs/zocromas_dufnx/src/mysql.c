@@ -26,6 +26,8 @@ dufnx_config_mysql( mucs_option_interface_t * interface, mas_dufnx_data_t * pduf
     {.name = "mysql-password",.shortn = '\0',.restype = MUCS_RTYP_STRING,.cust_ptr = &pdufnx_data->mysql.password,.flags = MUCS_FLAG_AUTOFREE},
     {.name = "mysql-db",.shortn = '\0',.restype = MUCS_RTYP_STRING,.cust_ptr = &pdufnx_data->mysql.db,.flags = MUCS_FLAG_AUTOFREE},
     {.name = "mysql-port",.shortn = '\0',.restype = MUCS_RTYP_UINT,.cust_ptr = &pdufnx_data->mysql.port,.flags = MUCS_FLAG_AUTOFREE},
+    {.name = "mysql-table-prefix",.shortn = '\0',.restype = MUCS_RTYP_STRING,.cust_ptr = &pdufnx_data->mysql.table_prefix,.flags =
+     MUCS_FLAG_AUTOFREE},
     {.name = NULL,.shortn = 0,.restype = 0,.cust_ptr = NULL,.def_string_value = NULL,.val = 0,.desc = NULL,.argdesc = NULL} /* */
   };
   mucs_config_soption_interface_tabnode_add( interface, "mysql-table", soptions_mysql );
@@ -35,6 +37,8 @@ mas_qstd_t *
 dufnx_qstd( mas_dufnx_mysql_data_t * mysql )
 {
   if ( !mysql->qstd )
-    mysql->qstd = mas_qstd_instance_setup( mysql->server, mysql->user, mysql->password, mysql->db, mysql->port );
+    mysql->qstd =
+            mas_qstd_instance_setup( mysql->server, mysql->user, mysql->password, mysql->db, mysql->port,
+                                     mysql->table_prefix ? mysql->table_prefix : "qstd_" );
   return mysql->qstd;
 }

@@ -3,10 +3,10 @@
 
 # include "qstd_types.h"
 
-void mas_qstd_init( mas_qstd_t * qstd, const char *host, const char *user, const char *passwd, const char *db, int port );
+void mas_qstd_init( mas_qstd_t * qstd, const char *host, const char *user, const char *passwd, const char *db, int port, const char *table_prefix );
 mas_qstd_t *mas_qstd_create( void );
-mas_qstd_t *mas_qstd_create_setup( const char *host, const char *user, const char *passwd, const char *db, int port );
-mas_qstd_t *mas_qstd_instance_setup( const char *host, const char *user, const char *passwd, const char *db, int port );
+mas_qstd_t *mas_qstd_create_setup( const char *host, const char *user, const char *passwd, const char *db, int port, const char *table_prefix );
+mas_qstd_t *mas_qstd_instance_setup( const char *host, const char *user, const char *passwd, const char *db, int port , const char *table_prefix);
 mas_qstd_t *mas_qstd_instance( void );
 
 void mas_qstd_reset( mas_qstd_t * qstd );
