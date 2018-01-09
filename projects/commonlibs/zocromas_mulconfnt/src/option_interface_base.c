@@ -110,9 +110,10 @@ mucs_config_soption_interface_create_setup( const char *name, const mucs_option_
 /* }                                                                                                                                */
 
 mucs_option_interface_t *
-mucs_config_soption_interface_tabnode_add( mucs_option_interface_t * interface, const char *name, const mucs_option_static_t * soptions )
+mucs_config_soption_interface_tabnode_add( mucs_option_interface_t * interface, const char *name, const mucs_option_static_t * soptions,
+                                           mucs_flags_t more_flags )
 {
-  interface->tablist = mucs_config_soption_tabnode_add( interface->tablist, name, soptions, 0 /* count=<auto> */ , 0 /* more_flags */  );
+  interface->tablist = mucs_config_soption_tabnode_add( interface->tablist, name, soptions, 0 /* count=<auto> */ , more_flags );
   return interface;
 }
 

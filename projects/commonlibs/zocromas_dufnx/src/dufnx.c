@@ -271,7 +271,7 @@ dufnx_config_cb_plus( mucs_option_interface_t * interface, mas_dufnx_data_t * pd
     , {.name = "cb-up-root",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_UP_ROOT,.flags = FDV}
   };
 #undef FDV
-  mucs_config_soption_interface_tabnode_add( interface, "cb-plus-table", soptions_cbplus );
+  mucs_config_soption_interface_tabnode_add( interface, "cb-plus-table", soptions_cbplus, MUCS_FLAG_AUTOFREE );
 }
 
 int

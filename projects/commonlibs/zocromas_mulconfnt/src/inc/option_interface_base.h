@@ -17,6 +17,6 @@ void mucs_config_option_interface_delete( mucs_option_interface_t * interface );
 /* mucs_option_interface_t *mucs_config_option_interface_tabnode_add( mucs_option_interface_t * interface, const char *name, */
 /*                                                                    const mucs_option_t * options );                       */
 mucs_option_interface_t *mucs_config_soption_interface_tabnode_add( mucs_option_interface_t * interface, const char *name,
-                                                                    const mucs_option_static_t * soptions );
+                                                                    const mucs_option_static_t * soptions, mucs_flags_t more_flags );
 
 #endif
