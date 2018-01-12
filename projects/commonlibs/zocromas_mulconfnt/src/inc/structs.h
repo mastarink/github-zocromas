@@ -39,8 +39,16 @@ struct mucs_option_static_s
   int val;
   char *desc;
   char *argdesc;
-  const char *def_string_value;
-  nvalue_t def_nvalue;
+  union
+  {
+    const char *def_string_value;
+    const char *dsv;
+  };
+  union
+  {
+    nvalue_t def_nvalue;
+    nvalue_t dnv;
+  };
   union
   {
     mucs_flags_t flags;
@@ -51,10 +59,19 @@ struct mucs_option_static_s
     mucs_option_callback_t callback;
     mucs_option_callback_t cb;
   };
+  union
+  {
+    mucs_option_callback_s_t callback_s;
+    mucs_option_callback_s_t cb_s;
+  };
   int cb_pass;
   int v_pass;
   int pass;
-  void *extra_data;
+  union
+  {
+    void *extra_data;
+    void *xd;
+  };
 };
 
 #endif

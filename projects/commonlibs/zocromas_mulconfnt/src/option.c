@@ -15,6 +15,8 @@
 #include "tools.h"
 #include "source.h"
 
+#include "option_ref.h"
+
 #include "option_base.h"
 #include "option.h"
 
@@ -640,7 +642,7 @@ no_value	use default value, if flag set(use_def_string,use_def_nvalue), otherwis
 }
 
 int
-mucs_config_option_lookup_options( const mucs_option_t * options, unsigned optcount _uUu_, const char *arg_nopref, const char *eq,
+mucs_config_option_lookup_options( const mucs_option_t * options, unsigned optcount, const char *arg_nopref, const char *eq,
                                    mucs_optscanner_t * optscan )
 {
   rDECLBAD;
@@ -660,6 +662,8 @@ mucs_config_option_lookup_options( const mucs_option_t * options, unsigned optco
         {
           optscan->at_arg = NULL;
           optscan->found_topt = topt;
+          /* if ( optscan->found_topts && optscan->found_num < optscan->found_max ) */
+          /*   optscan->found_topts[optscan->found_num++] = topt;                   */
           rC( mucs_config_option_validate( ep, optscan ) );
         }
       }
@@ -709,11 +713,18 @@ mucs_config_option_evaluate( mucs_option_t * opt, mucs_optscanner_t * optscan, v
 
   if ( rGOOD )
   {
-    if ( ( !mucs_global_flag( MUCS_FLAG_USE_CBPASS ) || opt->s.cb_pass < 0 || opt->s.cb_pass == optscan->pass )
-         && opt->s.callback /* && !opt->s.cust_ptr */  )
+    if ( ( !mucs_global_flag( MUCS_FLAG_USE_CBPASS ) || opt->s.cb_pass < 0 || opt->s.cb_pass == optscan->pass ) )
     {
-      rC( opt->s.callback( opt, userdata, opt->s.extra_data ) );
-      opt->d.extra_cb.callback_called++;
+      if ( opt->s.callback /* && !opt->s.cust_ptr */  )
+      {
+        rC( opt->s.callback( opt, userdata, opt->s.extra_data ) );
+        opt->d.extra_cb.callback_called++;
+      }
+      if ( opt->s.callback_s )
+      {
+        rC( opt->s.callback_s( mucs_config_option_string_value( opt ), mucs_config_option_npos( opt ), userdata, opt->s.extra_data ) );
+        opt->d.extra_cb.callback_called++;
+      }
     }
 
     if ( rGOOD && opt->d.has_value )

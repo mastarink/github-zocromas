@@ -28,11 +28,12 @@ typedef mas_argvc_t( *mucs_source_load_targ_fun_t ) ( mucs_source_t * han, mas_a
 
 typedef enum mucs_variant_e mucs_variant_t;
 typedef enum mucs_restype_e mucs_restype_t;
-typedef unsigned long  mucs_restypex_t;
+typedef unsigned long mucs_restypex_t;
 typedef enum mucs_bitwise_e mucs_bitwise_t;
 typedef struct mucs_option_s mucs_option_t;
 typedef struct mucs_option_dynamic_s mucs_option_dynamic_t;
 typedef int ( *mucs_option_callback_t ) ( mucs_option_t * opt, void *userdata, void *extradata );
+typedef int ( *mucs_option_callback_s_t ) ( const char *str, int npos, void *userdata, void *extradata );
 typedef struct mucs_option_table_list_s mucs_option_table_list_t;
 
 typedef struct mucs_optscanner_s mucs_optscanner_t;

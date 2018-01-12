@@ -1,0 +1,12 @@
+option lookup:
+1  mucs_option_interface_lookup_all_multipass	= option_interface.c
+2  mucs_option_interface_lookup_all		= option_interface.c
+3  mucs_source_list_lookup_all			= source_list.c
+4  mucs_source_lookup_all			= source.c
+5  mucs_source_lookup_seq			= source.c
+6  mucs_source_lookup_arg			= source.c
+7  mucs_source_lookup_optscan			= source.c
+8  mucs_source_lookup_opt			= source.c
+9  mucs_config_option_tablist_lookup		= option_tablist.c
+10 mucs_config_option_lookup_options		= option.c
+11 mucs_config_option_match_name		= option.c

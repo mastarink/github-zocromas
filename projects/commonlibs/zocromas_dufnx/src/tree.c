@@ -119,7 +119,7 @@ treestatcb( const char *ename, struct stat *st, void *userdata, unsigned depth _
   return 0;
 }
 
-int
+static int
 dufnx_tree( const char *real_path, masxfs_entry_filter_t * pentry_filter, FILE * fil, masxfs_levinfo_flags_t inflags, mas_dufnx_mysql_data_t * mysql )
 {
   rDECLGOOD;
@@ -175,5 +175,22 @@ dufnx_tree( const char *real_path, masxfs_entry_filter_t * pentry_filter, FILE *
                                  0 /* maxdepth */  ) );
 #endif
   masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_ALL );
+  rRET;
+}
+
+int
+dufnx_data_tree( const char *path, int npos, void *userdata, void *extradata _uUu_ )
+{
+  rDECLGOOD;
+  if ( npos > 0 )
+  {
+    char *real_path;
+    mas_dufnx_data_t *pdufnx_data = ( mas_dufnx_data_t * ) userdata;
+
+    real_path = mas_normalize_path_cwd_dots( path, FALSE );
+    WARN( "path: %s; real_path: %s", path, real_path );
+    rC( dufnx_tree( real_path, &pdufnx_data->entry_filter, stdout, pdufnx_data->levinfo_flags, &pdufnx_data->mysql ) );
+    mas_free( real_path );
+  }
   rRET;
 }

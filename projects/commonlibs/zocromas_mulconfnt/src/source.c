@@ -19,6 +19,9 @@
 #include "option.h"
 #include "option_tablist.h"
 
+#include "optscanner_base.h"
+#include "optscanner.h"
+
 #include "source_defaults.h"
 #include "source_base.h"
 
@@ -125,7 +128,7 @@ match_arg( const char *pref, const char *arg )
 {
   unsigned i = 0;
 
-  if ( !pref || !*pref )
+  if ( !pref || !*pref || !arg )
     return 0;
   for ( i = 0; pref[i] && arg[i]; i++ )
     if ( !arg[i] || pref[i] != arg[i] )
@@ -136,7 +139,7 @@ match_arg( const char *pref, const char *arg )
 }
 
 /* determine variant by prefix */
-static mucs_variant_t
+mucs_variant_t
 max_match_id( mucs_source_t * osrc, const char *arg )
 {
   int maxmatch = -1;
@@ -181,18 +184,6 @@ mucs_source_arg_no( mucs_source_t * osrc, int i )
 }
 
 int
-mucs_source_dealias_opt( mucs_source_t * osrc, const mucs_option_table_list_t * tablist, const mucs_option_t * found_topt_ _uUu_,
-                         mucs_optscanner_t * optscan )
-{
-  rDECLGOOD;
-  optscan->force_value = optscan->string_value;
-  while ( rGOOD && optscan->found_topt && optscan->found_topt->s.restype == MUCS_RTYP_ALIAS && optscan->found_topt->s.cust_ptr )
-    rC( mucs_config_option_tablist_lookup( tablist, ( char * ) optscan->found_topt->s.cust_ptr, osrc->eq, optscan ) );
-  optscan->force_value = NULL;
-  rRET;
-}
-
-static int
 mucs_source_found_opt( mucs_source_t * osrc, mucs_option_t * opt, void *userdata )
 {
   rDECLGOOD;
@@ -236,20 +227,32 @@ mucs_source_found_opt( mucs_source_t * osrc, mucs_option_t * opt, void *userdata
   rRET;
 }
 
+#if 0
+static int
+mucs_source_dealias_opt( mucs_source_t * osrc, const mucs_option_table_list_t * tablist, mucs_optscanner_t * optscan )
+{
+  rDECLGOOD;
+  optscan->force_value = optscan->string_value;
+  while ( rGOOD && optscan->found_topt && optscan->found_topt->s.restype == MUCS_RTYP_ALIAS && optscan->found_topt->s.cust_ptr )
+    rC( mucs_config_option_tablist_lookup( tablist, ( char * ) optscan->found_topt->s.cust_ptr, osrc->eq, optscan ) );
+  optscan->force_value = NULL;
+  rRET;
+}
+
 static int
 mucs_source_lookup_opt( mucs_source_t * osrc, const mucs_option_table_list_t * tablist, mucs_optscanner_t * optscan, void *userdata )
 {
   rDECLBAD;
   rC( mucs_config_option_tablist_lookup( tablist, optscan->at_arg, osrc->eq, optscan ) );
-  rC( mucs_source_dealias_opt( osrc, tablist, optscan->found_topt, optscan ) );
+  rC( mucs_source_dealias_opt( osrc, tablist, optscan ) );
   if ( rGOOD )
   {
     if ( optscan->found_topt )                                       /* TODO : move to mucs_config_option_tablist_lookup */
     {
       if ( !mucs_global_flag( MUCS_FLAG_USE_VPASS ) || ( optscan->found_topt->s.v_pass < 0 || optscan->found_topt->s.v_pass == optscan->pass ) )
       {
-        if ( !optscan->found_topt || ( !mucs_config_option_flag( optscan->found_topt, MUCS_FLAG_USE_VPASS )
-                                       || ( optscan->found_topt->s.v_pass < 0 || optscan->found_topt->s.v_pass == optscan->pass ) ) )
+        if ( !mucs_config_option_flag( optscan->found_topt, MUCS_FLAG_USE_VPASS )
+             || ( optscan->found_topt->s.v_pass < 0 || optscan->found_topt->s.v_pass == optscan->pass ) )
         {
           mucs_option_t *opt = mucs_config_option_clone( optscan->found_topt );
 
@@ -290,34 +293,38 @@ static int
 mucs_source_lookup_optscan( mucs_source_t * osrc, const mucs_option_table_list_t * tablist, mucs_optscanner_t * optscan, void *userdata )
 {
   rDECLBAD;
-  optscan->at_arg += optscan->preflen;
-  optscan->source = osrc;
-  if ( optscan->variantid == MUCS_VARIANT_BAD )
+  if ( optscan->at_arg )
   {
-#if 0
-    static const char *labels[MUCS_VARIANTS] = { "SHORT", "LONG", "NONOPT", "BAD" };
-    WARN( "NO VARIANT [%s] arg='%s';\n", labels[variantid], optscan->arg );
-#endif
-  }
-  else if ( optscan->variantid == MUCS_VARIANT_NONOPT )
-  {
-    mas_add_argvc_arg( &osrc->targno, optscan->at_arg );
-    rSETGOOD;
-  }
-/* else */
-  {
-    if ( osrc->curarg < osrc->targ.argc - 1 )
-      optscan->nextarg = osrc->targ.argv[osrc->curarg + 1];
-    do
+    optscan->at_arg += optscan->preflen;
+    optscan->source = osrc;
+    if ( optscan->variantid == MUCS_VARIANT_BAD )
     {
-      rC( mucs_source_lookup_opt( osrc, tablist, optscan, userdata ) );
-    } while ( optscan->variantid == MUCS_VARIANT_SHORT && optscan->at_arg && !strchr( " \t", *optscan->at_arg ) );
-  /* TODO if 
-   *       1. unrecognized option
-   *       2. do not stop on error flag
-   *         then -- add unrecognized option as MUCS_VARIANT_NONOPT (or something else !?)
-   * */
+# if 0
+      static const char *labels[MUCS_VARIANTS] = { "SHORT", "LONG", "NONOPT", "BAD" };
+      WARN( "NO VARIANT [%s] arg='%s';\n", labels[variantid], optscan->arg );
+# endif
+    }
+    else if ( optscan->variantid == MUCS_VARIANT_NONOPT )
+    {
+      mas_add_argvc_arg( &osrc->targno, optscan->at_arg );
+      rSETGOOD;
+    }
+/* else */
+    {
+      if ( osrc->curarg < osrc->targ.argc - 1 )
+        optscan->nextarg = osrc->targ.argv[osrc->curarg + 1];
+      do
+      {
+        rC( mucs_source_lookup_opt( osrc, tablist, optscan, userdata ) );
+      /* WARN( "(%d) %s", rCODE, optscan && optscan->found_topt ? optscan->found_topt->s.name : "=" ); */
+      } while ( optscan->variantid == MUCS_VARIANT_SHORT && optscan->at_arg && !strchr( " \t", *optscan->at_arg ) );
+    /* TODO if 
+     *       1. unrecognized option
+     *       2. do not stop on error flag
+     *         then -- add unrecognized option as MUCS_VARIANT_NONOPT (or something else !?)
+     * */
 
+    }
   }
   rRET;
 }
@@ -335,7 +342,7 @@ mucs_source_lookup_arg( mucs_source_t * osrc, const mucs_option_table_list_t * t
   rC( mucs_source_lookup_optscan( osrc, tablist, optscan, userdata ) );
   rRET;
 }
-
+#endif
 int
 mucs_source_lookup_seq( mucs_source_t * osrc, const mucs_option_table_list_t * tablist, void *userdata )
 {
@@ -347,20 +354,17 @@ mucs_source_lookup_seq( mucs_source_t * osrc, const mucs_option_table_list_t * t
 
   for ( osrc->curarg = 0; osrc && rGOOD /*!masregerrs_count_all_default( NULL, TRUE ) */  && osrc->curarg < osrc->targ.argc; osrc->curarg++ )
   {
+    mucs_optscanner_t optscan = { 0 };
     nargs++;
-    mucs_optscanner_t optscan = {
-      .arg = osrc->targ.argv[osrc->curarg],
-      .pass = osrc->pass,
-    };
-    optscan.at_arg = optscan.arg;
+
+    mucs_optscanner_init( &optscan, osrc, tablist );
     do
     {
-    /* optscan.at_arg = mas_skip_space_nz( optscan.at_arg ); */
-      if ( optscan.at_arg )
-        while ( *optscan.at_arg && strchr( " \t", *optscan.at_arg ) )
-          optscan.at_arg++;
-      rC( mucs_source_lookup_arg( osrc, tablist, &optscan, userdata ) );
-    } while ( optscan.variantid != MUCS_VARIANT_NONOPT && optscan.at_arg && strchr( " \t", *optscan.at_arg ) );
+      rC( mucs_optscanner_next_arg( &optscan ) );
+    /* rC( mucs_source_lookup_arg( osrc, tablist, &optscan, userdata ) ); */
+      rC( mucs_optscanner_lookup_arg( &optscan, userdata ) );
+    } while ( rGOOD && optscan.variantid != MUCS_VARIANT_NONOPT && optscan.at_arg && strchr( " \t", *optscan.at_arg ) );
+    mucs_optscanner_reset( &optscan );
   }
   if ( rGOOD )
     rCODE = nargs;

@@ -44,6 +44,9 @@ sfind option_tablist_base.c
 tab sfind option_tablist.h
 sfind option_tablist.c
 
+tab sfind optscanner.h
+sfind optscanner.c
+
 tab sfind option_interface.h
 sfind option_interface.c
 

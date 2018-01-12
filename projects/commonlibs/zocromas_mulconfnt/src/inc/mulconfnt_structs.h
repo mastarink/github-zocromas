@@ -61,6 +61,8 @@ struct mucs_source_s
   mas_argvc_t targ;
   mas_argvc_t targno;
 
+  unsigned found_max;
+
 /* mucs_error_t error; */
   mucs_option_callback_t common_callback;
   mucs_option_callback_t type_callbacks[MUCS_RTYP_MAX + 1];
@@ -136,16 +138,20 @@ struct mucs_option_table_list_s
 
 struct mucs_optscanner_s
 {
+  const mucs_option_table_list_t *tablist;
   const char *arg;
   const char *at_arg;
   size_t preflen;
-  const mucs_source_t *source;
+  mucs_source_t *source;
   mucs_variant_t variantid;
   int has_value;
   const char *string_value;
   const char *force_value;
   const char *nextarg;
   const mucs_option_t *found_topt;
+/* mucs_option_t **found_topts; */
+/* unsigned found_num;          */
+/* unsigned found_max;          */
   mucs_errors_t errors;
 
   int pass;

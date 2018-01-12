@@ -177,42 +177,41 @@ dufnx_config_disable_warn( mucs_option_t * opt _uUu_, void *userdata _uUu_, void
   minierr_disable( MAS_MIER_TYPE_WARN );
   rRET;
 }
-
 static int
+dufnx_test1( mucs_option_t * opt _uUu_, void *userdata _uUu_, void *extradata _uUu_ )
+{
+  rDECLGOOD;
+  WARN("ONE");
+  rRET;
+}
+static int
+dufnx_test2( mucs_option_t * opt _uUu_, void *userdata _uUu_, void *extradata _uUu_ )
+{
+  rDECLGOOD;
+  WARN("TWO");
+  rRET;
+}
+
+
+#if 0 
+static int 
 dufnx_config_arg_process( mucs_option_t * opt, void *userdata, void *extradata _uUu_ )
 {
   rDECLGOOD;
   if ( opt && mucs_config_option_npos( opt ) > 0 )                   /* to skip argv[0] */
   {
-    char *path;
-    int len;
     mas_dufnx_data_t *pdufnx_data = ( mas_dufnx_data_t * ) userdata;
+    const char *path = mucs_config_option_string_value( opt );
+    char *real_path = mas_normalize_path_cwd_dots( path, FALSE );
+    int len = strlen( real_path );
 
-  /* WARN( "%d. ARG:'%s'", opt->npos, opt->string_value ); */
-#if 0
-    path = mas_normalize_path_cwd( opt->string_value );
-#else
-    {
-      char *path;
-
-      path = mas_normalize_path_cwd_dots( "/home/mastar/.mas/lib/big/misc/develop/autotools/zoc/projects/commonlibs//..//zocromas_dufnx/mastest/",
-                                          TRUE );
-      WARN( "path:'%s'", path );
-      mas_free( path );
-    }
-    path = mas_normalize_path_cwd_dots( mucs_config_option_string_value( opt ), FALSE );
-    WARN( "path:'%s'", path );
-#endif
-    len = strlen( path );
-    if ( path[0] && path[1] && path[len - 1] == '/' )
-      path[len - 1] = 0;
-    mucs_config_option_set_string_value_na( opt, path );
+    mucs_config_option_set_string_value_na( opt, real_path );
 
     rC( dufnx_tree( mucs_config_option_string_value( opt ), &pdufnx_data->entry_filter, stdout, pdufnx_data->levinfo_flags, &pdufnx_data->mysql ) );
-//    WARN( "######################## %p [%d]", pdufnx_data, pdufnx_data->targv.argc );
   }
   rRET;
 }
+#endif
 
 mucs_option_interface_t *
 dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
@@ -232,10 +231,11 @@ dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
  * run    --treedb mastest/  --no-empty-dirs  --cb-up-root --min-nsame=13
  * */
 #define FDV MUCS_FLAG_ONLY_DEF_NVALUE
+/* FDV : short for MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE */
   mucs_option_static_t soptions[] = {
     {.name = "treedb",.rt = 'O',.p = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_DB,.f = FDV}
-  /* FDV : short for MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE */
-    , {.name = "treefs",.rt = 'O',.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_FS,.flags = FDV}
+    , {.name = "treefs",.rt = 'O',.p = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_FS,.flags = FDV}
+
     , {.name = "no-empty-dirs",.rt = 'O',.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_SKIP_EMPTY,.flags = FDV}
     , {.name = "empty-dirs",.rt = MUCS_RTYP_ULONG_NOR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_SKIP_EMPTY,.flags = FDV}
     , {.name = "max-depth",.restype = 'u',.p = &d->entry_filter.maxdepth}
@@ -243,11 +243,16 @@ dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
     , {.name = "max-size",.restype = MUCS_RTYP_ULONG_LONG,.p = &d->entry_filter.max_size}
     , {.name = "min-nsame",.restype = 'u',.p = &d->entry_filter.min_nsame_digest}
     , {.name = "max-nsame",.restype = 'u',.p = &d->entry_filter.max_nsame_digest}
-    , {.name = MUCS_NONOPT_NAME,.restype = 'T',.p = &d->targv,.callback = dufnx_config_arg_process,.cb_pass = 1}
+
+  /* , {.name = MUCS_NONOPT_NAME,.restype = 'T',.p = &d->targv,.callback = dufnx_config_arg_process,.cb_pass = 1} */
+    , {.name = MUCS_NONOPT_NAME,.restype = 'T',.p = &d->targv,.callback_s = dufnx_data_tree,.cb_pass = 1}
+
     , {.name = "store",.restype = 'S',.f = MUCS_FLAG_OPTIONAL_VALUE,.cb = dufnx_config_store_fs2db,.cb_pass = 1}
     , {.name = "name",.shortn = '\0',.restype = MUCS_RTYP_STRING,.cust_ptr = &d->entry_filter.glob /*,.flags = MUCS_FLAG_AUTOFREE|MUCS_FLAG_USE_VPASS */ }
     , {.name = "drop-tables",.shortn = '\0',.cb = dufnx_config_drop_tables}
     , {.name = "disable-warn",.cb = dufnx_config_disable_warn}
+    , {.name = "test",.cb = dufnx_test1}
+    , {.name = "test2",.cb = dufnx_test2}
   /* , {.name = "updatedb",.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.p = &d->levinfo_flags, */
   /*  .def_nvalue.v_ulong = MASXFS_CB_CAN_UPDATE_DB,.f = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE},                   */
     , {NULL}
