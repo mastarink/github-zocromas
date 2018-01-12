@@ -118,6 +118,48 @@ mucs_optscanner_lookup( mucs_optscanner_t * optscan, void *userdata )
   rRET;
 }
 
+static int
+match_arg( const char *pref, const char *arg )
+{
+  unsigned i = 0;
+
+  if ( !pref || !*pref || !arg )
+    return 0;
+  for ( i = 0; pref[i] && arg[i]; i++ )
+    if ( !arg[i] || pref[i] != arg[i] )
+      break;
+/*if ( !arg[i] )
+    i = 0; */
+  return i > 0 ? ( int ) i : -1;
+}
+
+/* determine variant by prefix */
+static mucs_variant_t
+max_match_id( mucs_source_t * osrc, const char *arg )
+{
+  int maxmatch = -1;
+  mucs_variant_t maxmatchid = MUCS_VARIANT_MAX;
+
+  if ( !osrc->lastoptpos || osrc->curarg <= osrc->lastoptpos )
+  {
+    for ( unsigned i = 0; osrc && ( i < sizeof( osrc->pref_ids ) / sizeof( osrc->pref_ids[0] ) ); i++ )
+    {
+      int len = match_arg( osrc->pref_ids[i].string, arg );
+
+      if ( len > maxmatch )
+      {
+        maxmatch = len;
+        maxmatchid = osrc->pref_ids[i].id;
+      }
+    }
+  }
+  else
+  {
+    maxmatchid = MUCS_VARIANT_NONOPT;
+  }
+  return maxmatchid;
+}
+
 int
 mucs_optscanner_lookup_arg( mucs_optscanner_t * optscan, void *userdata )
 {
@@ -133,7 +175,7 @@ mucs_optscanner_lookup_arg( mucs_optscanner_t * optscan, void *userdata )
 }
 
 int
-mucs_optscanner_next_arg( mucs_optscanner_t * optscan )
+mucs_optscanner_next_word( mucs_optscanner_t * optscan )
 {
   rDECLGOOD;
   if ( optscan->at_arg )

@@ -199,8 +199,8 @@ mucs_config_option_string_to_nvalue( mucs_option_t * opt )
   return v_x;
 }
 
-static int _uUu_
-mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x, mucs_optscanner_t * optscan )
+static int
+mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x, mucs_errors_t * perrors )
 {
   rDECLGOOD;
   if ( opt->s.restype & MUCS_RTYP_BW_NOT )
@@ -215,7 +215,7 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x, mucs_optsca
     if ( ( long long ) ( char ) v_x.v_long_long != v_x.v_long_long )
     {
       rSETBAD;
-      optscan->errors |= MUCS_ERROR_WRONG_VALUE;
+      *perrors |= MUCS_ERROR_WRONG_VALUE;
       QRGOPTM( opt, rCODE, "wrong value '%s'", opt->d.string_value );
       v_x.v_long_long = 0;
     }
@@ -234,7 +234,7 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x, mucs_optsca
     if ( ( unsigned long long ) ( unsigned char ) v_x.v_ulong_long != v_x.v_ulong_long )
     {
       rSETBAD;
-      optscan->errors |= MUCS_ERROR_WRONG_VALUE;
+      *perrors |= MUCS_ERROR_WRONG_VALUE;
       QRGOPTM( opt, rCODE, "wrong value '%s'", opt->d.string_value );
       v_x.v_ulong_long = 0;
     }
@@ -253,7 +253,7 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x, mucs_optsca
     if ( ( long long ) ( short ) v_x.v_long_long != v_x.v_long_long )
     {
       rSETBAD;
-      optscan->errors |= MUCS_ERROR_WRONG_VALUE;
+      *perrors |= MUCS_ERROR_WRONG_VALUE;
       QRGOPTM( opt, rCODE, "wrong value '%s'", opt->d.string_value );
       v_x.v_long_long = 0;
     }
@@ -272,7 +272,7 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x, mucs_optsca
     if ( ( unsigned long long ) ( unsigned short ) v_x.v_ulong_long != v_x.v_ulong_long )
     {
       rSETBAD;
-      optscan->errors |= MUCS_ERROR_WRONG_VALUE;
+      *perrors |= MUCS_ERROR_WRONG_VALUE;
       QRGOPTM( opt, rCODE, "wrong value '%s'", opt->d.string_value );
       v_x.v_ulong_long = 0;
     }
@@ -291,7 +291,7 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x, mucs_optsca
     if ( ( long long ) ( int ) v_x.v_long_long != v_x.v_long_long )
     {
       rSETBAD;
-      optscan->errors |= MUCS_ERROR_WRONG_VALUE;
+      *perrors |= MUCS_ERROR_WRONG_VALUE;
       QRGOPTM( opt, rCODE, "wrong value '%s'", opt->d.string_value );
       v_x.v_long_long = 0;
     }
@@ -310,7 +310,7 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x, mucs_optsca
     if ( ( unsigned long long ) ( unsigned int ) v_x.v_ulong_long != v_x.v_ulong_long )
     {
       rSETBAD;
-      optscan->errors |= MUCS_ERROR_WRONG_VALUE;
+      *perrors |= MUCS_ERROR_WRONG_VALUE;
       QRGOPTM( opt, rCODE, "wrong value '%s'", opt->d.string_value );
       v_x.v_ulong_long = 0;
     }
@@ -330,7 +330,7 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x, mucs_optsca
     {
     /*unable to place number into long */
       rSETBAD;
-      optscan->errors |= MUCS_ERROR_WRONG_VALUE;
+      *perrors |= MUCS_ERROR_WRONG_VALUE;
       QRGOPTM( opt, rCODE, "wrong value '%s'", opt->d.string_value );
       v_x.v_long_long = 0;
     }
@@ -350,7 +350,7 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x, mucs_optsca
     {
     /*unable to place number into long */
       rSETBAD;
-      optscan->errors |= MUCS_ERROR_WRONG_VALUE;
+      *perrors |= MUCS_ERROR_WRONG_VALUE;
       QRGOPTM( opt, rCODE, "wrong value '%s'", opt->d.string_value );
       v_x.v_ulong_long = 0;
     }
@@ -401,7 +401,7 @@ mucs_config_option_combine_value( mucs_option_t * opt, nvalue_t v_x, mucs_optsca
 }
 
 static int
-mucs_config_option_set_nvalue( mucs_option_t * opt, mucs_optscanner_t * optscan )
+mucs_config_option_set_nvalue( mucs_option_t * opt, mucs_errors_t * perrors )
 {
   rDECLGOOD;
   if ( opt )
@@ -420,26 +420,26 @@ mucs_config_option_set_nvalue( mucs_option_t * opt, mucs_optscanner_t * optscan 
       if ( errno /* || err */  )
       {
         rSETBAD;
-        optscan->errors |= MUCS_ERROR_WRONG_VALUE;
+        *perrors |= MUCS_ERROR_WRONG_VALUE;
         QRGOPTM( opt, rCODE, "wrong value '%s'", opt->d.string_value );
       }
     }
     if ( rGOOD )
     {
-      mucs_config_option_combine_value( opt, v_x, optscan );
+      mucs_config_option_combine_value( opt, v_x, perrors );
     }
   }
   rRET;
 }
 
 static int
-mucs_config_option_set_value( mucs_option_t * opt, mucs_optscanner_t * optscan /* const char *string_value */  )
+mucs_config_option_set_value( mucs_option_t * opt, const char *string_value, mucs_errors_t * perrors )
 {
   rDECLBAD;
 
   if ( opt )
   {
-    const char *string_value = optscan->string_value;
+  /* const char *string_value = optscan->string_value; */
 
     if ( opt->d.string_value )
       mas_free( opt->d.string_value );
@@ -451,7 +451,7 @@ mucs_config_option_set_value( mucs_option_t * opt, mucs_optscanner_t * optscan /
     if ( string_value )
       opt->d.string_value = mucs_config_option_flag( opt, MUCS_FLAG_UNQUOTE ) ? mucs_unquote( string_value, "'\"" ) : mas_strdup( string_value );
 #endif
-    rC( mucs_config_option_set_nvalue( opt, optscan ) );
+    rC( mucs_config_option_set_nvalue( opt, perrors ) );
   }
   rRET;
 }
@@ -662,8 +662,8 @@ mucs_config_option_lookup_options( const mucs_option_t * options, unsigned optco
         {
           optscan->at_arg = NULL;
           optscan->found_topt = topt;
-          /* if ( optscan->found_topts && optscan->found_num < optscan->found_max ) */
-          /*   optscan->found_topts[optscan->found_num++] = topt;                   */
+        /* if ( optscan->found_topts && optscan->found_num < optscan->found_max ) */
+        /*   optscan->found_topts[optscan->found_num++] = topt;                   */
           rC( mucs_config_option_validate( ep, optscan ) );
         }
       }
@@ -702,7 +702,7 @@ mucs_config_option_evaluate( mucs_option_t * opt, mucs_optscanner_t * optscan, v
   {
     mucs_config_option_ptr_to_nvalue( opt );
 
-    rC( mucs_config_option_set_value( opt, optscan ) );
+    rC( mucs_config_option_set_value( opt, optscan->string_value, &optscan->errors ) );
     opt->d.has_value = optscan->has_value;
   }
   else

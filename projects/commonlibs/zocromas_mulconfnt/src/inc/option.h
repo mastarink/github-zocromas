@@ -12,8 +12,6 @@ mucs_config_option_check( const mucs_option_t * opt )
   return opt ? 1 : 0;
 }
 
-/* int mucs_config_option_set_value( mucs_option_t * opt, mucs_optscanner_t * optscan (* const char *string_value *)  ); */
-
 mucs_flags_t mucs_config_option_flags( const mucs_option_t * opt );
 
 int mucs_config_soption_flag( const mucs_option_static_t * sopt, mucs_flags_t mask );

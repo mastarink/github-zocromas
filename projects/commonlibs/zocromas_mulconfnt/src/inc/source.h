@@ -35,6 +35,5 @@ char *mucs_source_wd( const mucs_source_t * osrc );
 char *mucs_source_absfile( const mucs_source_t * osrc, const char *fname );
 
 int mucs_source_found_opt( mucs_source_t * osrc, mucs_option_t * opt, void *userdata );
-mucs_variant_t max_match_id( mucs_source_t * osrc, const char *arg );
 
 #endif
