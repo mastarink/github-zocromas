@@ -1,10 +1,10 @@
 #define R_GOOD(_r) ((_r)>=0)
 #include "mulconfnt_defs.h"
 #include <string.h>
-#include <math.h>
+/* #include <math.h> */
 
 #include <mastar/wrap/mas_memory.h>
-#include <mastar/tools/mas_argvc_tools.h>
+/* #include <mastar/tools/mas_argvc_tools.h> */
 
 #include <mastar/minierr/minierr.h>
 
@@ -15,7 +15,9 @@
 #include "aoptions.h"
 
 #include "option.h"
-#include "option_base.h"
+/* #include "option_flags.h" */
+#include "option_value.h" // for QRGOPTM -> mucs_config_option_check  only
+/* #include "option_base.h" */
 
 #include "option_tablist.h"
 

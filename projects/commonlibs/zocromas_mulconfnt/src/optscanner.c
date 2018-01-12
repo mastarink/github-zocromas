@@ -13,6 +13,7 @@
 
 #include "option_base.h"
 #include "option.h"
+#include "option_flags.h"
 #include "option_tablist.h"
 
 #include "optscanner_base.h"

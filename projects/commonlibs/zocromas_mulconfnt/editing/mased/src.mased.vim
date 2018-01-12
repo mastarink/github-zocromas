@@ -26,6 +26,9 @@ sfind source_base.c
 tab sfind source.h
 sfind source.c
 
+tab sfind source_flags.h
+sfind source_flags.c
+
 tab sfind aoptions.h
 sfind aoptions.c
 
@@ -35,6 +38,12 @@ sfind option_base.c
 tab sfind option.h
 sfind option.c
 
+tab sfind option_value.h
+sfind option_value.c
+
+tab sfind option_flags.h
+sfind option_flags.c
+
 tab sfind option_ref.h
 sfind option_ref.c
 
@@ -43,6 +52,9 @@ sfind option_tablist_base.c
 
 tab sfind option_tablist.h
 sfind option_tablist.c
+
+tab sfind optscanner_base.h
+sfind optscanner_base.c
 
 tab sfind optscanner.h
 sfind optscanner.c

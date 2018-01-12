@@ -7,8 +7,8 @@
 #include <unistd.h>
 
 #include <mastar/wrap/mas_memory.h>
-#include <mastar/tools/mas_arg_tools.h>
-#include <mastar/tools/mas_argvc_tools.h>
+/* #include <mastar/tools/mas_arg_tools.h> */
+/* #include <mastar/tools/mas_argvc_tools.h> */
 #include <mastar/minierr/minierr.h>
 
 #include "mulconfnt_structs.h"

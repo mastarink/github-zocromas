@@ -3,16 +3,6 @@
 
 # include "mulconfnt_types.h"
 
-static inline int
-mucs_config_option_check( const mucs_option_t * opt )
-{
-  return opt ? 1 : 0;
-}
-
-mucs_flags_t mucs_config_option_flags( const mucs_option_t * opt );
-
-int mucs_config_soption_flag( const mucs_option_static_t * sopt, mucs_flags_t mask );
-int mucs_config_option_flag( const mucs_option_t * opt, mucs_flags_t mask );
 
 int mucs_config_option_lookup_options( const mucs_option_t * options, unsigned count, const char *arg, const char *eq, mucs_optscanner_t * optscan );
 

@@ -12,12 +12,13 @@
 
 #include "global.h"
 
-#include "tools.h"
-#include "source.h"
+/* #include "tools.h" */
+/* #include "source.h" */
 
 #include "option_ref.h"
 
-#include "option_base.h"
+/* #include "option_base.h" */
+#include "option_flags.h"
 #include "option_value.h"
 
 #include "option.h"
@@ -27,7 +28,6 @@
  * mucs_config_option_...
  *
  * */
-
 
 /*
  * if match
@@ -245,28 +245,6 @@ mucs_config_option_lookup_options( const mucs_option_t * options, unsigned optco
   rRET;
 }
 
-mucs_flags_t
-mucs_config_option_flags( const mucs_option_t * opt )
-{
-  mucs_flags_t osrcflags = opt && opt->d.source ? mucs_source_flags( opt->d.source ) : 0L;
-
-  return opt ? ( osrcflags | opt->s.flags ) : 0L;
-}
-
-int
-mucs_config_soption_flag( const mucs_option_static_t * sopt, mucs_flags_t mask )
-{
-  return sopt ? ( sopt->flags & mask ) : 0;
-}
-
-int
-mucs_config_option_flag( const mucs_option_t * opt, mucs_flags_t mask )
-{
-  int osrcflag = opt->d.source ? mucs_source_flag( opt->d.source, mask ) : 0L;
-
-  return opt ? ( osrcflag || mucs_config_soption_flag( &opt->s, mask ) ) : 0;
-}
-
 int
 mucs_config_option_evaluate( mucs_option_t * opt, mucs_optscanner_t * optscan, void *userdata )
 {
@@ -306,17 +284,3 @@ mucs_config_option_evaluate( mucs_option_t * opt, mucs_optscanner_t * optscan, v
 
   rRET;
 }
-
-#if 0
-int
-mucs_option_set_source( mucs_option_t * opt, mucs_source_t * osrc )
-{
-  rDECLBAD;
-  if ( opt && osrc )
-  {
-    rSETGOOD;
-    opt->d.source = osrc;
-  }
-  rRET;
-}
-#endif

@@ -2,12 +2,12 @@
 #include "mulconfnt_defs.h"
 #include <stdarg.h>
 #include <string.h>
-#include <sys/types.h>
-#include <sys/stat.h>
+/* #include <sys/types.h> */
+/* #include <sys/stat.h> */
 #include <unistd.h>
 
 #include <mastar/wrap/mas_memory.h>
-#include <mastar/tools/mas_argvc_tools.h>
+/* #include <mastar/tools/mas_argvc_tools.h> */
 
 #include "mulconfnt_structs.h"
 

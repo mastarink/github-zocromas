@@ -4,21 +4,22 @@
 #include <math.h>
 
 #include <mastar/wrap/mas_memory.h>
-#include <mastar/tools/mas_argvc_tools.h>
+/* #include <mastar/tools/mas_argvc_tools.h> */
 
 #include <mastar/minierr/minierr.h>
 
 #include "mulconfnt_structs.h"
 
-#include "global.h"
+/* #include "global.h" */
 
 #include "tools.h"
-#include "source.h"
+/* #include "source.h" */
 
-#include "option_ref.h"
+/* #include "option_ref.h" */
 
-#include "option_base.h"
-#include "option.h"
+/* #include "option_base.h" */
+#include "option_flags.h"
+/* #include "option.h" */
 
 #include "option_value.h"
 

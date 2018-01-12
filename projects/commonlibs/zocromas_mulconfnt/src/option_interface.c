@@ -1,7 +1,7 @@
 #define R_GOOD(_r) ((_r)>=0)
 #include "mulconfnt_defs.h"
 #include <string.h>
-#include <math.h>
+/* #include <math.h> */
 
 #include <mastar/wrap/mas_memory.h>
 #include <mastar/tools/mas_argvc_tools.h>
@@ -11,7 +11,7 @@
 
 #include "source_list.h"
 
-#include "option.h"
+/* #include "option.h" */
 #include "option_tablist_base.h"
 
 #include "option_interface.h"
