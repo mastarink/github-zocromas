@@ -19,6 +19,7 @@ libzocromas_mulconfntinclude_HEADERS =  \
 	option_base.h \
 	option_ref.h \
 	option.h \
+	option_value.h \
 	option_tablist_base.h \
 	option_tablist.h \
 	option_interface_base.h \

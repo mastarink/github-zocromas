@@ -17,6 +17,7 @@ libzocromas_mulconfnt_la_SOURCES = \
 	option_base.c \
 	option_ref.c \
 	option.c \
+	option_value.c \
 	option_tablist_base.c \
 	option_tablist.c \
 	option_interface_base.c \
