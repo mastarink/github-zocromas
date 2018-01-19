@@ -47,7 +47,6 @@ mas_mysqlpfs_mstmt_create( void )
 
   return mstmt;
 }
-
 mysqlpfs_mstmt_t *
 mas_mysqlpfs_mstmt_create_setup( mysqlpfs_t * pfs, int nparams, int nresults, const char *sqlop )
 {
@@ -60,8 +59,9 @@ mas_mysqlpfs_mstmt_create_setup( mysqlpfs_t * pfs, int nparams, int nresults, co
     mas_mysqlpfs_mstmt_init( pfs, mstmt, nparams, nresults );
     rC( mas_mysqlpfs_mstmt_prepare( mstmt, sqlop ) );
   }
-  if ( rBAD )
-    WARN( "ERR sqlop: %s", sqlop );
+  mstmt->ret_code = rCODE;
+/*if ( rBAD )
+    WARN( "ERR sqlop: %s", sqlop );*/
   return mstmt;
 }
 
@@ -87,7 +87,7 @@ mas_mysqlpfs_mstmt_reset_bind( mysqlpfs_mbind_t * mbind )
 int
 mas_mysqlpfs_mstmt_reset( mysqlpfs_mstmt_t * mstmt )
 {
-  int r = -1;
+  rDECLBAD;
 
   QRGP( mstmt );
   if ( mstmt )
@@ -95,17 +95,17 @@ mas_mysqlpfs_mstmt_reset( mysqlpfs_mstmt_t * mstmt )
     QRGP( mstmt->stmt );
     if ( mstmt->stmt )
     {
-      r = mas_mysqlpfs_mstmt_free_result( mstmt );
-      if ( !r )
-        r = mysql_stmt_close( mstmt->stmt );
+      rC( mas_mysqlpfs_mstmt_free_result( mstmt ) );
+      rC( mysql_stmt_close( mstmt->stmt ) );
       mstmt->stmt = NULL;
-      QRGS( r );
+      mstmt->ret_code = rCODE;
+      /* QRGS( rCODE ); */
     }
     mas_mysqlpfs_mstmt_reset_bind( &mstmt->binds.param );
     mas_mysqlpfs_mstmt_reset_bind( &mstmt->binds.result );
     mstmt->pfs = NULL;
   }
-  return r;
+  rRET;
 }
 
 void

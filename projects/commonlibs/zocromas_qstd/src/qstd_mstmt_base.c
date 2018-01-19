@@ -367,7 +367,8 @@ mas_qstd_mstmt_init_prepare_results_everything( mysqlpfs_mstmt_t * mstmt, int *p
  *      hex_sha1
  */
 
-  assert( ( *pnr ) == STD_MSTMT_SELECT_EVERYTHING_NRESULTS );
+  if ( rGOOD )
+    assert( ( *pnr ) == STD_MSTMT_SELECT_EVERYTHING_NRESULTS );
   rC( mas_qstd_mstmt_bind_result( mstmt ) );
   rRET;
 }
@@ -422,8 +423,10 @@ mas_qstd_mstmt_init_prepare_results_everythingx( mysqlpfs_mstmt_t * mstmt, int *
  *   +  hex_sha1
  */
 
-  assert( ( *pnr ) == STD_MSTMT_SELECT_EVERYTHINGX_NRESULTS );
-  assert( ( *pnr ) == STD_MSTMT_SELECT_EVERYTHINGXX_NRESULTS );
+  if ( rGOOD )
+    assert( ( *pnr ) == STD_MSTMT_SELECT_EVERYTHINGX_NRESULTS );
+  if ( rGOOD )
+    assert( ( *pnr ) == STD_MSTMT_SELECT_EVERYTHINGXX_NRESULTS );
   rC( mas_qstd_mstmt_bind_result( mstmt ) );
   rRET;
 }
@@ -448,13 +451,15 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_NAMES_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
         QRGP( mstmt );
+        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, np++, 255 ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
       /* rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, np++, 255 ) ); */
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        assert( np == STD_MSTMT_INSERT_NAMES_NFIELDS );
+        if ( rGOOD )
+          assert( np == STD_MSTMT_INSERT_NAMES_NFIELDS );
       }
       break;
     case STD_MSTMT_SELECT_NAMES_ID:
@@ -466,14 +471,17 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_NAMES_NFIELDS, STD_MSTMT_SELECT_NAMES_NRESULTS, selop );
         QRGP( mstmt );
+        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, np++, 255 ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
-        assert( np == STD_MSTMT_SELECT_NAMES_NFIELDS );
+        if ( rGOOD )
+          assert( np == STD_MSTMT_SELECT_NAMES_NFIELDS );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
         rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, nr++ ) );
         rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
-        assert( nr == STD_MSTMT_SELECT_NAMES_NRESULTS );
+        if ( rGOOD )
+          assert( nr == STD_MSTMT_SELECT_NAMES_NRESULTS );
       }
       break;
     case STD_MSTMT_INSERT_PARENTS:
@@ -483,10 +491,12 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_PARENTS_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
         QRGP( mstmt );
+        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        assert( np == STD_MSTMT_INSERT_PARENTS_NFIELDS );
+        if ( rGOOD )
+          assert( np == STD_MSTMT_INSERT_PARENTS_NFIELDS );
       }
       break;
     case STD_MSTMT_SELECT_PARENTS_ID:
@@ -497,14 +507,17 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_PARENTS_NFIELDS, STD_MSTMT_SELECT_PARENTS_NRESULTS, selop );
         QRGP( mstmt );
+        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
-        assert( np == STD_MSTMT_SELECT_PARENTS_NFIELDS );
+        if ( rGOOD )
+          assert( np == STD_MSTMT_SELECT_PARENTS_NFIELDS );
 
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
         rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, nr++ ) );
         rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
-        assert( nr == STD_MSTMT_SELECT_PARENTS_NRESULTS );
+        if ( rGOOD )
+          assert( nr == STD_MSTMT_SELECT_PARENTS_NRESULTS );
       }
       break;
     case STD_MSTMT_INSERT_SIZES:
@@ -514,10 +527,12 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_SIZES_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
         QRGP( mstmt );
+        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        assert( np == STD_MSTMT_INSERT_SIZES_NFIELDS );
+        if ( rGOOD )
+          assert( np == STD_MSTMT_INSERT_SIZES_NFIELDS );
       }
       break;
     case STD_MSTMT_SELECT_SIZES_ID:
@@ -528,14 +543,17 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_SIZES_NFIELDS, STD_MSTMT_SELECT_SIZES_NRESULTS, selop );
         QRGP( mstmt );
+        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
-        assert( np == STD_MSTMT_SELECT_SIZES_NFIELDS );
+        if ( rGOOD )
+          assert( np == STD_MSTMT_SELECT_SIZES_NFIELDS );
 
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
         rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, nr++ ) );
         rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
-        assert( nr == STD_MSTMT_SELECT_SIZES_NRESULTS );
+        if ( rGOOD )
+          assert( nr == STD_MSTMT_SELECT_SIZES_NRESULTS );
       }
       break;
     case STD_MSTMT_INSERT_DATAS:
@@ -545,12 +563,14 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_DATAS_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
         QRGP( mstmt );
+        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        assert( np == STD_MSTMT_INSERT_DATAS_NFIELDS );
+        if ( rGOOD )
+          assert( np == STD_MSTMT_INSERT_DATAS_NFIELDS );
       }
       break;
     case STD_MSTMT_SELECT_DATAS_ID:
@@ -561,15 +581,18 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_DATAS_NFIELDS, STD_MSTMT_SELECT_DATAS_NRESULTS, selop );
         QRGP( mstmt );
+        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
-        assert( np == STD_MSTMT_SELECT_DATAS_NFIELDS );
+        if ( rGOOD )
+          assert( np == STD_MSTMT_SELECT_DATAS_NFIELDS );
 
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
         rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, nr++ ) );
         rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
-        assert( nr == STD_MSTMT_SELECT_DATAS_NRESULTS );
+        if ( rGOOD )
+          assert( nr == STD_MSTMT_SELECT_DATAS_NRESULTS );
       }
       break;
     case STD_MSTMT_INSERT_PROPS:
@@ -583,6 +606,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_PROPS_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
         QRGP( mstmt );
+        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
@@ -596,7 +620,8 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, np++, 255 ) );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        assert( np == STD_MSTMT_INSERT_PROPS_NFIELDS );
+        if ( rGOOD )
+          assert( np == STD_MSTMT_INSERT_PROPS_NFIELDS );
       }
       break;
     case STD_MSTMT_SELECT_PROPS_ID:
@@ -607,14 +632,17 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 1, selop );
         QRGP( mstmt );
+        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        assert( np == STD_MSTMT_SELECT_PROPS_NFIELDS );
+        if ( rGOOD )
+          assert( np == STD_MSTMT_SELECT_PROPS_NFIELDS );
 
         rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, nr++ ) );
         rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
-        assert( nr == STD_MSTMT_SELECT_PROPS_NRESULTS );
+        if ( rGOOD )
+          assert( nr == STD_MSTMT_SELECT_PROPS_NRESULTS );
       }
       break;
     case STD_MSTMT_INSERT_SHA1:
@@ -625,9 +653,11 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_SHA1_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
         QRGP( mstmt );
+        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_binary( mstmt, np++, 20 ) );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        assert( np == STD_MSTMT_INSERT_SHA1_NFIELDS );
+        if ( rGOOD )
+          assert( np == STD_MSTMT_INSERT_SHA1_NFIELDS );
       }
       break;
     case STD_MSTMT_INSERT_SHA1DREF:
@@ -638,10 +668,12 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_SHA1DREF_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
         QRGP( mstmt );
+        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        assert( np == STD_MSTMT_INSERT_SHA1DREF_NFIELDS );
+        if ( rGOOD )
+          assert( np == STD_MSTMT_INSERT_SHA1DREF_NFIELDS );
       }
       break;
     case STD_MSTMT_SELECT_SHA1_ID:
@@ -652,14 +684,17 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 1, selop );
         QRGP( mstmt );
+        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_binary( mstmt, np++, 20 ) );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        assert( np == STD_MSTMT_SELECT_PROPS_NFIELDS );
+        if ( rGOOD )
+          assert( np == STD_MSTMT_SELECT_PROPS_NFIELDS );
 
         rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, nr++ ) );
         rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
-        assert( nr == STD_MSTMT_SELECT_PROPS_NRESULTS );
+        if ( rGOOD )
+          assert( nr == STD_MSTMT_SELECT_PROPS_NRESULTS );
       }
       break;
     case STD_MSTMT_SELECT_SHA1DREF:
@@ -670,14 +705,17 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 1, selop );
         QRGP( mstmt );
+        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        assert( np == STD_MSTMT_SELECT_PROPS_NFIELDS );
+        if ( rGOOD )
+          assert( np == STD_MSTMT_SELECT_PROPS_NFIELDS );
 
         rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, nr++ ) );
         rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
-        assert( nr == STD_MSTMT_SELECT_PROPS_NRESULTS );
+        if ( rGOOD )
+          assert( nr == STD_MSTMT_SELECT_PROPS_NRESULTS );
       }
       break;
     case STD_MSTMT_SELECT_NODES_ID:
@@ -688,15 +726,18 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_NODES_NFIELDS, STD_MSTMT_SELECT_NODES_NRESULTS, selop );
         QRGP( mstmt );
+        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, np++, 255 ) );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
-        assert( np == STD_MSTMT_SELECT_NODES_NFIELDS );
+        if ( rGOOD )
+          assert( np == STD_MSTMT_SELECT_NODES_NFIELDS );
 
         rC( mas_mysqlpfs_mstmt_prepare_result_longlong( mstmt, nr++ ) );
         rC( mas_mysqlpfs_mstmt_bind_result( mstmt ) );
-        assert( nr == STD_MSTMT_SELECT_NODES_NRESULTS );
+        if ( rGOOD )
+          assert( nr == STD_MSTMT_SELECT_NODES_NRESULTS );
       }
       break;
     case STD_MSTMT_SELECT_EVERYTHING_PN:
@@ -712,9 +753,12 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
                 "   ORDER BY name_id";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_EVERYTHING_NFIELDS_PN, STD_MSTMT_SELECT_EVERYTHING_NRESULTS, selop );
+        QRGP( mstmt );
+        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* parent_id */
         rC( mas_qstd_mstmt_prepare_param_string( mstmt, np++ ) );    /* name */
-        assert( np == STD_MSTMT_SELECT_EVERYTHING_NFIELDS_PN );
+        if ( rGOOD )
+          assert( np == STD_MSTMT_SELECT_EVERYTHING_NFIELDS_PN );
 #if 1
         rC( mas_qstd_mstmt_init_prepare_results_everything( mstmt, &nr ) );
 #else
@@ -734,7 +778,8 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* atim */
         rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* mtim */
         rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* ctim */
-        assert( nr == STD_MSTMT_SELECT_EVERYTHING_NRESULTS );
+        if ( rGOOD )
+          assert( nr == STD_MSTMT_SELECT_EVERYTHING_NRESULTS );
         rC( mas_qstd_mstmt_bind_result( mstmt ) );
 #endif
       }
@@ -752,8 +797,11 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
                 "   ORDER BY name_id";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_EVERYTHING_NFIELDS_P, STD_MSTMT_SELECT_EVERYTHING_NRESULTS, selop );
+        QRGP( mstmt );
+        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* parent_id */
-        assert( np == STD_MSTMT_SELECT_EVERYTHING_NFIELDS_P );
+        if ( rGOOD )
+          assert( np == STD_MSTMT_SELECT_EVERYTHING_NFIELDS_P );
 
         if ( !rGOOD )
           WARN( "%s", mas_mysqlpfs_mstmt_error( mstmt ) );
@@ -777,7 +825,8 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* atim */
         rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* mtim */
         rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, nr++ ) ); /* ctim */
-        assert( nr == STD_MSTMT_SELECT_EVERYTHING_NRESULTS );
+        if ( rGOOD )
+          assert( nr == STD_MSTMT_SELECT_EVERYTHING_NRESULTS );
         rC( mas_qstd_mstmt_bind_result( mstmt ) );
 #endif
       }
@@ -796,14 +845,18 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
                 "   ORDER BY name_id";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_EVERYTHINGX_NFIELDS_PN, STD_MSTMT_SELECT_EVERYTHINGX_NRESULTS, selop );
+        QRGP( mstmt );
+        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* parent_id */
         rC( mas_qstd_mstmt_prepare_param_string( mstmt, np++ ) );    /* name */
-        assert( np == STD_MSTMT_SELECT_EVERYTHINGX_NFIELDS_PN );
+        if ( rGOOD )
+          assert( np == STD_MSTMT_SELECT_EVERYTHINGX_NFIELDS_PN );
         if ( !rGOOD )
           WARN( "%s", mas_mysqlpfs_mstmt_error( mstmt ) );
 
         rC( mas_qstd_mstmt_init_prepare_results_everythingx( mstmt, &nr ) );
-        assert( nr == STD_MSTMT_SELECT_EVERYTHINGX_NRESULTS );
+        if ( rGOOD )
+          assert( nr == STD_MSTMT_SELECT_EVERYTHINGX_NRESULTS );
 
       }
       break;
@@ -821,13 +874,17 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
                 "   ORDER BY name_id";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_EVERYTHINGX_NFIELDS_P, STD_MSTMT_SELECT_EVERYTHINGX_NRESULTS, selop );
+        QRGP( mstmt );
+        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* parent_id */
-        assert( np == STD_MSTMT_SELECT_EVERYTHINGX_NFIELDS_P );
+        if ( rGOOD )
+          assert( np == STD_MSTMT_SELECT_EVERYTHINGX_NFIELDS_P );
         if ( !rGOOD )
           WARN( "%s", mas_mysqlpfs_mstmt_error( mstmt ) );
 
         rC( mas_qstd_mstmt_init_prepare_results_everythingx( mstmt, &nr ) );
-        assert( nr == STD_MSTMT_SELECT_EVERYTHINGX_NRESULTS );
+        if ( rGOOD )
+          assert( nr == STD_MSTMT_SELECT_EVERYTHINGX_NRESULTS );
       }
       break;
     case STD_MSTMT_SELECT_EVERYTHINGXX_PN:
@@ -854,6 +911,8 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
                 "   ORDER BY name_id";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_EVERYTHINGXX_NFIELDS_PN, STD_MSTMT_SELECT_EVERYTHINGXX_NRESULTS, selop );
+        QRGP( mstmt );
+        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* parent_id */
         rC( mas_qstd_mstmt_prepare_param_string( mstmt, np++ ) );    /* name */
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* min_nsamesize */
@@ -868,9 +927,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* max_sha1id */
         rC( mas_qstd_mstmt_prepare_param_string( mstmt, np++ ) );    /* regexp */
         if ( rGOOD )
-        {
           assert( np == STD_MSTMT_SELECT_EVERYTHINGXX_NFIELDS_PN );
-        }
         if ( !rGOOD )
           WARN( "%s", mas_mysqlpfs_mstmt_error( mstmt ) );
 
@@ -902,6 +959,8 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
                 "   ORDER BY name_id";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_EVERYTHINGXX_NFIELDS_P, STD_MSTMT_SELECT_EVERYTHINGXX_NRESULTS, selop );
+        QRGP( mstmt );
+        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* parent_id */
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* min_nsamesize */
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* max_nsamesize */
@@ -914,7 +973,8 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* min_sha1id */
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* max_sha1id */
         rC( mas_qstd_mstmt_prepare_param_string( mstmt, np++ ) );    /* regexp */
-        assert( np == STD_MSTMT_SELECT_EVERYTHINGXX_NFIELDS_P );
+        if ( rGOOD )
+          assert( np == STD_MSTMT_SELECT_EVERYTHINGXX_NFIELDS_P );
         if ( !rGOOD )
           WARN( "%s", mas_mysqlpfs_mstmt_error( mstmt ) );
 

@@ -30,10 +30,11 @@ mas_qstd_mstmt_selget_names_id( mas_qstd_t * qstd, const char *name, unsigned lo
   {
     int np = 0;
     int nr = 0;
-    mysqlpfs_mstmt_t *mstmt_s = mas_qstd_mstmt_get( qstd, STD_MSTMT_SELECT_NAMES_ID );
     int has_data = 0;
+    mysqlpfs_mstmt_t *mstmt_s = mas_qstd_mstmt_get( qstd, STD_MSTMT_SELECT_NAMES_ID );
 
     QRGP( mstmt_s );
+    rC( mas_mysqlpfs_mstmt_ret_code( mstmt_s ) );
 
     rC( mas_mysqlpfs_mstmt_set_param_string( mstmt_s, np++, name ) );
     rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, np++, updir_id, updir_id ? FALSE : TRUE ) );
@@ -65,12 +66,14 @@ mas_qstd_mstmt_insget_names_id( mas_qstd_t * qstd, const char *name, unsigned lo
   QRGP( name );
   unsigned long long theid = 0;
 
+  assert( updir_id );
   {
     int np = 0;
     mysqlpfs_mstmt_t *mstmt = mas_qstd_mstmt_get( qstd, STD_MSTMT_INSERT_NAMES );
 
-    assert( updir_id );
     QRGP( mstmt );
+    rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
+
     rC( mas_mysqlpfs_mstmt_set_param_string( mstmt, np++, name ) );
     rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, np++, updir_id, updir_id ? FALSE : TRUE ) );
     rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, np++, data_id, data_id ? FALSE : TRUE ) );

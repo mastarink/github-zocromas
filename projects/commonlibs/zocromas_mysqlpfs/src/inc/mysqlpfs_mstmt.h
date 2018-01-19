@@ -4,6 +4,7 @@
 # include <unistd.h>
 # include "mysqlpfs_types.h"
 
+int mas_mysqlpfs_mstmt_ret_code( mysqlpfs_mstmt_t * mstmt );
 
 int mas_mysqlpfs_mstmt_prepare( mysqlpfs_mstmt_t * mstmt, const char *op );
 int mas_mysqlpfs_mstmt_unprepare( mysqlpfs_mstmt_t * mstmt );

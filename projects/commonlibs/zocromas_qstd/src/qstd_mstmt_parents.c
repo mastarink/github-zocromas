@@ -29,10 +29,11 @@ mas_qstd_mstmt_selget_parents_id( mas_qstd_t * qstd, unsigned long long dir_id )
   {
     int np = 0;
     int nr = 0;
-    mysqlpfs_mstmt_t *mstmt_s = mas_qstd_mstmt_get( qstd, STD_MSTMT_SELECT_PARENTS_ID );
     int has_data = 0;
+    mysqlpfs_mstmt_t *mstmt_s = mas_qstd_mstmt_get( qstd, STD_MSTMT_SELECT_PARENTS_ID );
 
     QRGP( mstmt_s );
+    rC( mas_mysqlpfs_mstmt_ret_code( mstmt_s ) );
 
     rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, np++, dir_id, dir_id ? FALSE : TRUE ) );
     assert( np == STD_MSTMT_SELECT_PARENTS_NFIELDS );
@@ -65,6 +66,7 @@ mas_qstd_mstmt_insget_parents_id( mas_qstd_t * qstd, unsigned long long dir_id )
     mysqlpfs_mstmt_t *mstmt = mas_qstd_mstmt_get( qstd, STD_MSTMT_INSERT_PARENTS );
 
     QRGP( mstmt );
+    rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
     rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, np++, dir_id, dir_id ? FALSE : TRUE ) );
     assert( np == STD_MSTMT_INSERT_PARENTS_NFIELDS );
 

@@ -188,7 +188,7 @@ dufnx_data_tree( const char *path, int npos, void *userdata, void *extradata _uU
     mas_dufnx_data_t *pdufnx_data = ( mas_dufnx_data_t * ) userdata;
 
     real_path = mas_normalize_path_cwd_dots( path, FALSE );
-    WARN( "path: %s; real_path: %s", path, real_path );
+ /* WARN( "path: %s; real_path: %s", path, real_path ); */
     rC( dufnx_tree( real_path, &pdufnx_data->entry_filter, stdout, pdufnx_data->levinfo_flags, &pdufnx_data->mysql ) );
     mas_free( real_path );
   }

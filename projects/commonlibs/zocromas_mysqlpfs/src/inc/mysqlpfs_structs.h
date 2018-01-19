@@ -42,6 +42,7 @@ struct mysqlpfs_mstmt_s
     mysqlpfs_mbind_t result;
   } binds;
   const mysqlpfs_t *pfs;
+  int ret_code;
 };
 
 #endif

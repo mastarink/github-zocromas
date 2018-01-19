@@ -82,7 +82,7 @@ masxfs_levinfo_db_open( masxfs_levinfo_t * li )
           if ( !li->db.node_id )
           {
             rSETBAD;
-            QRLIM( li, rCODE, "can't get node_id for '%s' (D:%d)", li->name, li->lidepth );
+            /* 20180119.135237 QRLIM( li, rCODE, "can't get node_id for '%s' (D:%d)", li->name, li->lidepth ); */
           }
         }
       }

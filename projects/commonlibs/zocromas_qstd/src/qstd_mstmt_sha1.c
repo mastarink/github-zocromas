@@ -25,10 +25,11 @@ mas_qstd_mstmt_selget_sha1_id( mas_qstd_t * qstd, const const unsigned char *sha
   {
     int np = 0;
     int nr = 0;
-    mysqlpfs_mstmt_t *mstmt_s = mas_qstd_mstmt_get( qstd, STD_MSTMT_SELECT_SHA1_ID );
     int has_data = 0;
+    mysqlpfs_mstmt_t *mstmt_s = mas_qstd_mstmt_get( qstd, STD_MSTMT_SELECT_SHA1_ID );
 
     QRGP( mstmt_s );
+    rC( mas_mysqlpfs_mstmt_ret_code( mstmt_s ) );
 
     rC( mas_mysqlpfs_mstmt_set_param_binary( mstmt_s, np++, sha1, 20 ) );
     rC( mas_mysqlpfs_mstmt_execute_store( mstmt_s ) );
@@ -57,10 +58,11 @@ mas_qstd_mstmt_selget_sha1dref( mas_qstd_t * qstd, unsigned long long data_id, u
   {
     int np = 0;
     int nr = 0;
-    mysqlpfs_mstmt_t *mstmt_s = mas_qstd_mstmt_get( qstd, STD_MSTMT_SELECT_SHA1DREF );
     int has_data = 0;
+    mysqlpfs_mstmt_t *mstmt_s = mas_qstd_mstmt_get( qstd, STD_MSTMT_SELECT_SHA1DREF );
 
     QRGP( mstmt_s );
+    rC( mas_mysqlpfs_mstmt_ret_code( mstmt_s ) );
 
     rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, np++, data_id, FALSE ) );
   /* rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, np++, sha1_id, FALSE ) ); */
@@ -93,6 +95,7 @@ mas_qstd_mstmt_insget_sha1_id( mas_qstd_t * qstd, unsigned long long data_id _uU
     mysqlpfs_mstmt_t *mstmt = mas_qstd_mstmt_get( qstd, STD_MSTMT_INSERT_SHA1 );
 
     QRGP( mstmt );
+    rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
   /* rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, np++, data_id, FALSE ) ); */
     rC( mas_mysqlpfs_mstmt_set_param_binary( mstmt, np++, sha1, 20 ) );
 
@@ -118,6 +121,7 @@ mas_qstd_mstmt_insget_sha1dref( mas_qstd_t * qstd, unsigned long long data_id, u
     mysqlpfs_mstmt_t *mstmt = mas_qstd_mstmt_get( qstd, STD_MSTMT_INSERT_SHA1DREF );
 
     QRGP( mstmt );
+    rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
     rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, np++, data_id, FALSE ) );
     rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt, np++, sha1_id, FALSE ) );
 

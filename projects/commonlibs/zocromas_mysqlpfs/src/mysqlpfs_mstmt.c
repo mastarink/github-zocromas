@@ -48,6 +48,12 @@ MYSQL_TYPE_NULL
 /* https://dev.mysql.com/doc/refman/5.7/en/c-api-prepared-statement-functions.html */
 
 int
+mas_mysqlpfs_mstmt_ret_code( mysqlpfs_mstmt_t * mstmt )
+{
+  return mstmt ? mstmt->ret_code : -1;
+}
+
+int
 mas_mysqlpfs_mstmt_prepare( mysqlpfs_mstmt_t * mstmt, const char *sqlop )
 {
   rDECLBAD;
@@ -65,8 +71,8 @@ mas_mysqlpfs_mstmt_prepare( mysqlpfs_mstmt_t * mstmt, const char *sqlop )
           char *sqlopx = mas_expand_string_cb_arg( sqlop, mas_mysqlpfs_expand_sqlop, mstmt->pfs ? mstmt->pfs->table_prefix : NULL );
 
           rC( mysql_stmt_prepare( mstmt->stmt, sqlopx, strlen( sqlopx ) ) );
-          if ( rBAD )
-            WARN( "ERR prep sqlop: %s", sqlopx );
+/*        if ( rBAD )
+            WARN( "ERR prep sqlop: %s", sqlopx ); */
           mas_free( sqlopx );
         }
         QRGS( rCODE );
@@ -134,7 +140,7 @@ mas_mysqlpfs_mstmt_prepare_mbind_gen( mysqlpfs_mbind_t * mbind, int pos, enum en
         }
         else
         {
-          QRGM( rCODE, "ERROR: pos:%d;mbind->nbind:%d", pos, mbind->nbind );
+        /* QRGM( rCODE, "ERROR: pos:%d;mbind->nbind:%d", pos, mbind->nbind ); */
         /* ADIE( "ERROR: pos:%d;mbind->nbind:%d", pos, mbind->nbind ); */
         }
       }
@@ -235,7 +241,8 @@ mas_mysqlpfs_mstmt_set_bind_longlong( mysqlpfs_mbind_t * mbind, int pos, unsigne
     {
       WARN( "Unmet: (pos:(%d) < nbind:(%d)) and %p and %p", pos, mbind->nbind, mbind->allocated_buffers, mbind->allocated_buffers[pos] );
       rSETBAD;
-      QRG( rCODE );
+      assert(0);
+      /* 20180119.135244 QRG( rCODE ); */
     }
   }
   rRET;

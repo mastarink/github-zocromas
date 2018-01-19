@@ -29,10 +29,11 @@ mas_qstd_mstmt_selget_node_id( mas_qstd_t * qstd, unsigned long long parent_id, 
   {
     int np = 0;
     int nr = 0;
-    mysqlpfs_mstmt_t *mstmt_s = mas_qstd_mstmt_get( qstd, STD_MSTMT_SELECT_NODES_ID );
     int has_data = 0;
+    mysqlpfs_mstmt_t *mstmt_s = mas_qstd_mstmt_get( qstd, STD_MSTMT_SELECT_NODES_ID );
 
     QRGP( mstmt_s );
+    rC( mas_mysqlpfs_mstmt_ret_code( mstmt_s ) );
 
     rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, np++, parent_id, FALSE ) );
     rC( mas_mysqlpfs_mstmt_set_param_string( mstmt_s, np++, name ) );
@@ -40,19 +41,21 @@ mas_qstd_mstmt_selget_node_id( mas_qstd_t * qstd, unsigned long long parent_id, 
 
     rC( mas_mysqlpfs_mstmt_fetch( mstmt_s, &has_data ) );
 
-    if ( has_data )
+    if ( rGOOD && has_data )
     {
       unsigned is_null = 0;
 
       rC( mas_mysqlpfs_mstmt_get_result_longlong( mstmt_s, nr++, &theid, &is_null ) );
     /* WARN( "(%d) DATA for %lld, '%s' => %lld", rCODE, parent_id, name, theid ); */
-      assert( nr == STD_MSTMT_SELECT_NODES_NRESULTS );
+      if ( rGOOD )
+        assert( nr == STD_MSTMT_SELECT_NODES_NRESULTS );
     }
+#if 0
     else
     {
-      WARN( "NO DATA for parent_id: %lld, name: '%s'", parent_id, name );
+      WARN( "NO DATA for parent_id: %lld, name: '%s' - %llu", parent_id, name, theid );
     }
-
+#endif
     mas_mysqlpfs_mstmt_free_result( mstmt_s );
   }
   return theid;
