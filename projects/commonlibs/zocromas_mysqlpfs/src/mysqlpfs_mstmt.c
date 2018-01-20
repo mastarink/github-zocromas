@@ -232,17 +232,19 @@ mas_mysqlpfs_mstmt_set_bind_longlong( mysqlpfs_mbind_t * mbind, int pos, unsigne
       mysqlpfs_s_bool_t *p_is_null = mbind->is_null + pos;
       mysqlpfs_s_ulonglong_t *p = mbind->allocated_buffers[pos];
 
-      *p = ( mysqlpfs_s_ulonglong_t ) num;
-      *p_is_null = ( mysqlpfs_s_bool_t ) is_null;
-      *p_length = 0;
-      rSETGOOD;
+      if ( p && p_is_null && p_length )
+      {
+        *p = ( mysqlpfs_s_ulonglong_t ) num;
+        *p_is_null = ( mysqlpfs_s_bool_t ) is_null;
+        *p_length = 0;
+        rSETGOOD;
+      }
     }
     else
     {
       WARN( "Unmet: (pos:(%d) < nbind:(%d)) and %p and %p", pos, mbind->nbind, mbind->allocated_buffers, mbind->allocated_buffers[pos] );
       rSETBAD;
-      assert(0);
-      /* 20180119.135244 QRG( rCODE ); */
+      QRG( rCODE );
     }
   }
   rRET;

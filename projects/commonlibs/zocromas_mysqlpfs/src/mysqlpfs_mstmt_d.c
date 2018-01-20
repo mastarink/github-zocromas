@@ -22,7 +22,7 @@
 int
 mas_mysqlpfs_mstmt_set_direct_param_string( mysqlpfs_mstmt_t * mstmt, int pos, const char *str )
 {
-  int r = -1;
+  rDECLBAD;
 
   QRGP( mstmt );
   if ( mstmt )
@@ -56,8 +56,8 @@ mas_mysqlpfs_mstmt_set_direct_param_string( mysqlpfs_mstmt_t * mstmt, int pos, c
         mstmt->binds.param.bind[pos].is_null = 0;
         mstmt->binds.param.bind[pos].length = plength;
       }
-      r = 0;
+      rSETGOOD;
     }
   }
-  return r;
+  rRET;
 }

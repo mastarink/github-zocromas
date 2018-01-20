@@ -25,7 +25,7 @@
 int
 mas_mysqlpfs_query( mysqlpfs_t * pfs, const char *sqlop )
 {
-  int r = -1;
+  rDECLBAD;
 
   QRGP( pfs );
   QRGP( sqlop );
@@ -34,12 +34,11 @@ mas_mysqlpfs_query( mysqlpfs_t * pfs, const char *sqlop )
     {
       char *sqlopx = mas_expand_string_cb_arg( sqlop, mas_mysqlpfs_expand_sqlop, pfs->table_prefix );
 
-      r = mysql_query( &pfs->mysql, sqlopx );
+      if ( 0 == mysql_query( &pfs->mysql, sqlopx ) )
+        rSETGOOD;
       mas_free( sqlopx );
     }
-    if ( r )
-      WARN( "(%d) --- '%s'\n", r, sqlop );
-    QRGS( r );
+    QRGS( rCODE );
   }
-  return r;
+  rRET;
 }

@@ -1,4 +1,20 @@
 #
+# run  --mysql-table-prefix=pictures_  --drop-tables  
+#     --store=/home/mastar/.mas/lib/big/misc/media/photo  
+# #   --store=/home/mastar/.mas/lib/big/misc/media/photo/LG_G3  
+# #   --store=/home/mastar/.mas/lib/big/misc/media/photo/Pictures  
+# #   --store=/home/mastar/.mas/lib/big/misc/media/photo/Pictures.R.20120207.164339 
+#     --store=/home/space/sambaspace/2016 
+#     --store=/home/space/sambaspace/2017 
+#     --store=/home/space/sambaspace/2016x  
+#     --store=/home/space/owncloud/data/mastarink/files/Camera
+#     --store=/home/mastar/Desktop/20160108/Camera_Uploads
+#     --store=/home/mastar/Desktop/20160108/Camera_Uploads_only
+#
+# /home/mastar/.mas/lib/a/down/chromium/Camera.zip
+# /mnt/jotera/backup/photo/Camera Uploads.zip
+# /mnt/jotera/backup/mobile/LG_G3.flash-DCIM.20171211.tar.gz
+# /home/mastar/.mas/lib/a/downloads/by/firefox/Photo.tar.gz
 mysql-user=masdufnt
 mysql-password=i2xV9KrTA54HRpj4e
 mysql-db=masdufntdb

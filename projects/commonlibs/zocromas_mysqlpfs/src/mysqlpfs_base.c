@@ -25,7 +25,7 @@ mysqlpfs_create( void )
 int
 mysqlpfs_init( mysqlpfs_t * pfs, const char *host, const char *user, const char *passwd, const char *db, int port, const char *table_prefix )
 {
-  int r = 0;
+  rDECLBAD;
   MYSQL *mysql = NULL;
 
 /* client_flag |= CLIENT_MULTI_STATEMENTS; */
@@ -36,15 +36,14 @@ mysqlpfs_init( mysqlpfs_t * pfs, const char *host, const char *user, const char 
   {
     pfs->inited = 1;
     pfs->table_prefix = mas_strdup( table_prefix );
+    rSETGOOD;
   }
   else
   {
     mysqlpfs_reset( pfs );
-    r = -1;
   }
 
-/* WARN( "MYSQL: %p : %d", mysql, r ); */
-  return r;
+  rRET;
 }
 
 mysqlpfs_t *

@@ -49,10 +49,7 @@ mas_mysqlpfs_query_result( mysqlpfs_t * pfs, const char *sqlop )
   QRGP( pfs );
   if ( pfs )
   {
-    int r = -1;
-
-    r = mas_mysqlpfs_query( pfs, sqlop );
-    if ( !r )
+    if ( 0 == mas_mysqlpfs_query( pfs, sqlop ) )
       result = mas_mysqlpfs_result( pfs );
     QRGSP( result );
   }
