@@ -900,11 +900,11 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
                 "     AND (detype IN ('DIR','LNK') "                 /* */
               /* ('BLK','CHR','DIR','FIFO','LNK','-REG','SOCK') */
                 "     OR ("                                          /* */
-                "          ( nsamesize>? AND nsamesize<=? ) "        /* */
-                "         AND ( nsamesha1>? AND nsamesha1<=? ) "     /* */
-                "         AND ( size>? AND size<=? ) "               /* */
-                "         AND ( inode>? AND inode<=? ) "             /* */
-                "         AND ( sha1id>? AND sha1id<=? ) "           /* */
+                "          ( nsamesize>=? AND nsamesize<=? ) "        /* */
+                "         AND ( nsamesha1>=? AND nsamesha1<=? ) "     /* */
+                "         AND ( size>=? AND size<=? ) "               /* */
+                "         AND ( inode>=? AND inode<=? ) "             /* */
+                "         AND ( sha1id>=? AND sha1id<=? ) "           /* */
                 "         AND ( name REGEXP ? )  "                   /* */
                 "      ) "                                           /* */
                 "     ) "                                            /* */
@@ -948,11 +948,11 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
                 "     AND (detype IN ('DIR','LNK') "                 /* */
               /* ('BLK','CHR','DIR','FIFO','LNK','-REG','SOCK') */
                 "     OR ("                                          /* */
-                "          ( nsamesize>? AND nsamesize<=? ) "        /* */
-                "         AND ( nsamesha1>? AND nsamesha1<=? ) "     /* */
-                "         AND ( size>? AND size<=? ) "               /* */
-                "         AND ( inode>? AND inode<=? ) "             /* */
-                "         AND ( sha1id>? AND sha1id<=? ) "           /* */
+                "          ( nsamesize>=? AND nsamesize<=? ) "        /* */
+                "         AND ( nsamesha1>=? AND nsamesha1<=? ) "     /* */
+                "         AND ( size>=? AND size<=? ) "               /* */
+                "         AND ( inode>=? AND inode<=? ) "             /* */
+                "         AND ( sha1id>=? AND sha1id<=? ) "           /* */
                 "         AND ( name REGEXP ? )  "                   /* */
                 "      ) "                                           /* */
                 "     ) "                                            /* */

@@ -201,13 +201,19 @@ masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_st
 }
 
 int
+masxfs_levinfo_db_opened_dir( const masxfs_levinfo_t * li )
+{
+  return li && li->db.scan.mstmt ? 1 : 0;
+}
+
+int
 masxfs_levinfo_db_opendir( masxfs_levinfo_t * li, masxfs_entry_filter_t * entry_pfilter )
 {
   rDECLBAD;
-
 /* assert( 0 != strcmp( li->name, ".auxdir" ) ); */
   if ( li )
   {
+    assert( !masxfs_levinfo_db_opened_dir( li ) );
     if ( li->db.scan.mstmt )
     {
       rSETGOOD;
@@ -215,7 +221,9 @@ masxfs_levinfo_db_opendir( masxfs_levinfo_t * li, masxfs_entry_filter_t * entry_
     else
     {
     /* WARN( "real open 1 '%s' %lld", li->name, li->db.node_id ); */
-      rC( masxfs_levinfo_db_open( li ) );
+      if ( !masxfs_levinfo_db_opened( li ) )
+        rC( masxfs_levinfo_db_open( li ) );
+      assert( masxfs_levinfo_db_opened( li ) );
     /* WARN( "(%d) real open 2 '%s' %lld", rCODE, li->name, li->db.node_id ); */
     /* assert( li->detype != MASXFS_ENTRY_DIR_NUM || li->db.node_id ); */
     /* FIXME */
@@ -247,11 +255,11 @@ masxfs_levinfo_db_closedir( masxfs_levinfo_t * li )
 }
 
 int
-masxfs_levinfo_db_rewinddir( masxfs_levinfo_t * li, masxfs_entry_filter_t * entry_pfilter )
+masxfs_levinfo_db_rewinddir( masxfs_levinfo_t * li, masxfs_entry_filter_t * entry_pfilter _uUu_ )
 {
   rDECLBAD;
 
-  rC( masxfs_levinfo_db_opendir( li, entry_pfilter ) );
+/* rC( masxfs_levinfo_db_opendir( li, entry_pfilter ) ); */
   if ( li )
     rC( mas_qstd_mstmt_data_seek( li->db.scan.mstmt, 0 ) );
   rRET;

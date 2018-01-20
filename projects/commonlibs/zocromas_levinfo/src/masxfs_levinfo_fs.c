@@ -67,6 +67,12 @@ masxfs_levinfo_fs_open_at( masxfs_levinfo_t * li, int fdparent )
 }
 
 int
+masxfs_levinfo_fs_opened( masxfs_levinfo_t * li )
+{
+  return li->fd > 0;
+}
+
+int
 masxfs_levinfo_fs_open( masxfs_levinfo_t * li )
 {
   rDECLBAD;

@@ -44,6 +44,12 @@ masxfs_levinfo_db_open_at( masxfs_levinfo_t * li _uUu_, int fdparent _uUu_ )
 }
 
 int
+masxfs_levinfo_db_opened( masxfs_levinfo_t * li )
+{
+  return li->db.node_id ? 1 : 0;
+}
+
+int
 masxfs_levinfo_db_open( masxfs_levinfo_t * li )
 {
   rDECLBAD;
@@ -82,7 +88,7 @@ masxfs_levinfo_db_open( masxfs_levinfo_t * li )
           if ( !li->db.node_id )
           {
             rSETBAD;
-            /* 20180119.135237 QRLIM( li, rCODE, "can't get node_id for '%s' (D:%d)", li->name, li->lidepth ); */
+          /* 20180119.135237 QRLIM( li, rCODE, "can't get node_id for '%s' (D:%d)", li->name, li->lidepth ); */
           }
         }
       }
@@ -117,15 +123,19 @@ masxfs_levinfo__db_stat( masxfs_levinfo_t * li, masxfs_entry_filter_t * entry_pf
 {
   rDECLBAD;
 
-  if ( li->lidepth )
+  if ( li->lidepth > 0 )
   {
-    rC( masxfs_levinfo_db_opendir( li - 1, entry_pfilter ) );
-    if ( !li->db.stat )
+    if ( !masxfs_levinfo_db_opened_dir( li - 1 ) )
+      rC( masxfs_levinfo_db_opendir( li - 1, entry_pfilter ) );
+    assert( masxfs_levinfo_db_opened_dir( li - 1 ) );
+    if ( !li->db.stat )                                              // XXX ??
     {
       int has_data = 0;                                              /* or just pass NULL instead of &has_data */
 
       rC( masxfs_levinfo_db_readdir( li - 1, entry_pfilter, &has_data ) );
     }
+    else
+      rSETGOOD;
     if ( pstat )
       *pstat = li->db.stat;
   }

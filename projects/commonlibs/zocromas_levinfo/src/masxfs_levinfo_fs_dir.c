@@ -31,8 +31,10 @@ masxfs_levinfo_fs_rewinddir( masxfs_levinfo_t * li )
 {
   rDECLBAD;
 
-  rC( masxfs_levinfo_fs_opendir( li ) );
-  if ( rGOOD && li && li->fs.scan.pdir )
+  assert( masxfs_levinfo_fs_opened_dir( li ) );
+/* rC( masxfs_levinfo_fs_opendir( li ) ); */
+  assert( masxfs_levinfo_fs_opened( li ) );
+  if (  /*rGOOD && */ li && li->fs.scan.pdir )
   {
     errno = 0;
     rewinddir( li->fs.scan.pdir );
@@ -47,6 +49,12 @@ masxfs_levinfo_fs_rewinddir( masxfs_levinfo_t * li )
 }
 
 int
+masxfs_levinfo_fs_opened_dir( const masxfs_levinfo_t * li )
+{
+  return li && li->fs.scan.pdir ? 1 : 0;
+}
+
+int
 masxfs_levinfo_fs_opendir( masxfs_levinfo_t * li )
 {
   rDECLBAD;
@@ -54,10 +62,13 @@ masxfs_levinfo_fs_opendir( masxfs_levinfo_t * li )
   if ( li )
   {
     rSETGOOD;
-
+  /* assert( !li->fs.scan.pdir ); */
     if ( !li->fs.scan.pdir )
     {
+      assert( !masxfs_levinfo_fs_opened( li ) );
       int fd = masxfs_levinfo_fs_open( li );
+
+      assert( masxfs_levinfo_fs_opened( li ) );
 
       if ( fd > 0 )
       {
@@ -69,7 +80,7 @@ masxfs_levinfo_fs_opendir( masxfs_levinfo_t * li )
         if ( rGOOD && li->fs.scan.pdir )
         {
           li->detype = MASXFS_ENTRY_DIR_NUM;
-          rC( masxfs_levinfo_fs_rewinddir( li ) );
+        /*20180120.151331? rC( masxfs_levinfo_fs_rewinddir( li ) ); */
         }
         else
         {

@@ -75,7 +75,6 @@ masxfs_levinfo_size_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags)
 {
   rDECLBAD;
   off_t size = 0;
-
   if ( li )
   {
   /* if ( tflags & MASXFS_CB_MODE_DB )                                               */

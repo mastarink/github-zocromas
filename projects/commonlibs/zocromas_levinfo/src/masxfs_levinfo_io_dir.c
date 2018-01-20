@@ -37,9 +37,22 @@ masxfs_levinfo_rewinddir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, m
 }
 
 int
+masxfs_levinfo_opened_dir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
+{
+  int r = 0;
+
+  if ( flags & MASXFS_CB_MODE_FS )
+    r = masxfs_levinfo_fs_opened_dir( li );
+  if ( flags & MASXFS_CB_MODE_DB )
+    r = masxfs_levinfo_db_opened_dir( li );
+  return r;
+}
+
+int
 masxfs_levinfo_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, masxfs_entry_filter_t * entry_pfilter )
 {
   rDECLGOOD;
+  assert( !masxfs_levinfo_opened_dir( li, flags ) );
 
   if ( flags & MASXFS_CB_MODE_FS )
     rC( masxfs_levinfo_fs_opendir( li ) );

@@ -17,10 +17,16 @@
 
 #include "masxfs_levinfo_scan.h"
 
+/* scan all childs, for open  */
 static int
 masxfs_levinfo_scanf_dir_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * scanner, masxfs_levinfo_flags_t more_flags, void *userdata,
                                   masxfs_depth_t reldepth );
 
+/* scan all childs, for closed: 
+ * 1. open
+ * 2. scanf_dir_scanner
+ * 3. close
+ * */
 int
 masxfs_levinfo_scanf_li_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * scanner, masxfs_levinfo_flags_t more_flags, void *userdata,
                                  masxfs_depth_t reldepth )
@@ -29,11 +35,14 @@ masxfs_levinfo_scanf_li_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * scann
 
   masxfs_levinfo_flags_t flags = scanner->flags | more_flags;
 
+  assert( !masxfs_levinfo_opened_dir( li, flags ) );
   rC( masxfs_levinfo_opendir( li, flags, scanner->entry_pfilter ) );
+  assert( masxfs_levinfo_opened_dir( li, flags ) );
   if ( rGOOD )
   {
     int rc = 0;
 
+/* scan all childs, for open  */
     rC( masxfs_levinfo_scanf_dir_scanner( li, scanner, more_flags, userdata, reldepth ) );
     rc = masxfs_levinfo_closedir( li, flags );                       /* sic! */
     if ( rGOOD )
@@ -43,6 +52,7 @@ masxfs_levinfo_scanf_li_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * scann
   rRET;
 }
 
+/* scan self */
 static int
 masxfs_levinfo_scanf_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxfs_entry_filter_t * entry_pfilter, masxfs_entry_callback_t * cb,
                                                 void *userdata, masxfs_levinfo_flags_t flags, masxfs_depth_t reldepth )
@@ -89,6 +99,7 @@ masxfs_levinfo_scanf_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxf
           if ( cb && cb->fun_simple )
           {
             masxfs_scan_fun_simple_t fun_simple = cb->fun_simple;
+
 /* WARN("file: %s", lithis->name); */
 //            const char *prefix = NULL;
 //            prefix = masxfs_levinfo_prefix_ref( lithis, "    ", "└── ", "│   ", "├── ", cb->fun_top_depth + 1, tflags );
@@ -103,7 +114,7 @@ masxfs_levinfo_scanf_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxf
             masxfs_scan_fun_stat_t fun_stat = cb->fun_stat;
             struct stat *st = NULL;
 
-            rC( masxfs_levinfo_stat( lithis, tflags, NULL /* entry_pfilter */, &st /* stat */  ) );
+            rC( masxfs_levinfo_stat( lithis, tflags, NULL /* entry_pfilter */ , &st /* stat */  ) );
             if ( rGOOD )
             {
 #if 0
@@ -140,6 +151,7 @@ masxfs_levinfo_scanf_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxf
   rRET;
 }
 
+ /* scan self, possibly UP_ROOT */
 static int
 masxfs_levinfo_scanf_entry_single_internal_scanner( masxfs_levinfo_t * liparent, masxfs_levinfo_t * lithis, masxfs_scanner_t * scanner,
                                                     masxfs_levinfo_flags_t more_flags, masxfs_levinfo_flags_t no_flags, void *userdata,
@@ -172,6 +184,7 @@ masxfs_levinfo_scanf_entry_single_internal_scanner( masxfs_levinfo_t * liparent,
             if ( li->lidepth == ( masxfs_depth_t ) ( li - lia ) )
             {
               li->detype = MASXFS_ENTRY_DIR_NUM;
+            /* scan self */
               rC( masxfs_levinfo_scanf_entry_single_internal_1cb( li, entry_pfilter, cb, userdata, flags & ~MASXFS_CB_UP_ROOT, li - lithis ) );
             }
             else
@@ -180,7 +193,7 @@ masxfs_levinfo_scanf_entry_single_internal_scanner( masxfs_levinfo_t * liparent,
             }
           }
         }
-      /* assert( lithis->detype > MASXFS_ENTRY_UNKNOWN_NUM ); */
+      /* scan self */
         rC( masxfs_levinfo_scanf_entry_single_internal_1cb( lithis, entry_pfilter, cb, userdata, flags & ~MASXFS_CB_UP_ROOT, reldepth ) );
         if ( ( flags & MASXFS_CB_SINGLE_CB ) || !cb || !cb->fun_simple )
           break;
@@ -204,6 +217,7 @@ masxfs_levinfo_scanf_entry_single_internal_cbs( masxfs_levinfo_t * liparent, mas
   return masxfs_levinfo_scanf_entry_single_internal_scanner( liparent, lithis, &scanner, 0, userdata, reldepth );
 } */
 
+ /* scan self, possibly UP_ROOT, checked */
 static int
 masxfs_levinfo_scanf_entry_single_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * scanner, masxfs_levinfo_flags_t more_flags,
                                            masxfs_levinfo_flags_t no_flags, void *userdata, masxfs_depth_t reldepth )
@@ -216,6 +230,7 @@ masxfs_levinfo_scanf_entry_single_scanner( masxfs_levinfo_t * li, masxfs_scanner
   if ( li )
   {
     assert( li->lidepth );
+  /* scan self, possibly UP_ROOT */
     rC( masxfs_levinfo_scanf_entry_single_internal_scanner
         ( li->lidepth > 0 ? li - 1 : NULL, li, scanner, more_flags, no_flags, userdata, reldepth ) );
   }
@@ -224,6 +239,7 @@ masxfs_levinfo_scanf_entry_single_scanner( masxfs_levinfo_t * li, masxfs_scanner
   rRET;
 }
 
+/* scan self & all childs, for closed */
 static int
 masxfs_levinfo_scanf_entry_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * scanner, masxfs_levinfo_flags_t more_flags, void *userdata,
                                     masxfs_depth_t reldepth )
@@ -232,16 +248,30 @@ masxfs_levinfo_scanf_entry_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * sc
 
   if ( li )
   {
+    assert( !masxfs_levinfo_opened_dir( li, more_flags ) );
     if ( li->detype == MASXFS_ENTRY_DIR_NUM )
     {
+#if 0
+    /* scan all childs, for open  */
       rC( masxfs_levinfo_scanf_dir_scanner( li, scanner, more_flags | MASXFS_CB_COUNT | MASXFS_CB_SKIP | MASXFS_CB_SINGLE_CB, userdata, reldepth ) );
+#else
+    /* scan all childs, for closed */
+      rC( masxfs_levinfo_scanf_li_scanner( li, scanner, more_flags | MASXFS_CB_COUNT | MASXFS_CB_SKIP | MASXFS_CB_SINGLE_CB, userdata, reldepth ) );
+#endif
       QRLI( li, rCODE );
     }
+  /* scan self, possibly UP_ROOT, checked */
     rC( masxfs_levinfo_scanf_entry_single_scanner( li, scanner, more_flags, 0, userdata, reldepth ) );
     QRLI( li, rCODE );
     if ( li->detype == MASXFS_ENTRY_DIR_NUM )
     {
+#if 0
+    /* scan all childs, for open  */
+      rC( masxfs_levinfo_scanf_dir_scanner( li, scanner, more_flags, userdata, reldepth ) );
+#else
+    /* scan all childs, for closed */
       rC( masxfs_levinfo_scanf_li_scanner( li, scanner, more_flags, userdata, reldepth ) );
+#endif
       QRLI( li, rCODE );
     }
     else if ( li->detype == MASXFS_ENTRY_REG_NUM )
@@ -277,6 +307,7 @@ masxfs_levinfo_match_filter( masxfs_levinfo_t * li, masxfs_entry_filter_t * entr
   return f;
 }
 
+/* scan one child, for open  */
 int
 masxfs_levinfo_scanf_down_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * scanner, masxfs_levinfo_flags_t more_flags, void *userdata,
                                    masxfs_depth_t reldepth )
@@ -289,6 +320,8 @@ masxfs_levinfo_scanf_down_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * sca
     masxfs_levinfo_flags_t flags = scanner->flags | more_flags;
     masxfs_depth_t lidepth = li->lidepth;
 
+    assert( masxfs_levinfo_opened_dir( li, flags ) );
+
     li++;
     lidepth++;
     reldepth++;
@@ -298,6 +331,7 @@ masxfs_levinfo_scanf_down_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * sca
       if ( ( flags & MASXFS_CB_RECURSIVE ) && masxfs_levinfo_match_filter( li, &maxdepth_filter )
            && masxfs_levinfo_match_filter( li, entry_pfilter ) )
       {
+/* scan self & all childs, for closed */
         rC( masxfs_levinfo_scanf_entry_scanner( li, scanner, more_flags, userdata, reldepth ) );
       }
       else
@@ -370,12 +404,10 @@ masxfs_levinfo_fix_type( masxfs_levinfo_t * li _uUu_ )
 }
 #endif
 
-/*
- * bad:  r< 0
- * good: r>=0 */
+/* scan remaining childs, for open  */
 static int
-masxfs_levinfo_scanf_dir_rest_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * scanner, masxfs_levinfo_flags_t more_flags,
-                                       void *userdata, masxfs_depth_t reldepth )
+masxfs_levinfo_scanf_dir_remaining_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * scanner, masxfs_levinfo_flags_t more_flags,
+                                            void *userdata, masxfs_depth_t reldepth )
 {
   rDECLBAD;
   int n = 0;
@@ -386,9 +418,12 @@ masxfs_levinfo_scanf_dir_rest_scanner( masxfs_levinfo_t * li, masxfs_scanner_t *
     rSETGOOD;
     masxfs_levinfo_flags_t flags = scanner->flags | more_flags;
 
+    assert( masxfs_levinfo_opened_dir( li, flags ) );
+
 /* TODO filter here ?! 20171229.122350 */
     while ( rGOOD && rC( masxfs_levinfo_readdir( li, scanner->entry_pfilter, flags, &has_data ) ) && has_data )
     {
+    /* scan one child, for open  */
       rC( masxfs_levinfo_scanf_down_scanner( li, scanner, more_flags, userdata, reldepth ) );
       QRLI( li, rCODE );
       assert( !li[1].name );
@@ -402,6 +437,7 @@ masxfs_levinfo_scanf_dir_rest_scanner( masxfs_levinfo_t * li, masxfs_scanner_t *
   rRET;
 }
 
+/* scan all childs, for open  */
 static int
 masxfs_levinfo_scanf_dir_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * scanner, masxfs_levinfo_flags_t more_flags, void *userdata,
                                   masxfs_depth_t reldepth )
@@ -409,9 +445,12 @@ masxfs_levinfo_scanf_dir_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * scan
   rDECLBAD;
   masxfs_levinfo_flags_t flags = scanner->flags | more_flags;
 
-  /* assert( masxfs_levinfo_detype( li, flags ) == MASXFS_ENTRY_DIR_NUM ); */
-  rC( masxfs_levinfo_rewinddir( li, flags, scanner->entry_pfilter  ) );
-  rC( masxfs_levinfo_scanf_dir_rest_scanner( li, scanner, more_flags, userdata, reldepth ) );
+  assert( masxfs_levinfo_opened_dir( li, flags ) );
+
+/* assert( masxfs_levinfo_detype( li, flags ) == MASXFS_ENTRY_DIR_NUM ); */
+  rC( masxfs_levinfo_rewinddir( li, flags, scanner->entry_pfilter ) );
+/* scan remaining childs, for open  */
+  rC( masxfs_levinfo_scanf_dir_remaining_scanner( li, scanner, more_flags, userdata, reldepth ) );
   rRET;
 }
 
@@ -456,6 +495,7 @@ masxfs_levinfo_scanf_tree_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * sca
       {
         if ( li->lidepth )
         {
+        /* scan self, possibly UP_ROOT, checked */
           rC( masxfs_levinfo_scanf_entry_single_scanner
               ( li, scanner, MASXFS_CB_COUNT | MASXFS_CB_SKIP | MASXFS_CB_SINGLE_CB, MASXFS_CB_SKIP_EMPTY, userdata, reldepth ) );
           QRLI( li, rCODE );
@@ -467,6 +507,7 @@ masxfs_levinfo_scanf_tree_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * sca
           WARN( "%lx : %lx - %s %s %s - %s rd:%d", flags, xflags, flags & MASXFS_CB_SELF ? "SELF" : "", flags & MASXFS_CB_UP ? "UP" :
                 "", flags & MASXFS_CB_FROM_ROOT ? "FROM_ROOT" : "", li->name, reldepth );
 #endif
+        /* scan self, possibly UP_ROOT, checked */
           rC( masxfs_levinfo_scanf_entry_single_scanner( li, scanner, xflags ? 0 : MASXFS_CB_SKIP, MASXFS_CB_SKIP_EMPTY, userdata, reldepth ) );
           QRLI( li, rCODE );
         }
@@ -480,8 +521,17 @@ masxfs_levinfo_scanf_tree_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * sca
       reldepth--;
       li--;
 
+#if 0
+/* scan all childs, for open  */
       rC( masxfs_levinfo_scanf_dir_scanner( li, scanner, 0 | MASXFS_CB_COUNT | MASXFS_CB_SKIP | MASXFS_CB_SINGLE_CB, userdata, reldepth ) );
+/* scan all childs, for open  */
       rC( masxfs_levinfo_scanf_dir_scanner( li, scanner, 0, userdata, reldepth ) );
+#else
+/* scan all childs, for closed */
+      rC( masxfs_levinfo_scanf_li_scanner( li, scanner, 0 | MASXFS_CB_COUNT | MASXFS_CB_SKIP | MASXFS_CB_SINGLE_CB, userdata, reldepth ) );
+/* scan all childs, for closed */
+      rC( masxfs_levinfo_scanf_li_scanner( li, scanner, 0, userdata, reldepth ) );
+#endif
       memset( li->child_count_pair, 0, sizeof( li->child_count_pair ) );
     }
     else
