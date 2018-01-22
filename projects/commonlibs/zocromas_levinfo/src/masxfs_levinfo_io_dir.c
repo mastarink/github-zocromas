@@ -25,27 +25,40 @@ exiternal functions used:
 */
 
 int
-masxfs_levinfo_rewinddir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, masxfs_entry_filter_t * entry_pfilter )
+masxfs_levinfo_rewinddir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
   rDECLGOOD;
 
   if ( flags & MASXFS_CB_MODE_FS )
     rC( masxfs_levinfo_fs_rewinddir( li ) );
   if ( flags & MASXFS_CB_MODE_DB )
-    rC( masxfs_levinfo_db_rewinddir( li, entry_pfilter ) );
+    rC( masxfs_levinfo_db_rewinddir( li ) );
   rRET;
 }
 
 int
 masxfs_levinfo_opened_dir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
-  int r = 0;
+  int f = 0;
 
   if ( flags & MASXFS_CB_MODE_FS )
-    r = masxfs_levinfo_fs_opened_dir( li );
+    f = masxfs_levinfo_fs_opened_dir( li );
   if ( flags & MASXFS_CB_MODE_DB )
-    r = masxfs_levinfo_db_opened_dir( li );
-  return r;
+    f = masxfs_levinfo_db_opened_dir( li );
+  return f;
+}
+
+int
+masxfs_levinfo_closedir_force( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, int rcode )
+{
+  rDECLGOOD;
+  int rc = 0;
+
+  rCODE = rcode;
+  rc = masxfs_levinfo_closedir( li, flags );                         /* sic! */
+  if ( rGOOD )
+    rCODE = rc;
+  rRET;
 }
 
 int
@@ -58,6 +71,8 @@ masxfs_levinfo_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, mas
     rC( masxfs_levinfo_fs_opendir( li ) );
   if ( flags & MASXFS_CB_MODE_DB )
     rC( masxfs_levinfo_db_opendir( li, entry_pfilter ) );
+  assert( flags & ( MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB ) );
+  assert( masxfs_levinfo_opened_dir( li, flags ) );
   rRET;
 }
 
@@ -71,6 +86,7 @@ masxfs_levinfo_closedir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
     rC( masxfs_levinfo_fs_closedir( li ) );
   if ( flags & MASXFS_CB_MODE_DB )
     rC( masxfs_levinfo_db_closedir( li ) );
+  assert( flags & ( MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB ) );
   rRET;
 }
 

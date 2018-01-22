@@ -39,7 +39,6 @@ treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, uns
   FILE *fil = ( FILE * ) userdata;
   static masxfs_depth_t top_depth = 0;
 
-/* EXAM( !epath, TRUE, "%d ? %d" ); */
   size_t size = masxfs_levinfo_size_ref( li, flags );
 
 /*int fd _uUu_ = masxfs_levinfo_fd_ref( li, flags );*/

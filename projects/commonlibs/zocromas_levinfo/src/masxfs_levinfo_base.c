@@ -12,6 +12,7 @@
 #include "masxfs_levinfo_io.h"
 #include "masxfs_levinfo_io_dir.h"
 
+#include "masxfs_levinfo_tools.h"
 #include "masxfs_levinfo_digest.h"
 
 #include "masxfs_levinfo_base.h"
@@ -40,7 +41,7 @@ masxfs_levinfo_create( void )
 
 void
 masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *name, size_t len,
-                       masxfs_entry_type_t d_type /*, ino_t d_inode _uUu_ */ ,
+                       masxfs_entry_type_t detype /*, ino_t d_inode _uUu_ */ ,
                        unsigned long long node_id, masxfs_stat_t * stat, masxfs_xstatc_t * xstat _uUu_ )
 {
   if ( li && name )
@@ -50,7 +51,7 @@ masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char
     if ( li->name )
       mas_free( li->name );
     li->name = newname;
-    li->detype = d_type;
+    li->detype = detype;
   /* li->deinode = d_inode; (* TODO take from destat OR needless!!! *) */
     li->lidepth = lidepth;
     li->db.node_id = node_id;
@@ -82,10 +83,10 @@ masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char
 }
 
 void
-masxfs_levinfo_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *name, masxfs_entry_type_t d_type /*, ino_t d_inode */ ,
+masxfs_levinfo_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *name, masxfs_entry_type_t detype /*, ino_t d_inode */ ,
                      masxfs_stat_t * stat, masxfs_xstatc_t * xstat, unsigned long long node_id )
 {
-  masxfs_levinfo_n_init( li, lidepth, name, name ? strlen( name ) : 0, d_type /*, d_inode */ , node_id, stat, xstat );
+  masxfs_levinfo_n_init( li, lidepth, name, name ? strlen( name ) : 0, detype /*, d_inode */ , node_id, stat, xstat );
 }
 
 /* flags: only MASXFS_CB_MODE_FS or/and MASXFS_CB_MODE_DB used */
@@ -142,8 +143,6 @@ masxfs_levinfo_reset_lia( masxfs_levinfo_t * lia, masxfs_depth_t sz, masxfs_levi
     for ( masxfs_depth_t il = 0; il < sz && ( lia + il )->name; il++ )
     {
       masxfs_levinfo_reset( lia + il, flags );                       /* flags: only MASXFS_CB_MODE_FS or/and MASXFS_CB_MODE_DB used */
-    /* if ( il < sz - 1 )                   */
-    /*   li->detype = MASXFS_ENTRY_DIR_NUM; */
     }
 }
 
@@ -155,4 +154,27 @@ masxfs_levinfo_delete_lia( masxfs_levinfo_t * li, masxfs_depth_t sz, masxfs_levi
     masxfs_levinfo_reset_lia( li, sz, flags );
     mas_free( li );
   }
+}
+
+int
+masxfs_levinfo_init_valid( masxfs_levinfo_t * li, masxfs_depth_t lidepth, masxfs_entry_filter_t * entry_pfilter, const char *dename,
+                           masxfs_entry_type_t detype, unsigned long long node_id, masxfs_stat_t * stat, masxfs_xstatc_t * xstat )
+{
+  int validx = 0;
+
+  if ( li )
+  {
+    assert( !li->db.stat );
+    masxfs_levinfo_init( li, lidepth, dename, detype, stat, xstat, node_id );
+    assert( li->db.stat );
+    {
+      validx = masxfs_levinfo_stat_valid( li, entry_pfilter, MASXFS_CB_MODE_DB )
+              && masxfs_levinfo_xstat_valid( li, entry_pfilter, MASXFS_CB_MODE_DB );
+      if ( !validx )
+      {
+        masxfs_levinfo_reset( li, MASXFS_CB_MODE_DB );               /* flags: only MASXFS_CB_MODE_FS or/and MASXFS_CB_MODE_DB used */
+      }
+    }
+  }
+  return validx;
 }

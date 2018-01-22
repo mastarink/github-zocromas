@@ -18,17 +18,6 @@
 
 #include "masxfs_levinfo_fs.h"
 
-/*
-exiternal functions used:
-
- openat
- open
- close
- fstatat
- fstat
-
- */
-
 int
 masxfs_levinfo_fs_open_at( masxfs_levinfo_t * li, int fdparent )
 {

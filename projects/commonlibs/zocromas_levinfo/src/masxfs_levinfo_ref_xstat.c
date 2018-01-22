@@ -11,8 +11,6 @@
 #include "masxfs_levinfo_structs.h"
 
 #include "masxfs_levinfo_io.h"
-//#include "masxfs_levinfo_format.h"
-//#include "masxfs_levinfo_path.h"
 
 #include "masxfs_levinfo_ref.h"
 #include "masxfs_levinfo_ref_xstat.h"
