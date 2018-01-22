@@ -113,7 +113,7 @@ treestatcb( const char *ename, struct stat *st, void *userdata, unsigned depth _
   FILE *fil = ( FILE * ) userdata;
 
 /* /usr/bin/tree -U --inodes -s -a mastest | nl -ba -nrn -w4 > tree-U--inodes-s-a.tree */
-  fprintf( fil, "%4ld\t%s[%-10ld %10ld]  %-30s\n", serial, treeprefix ? treeprefix : "", st->st_ino, st->st_size,
+  fprintf( fil, "%4ld\t%s[%-10ld %10ld]  %-30s (stat)\n", serial, treeprefix ? treeprefix : "", st->st_ino, st->st_size,
            ename ? ename : "" /*, epath ? epath : "" */  );
   return 0;
 }
@@ -125,12 +125,14 @@ dufnx_tree( const char *real_path, masxfs_entry_filter_t * pentry_filter, FILE *
 
   masxfs_levinfo_flags_t walkflags = MASXFS_CB_RECURSIVE | MASXFS_CB_STAT | MASXFS_CB_SINGLE_CB | inflags;
 
+  masxfs_entry_callback_t _uUu_ callbacks1[] = { {.fun_counter = 0} };
   masxfs_entry_callback_t callbacks[] = {
-    {.fun_simple = treecb,.flags =
-     /* MASXFS_CB_OFF_NAME | MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ ,.entry_filter =
-     {.maxdepth = 0}},
-    {.fun_stat = treestatcb,.flags = MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT,.entry_filter = {.maxdepth = 0}},
-    {NULL}
+    {
+     .fun_simple = treecb,.flags =
+     /* MASXFS_CB_OFF_NAME | MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ ,
+     /*.entry_filter =   {.maxdepth = 0} */},
+    {.fun_stat = treestatcb,.flags = MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /*,.entry_filter = {.maxdepth = 0} */},
+    {0}
   };
   dufnx_qstd( mysql );
   masxfs_pathinfo_t *pi = NULL;
@@ -187,7 +189,7 @@ dufnx_data_tree( const char *path, int npos, void *userdata, void *extradata _uU
     mas_dufnx_data_t *pdufnx_data = ( mas_dufnx_data_t * ) userdata;
 
     real_path = mas_normalize_path_cwd_dots( path, FALSE );
- /* WARN( "path: %s; real_path: %s", path, real_path ); */
+  /* WARN( "path: %s; real_path: %s", path, real_path ); */
     rC( dufnx_tree( real_path, &pdufnx_data->entry_filter, stdout, pdufnx_data->levinfo_flags, &pdufnx_data->mysql ) );
     mas_free( real_path );
   }

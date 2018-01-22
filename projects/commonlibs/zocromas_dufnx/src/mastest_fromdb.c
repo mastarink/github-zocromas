@@ -19,7 +19,7 @@
 
 static int numline_treecb = 0;
 static int _uUu_
-treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *data _uUu_, unsigned long serial _uUu_ , masxfs_depth_t reldepth _uUu_)
+treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *data _uUu_, unsigned long serial _uUu_, masxfs_depth_t reldepth _uUu_ )
 {
   FILE *fil = ( FILE * ) data;
   static masxfs_depth_t top_depth = 0;
@@ -53,8 +53,10 @@ testtreefromdb( const char *path, masxfs_depth_t maxdepth, FILE * fil )
   rDECL( 0 );
 
   masxfs_entry_callback_t callbacks[] = {
-    {treecb,.flags = /* MASXFS_CB_OFF_NAME | MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ },
-    {NULL}
+    {
+     .fun_simple = treecb,.flags =
+     /* MASXFS_CB_OFF_NAME | MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ },
+    {0}
   };
   WARN( "******** start *******" );
 

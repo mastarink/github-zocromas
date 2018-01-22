@@ -1,7 +1,6 @@
 #ifndef MASXFS_LEVINFO_STRUCTS_H
 # define MASXFS_LEVINFO_STRUCTS_H
 
-
 //# include <mastar/mysqlpfs/mysqlpfs_types.h>
 typedef struct mysqlpfs_mstmt_s mysqlpfs_mstmt_t;
 
@@ -29,12 +28,16 @@ struct masxfs_entry_filter_s
 struct masxfs_entry_callback_s
 {
 /* unsigned types; */
-  masxfs_scan_fun_simple_t fun_simple;
-  masxfs_scan_fun_stat_t fun_stat;
   masxfs_levinfo_flags_t flags;
-  masxfs_entry_filter_t entry_filter;
+  /* masxfs_entry_filter_t entry_filter; */
   unsigned long fun_counter;
   masxfs_depth_t fun_top_depth;
+  /* union        */
+  /* {            */
+  /*   void *fun; */
+    masxfs_scan_fun_simple_t fun_simple;
+    masxfs_scan_fun_stat_t fun_stat;
+  /* }; */
 };
 struct masxfs_scanner_s
 {                                                                    /* TODO */

@@ -4,6 +4,7 @@
 # include <stddef.h>
 # include <errno.h>
 
+
 # define _uUu_ __attribute__(( unused ))
 /* # define _mas_internal_  __attribute__ ((visibility ("hidden"))) */
 

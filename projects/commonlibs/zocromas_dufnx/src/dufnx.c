@@ -136,7 +136,7 @@ dufnx_config_store_fs2db( mucs_option_t * opt, void *userdata, void *extradata _
         };
 
         masxfs_entry_callback_t callback = {
-          fillcb,.flags = MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT | MASXFS_CB_DIGESTS | MASXFS_CB_PATH /* | MASXFS_CB_NO_FD */
+          .fun_simple=fillcb,.flags = MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT | MASXFS_CB_DIGESTS | MASXFS_CB_PATH /* | MASXFS_CB_NO_FD */
         };
         rC( mas_qstd_start_transaction( qstd ) );
       /* TODO FIXME : limiting maxdepth here (filling db) leads to memleak when scanning db 20170320.140237 */

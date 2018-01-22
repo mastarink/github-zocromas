@@ -100,9 +100,11 @@ testfill( const char *path, masxfs_depth_t maxdepth )
   rDECLBAD;
 
   masxfs_entry_callback_t callbacks[] = {
-    {testfillcb,.flags = /* MASXFS_CB_OFF_NAME | MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ }
+    {
+     .fun_simple = testfillcb,.flags =
+     /* MASXFS_CB_OFF_NAME | MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_FD */ }
 
-    , {NULL}
+    , {0}
   };
   WARN( "******** testfill *******" );
   {

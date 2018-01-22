@@ -68,30 +68,11 @@ masxfs_levinfo_scanf_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxf
 {
   rDECLBAD;
   {
-    masxfs_entry_type_bit_t entry_bit = 1 << lithis->detype;
-
-    if ( entry_pfilter && ( entry_pfilter->typeflags & entry_bit ) && cb )
+    if ( cb )
     {
-      masxfs_depth_t maxdepthc = cb->entry_filter.maxdepth;
+      /* masxfs_depth_t maxdepthc = cb->entry_filter.maxdepth; */
 
-      if ( lithis->lidepth )
-      {
-        int indx = ( flags & MASXFS_CB_COUNT ) ? 1 : 0;
-
-        if ( flags & MASXFS_CB_COUNT )
-        {
-          if ( lithis->detype != MASXFS_ENTRY_DIR_NUM )
-            lithis[-1].leaf_count++;
-          else
-            lithis[-1].leaf_count += lithis->leaf_count;
-        }
-        {
-          if ( !( flags & MASXFS_CB_SKIP_EMPTY ) || lithis->leaf_count || lithis->detype != MASXFS_ENTRY_DIR_NUM )
-            lithis[-1].child_count_pair[indx]++;
-        }
-      }
-
-      if ( maxdepthc == 0 || ( maxdepthc > 0 && lithis->lidepth < maxdepthc - 1 ) )
+      if ( 1 /* && maxdepthc == 0 || ( maxdepthc > 0 && lithis->lidepth < maxdepthc - 1 ) */ )
       {
         masxfs_levinfo_flags_t tflags = flags | cb->flags;
 
@@ -104,16 +85,14 @@ masxfs_levinfo_scanf_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxf
           if ( !cb->fun_counter && depth )
             cb->fun_top_depth = depth - 1;
 
-          if ( cb && cb->fun_simple )
+          if ( cb && cb->fun_simple && !( flags & MASXFS_CB_USE_STAT_CB ) )
           {
             masxfs_scan_fun_simple_t fun_simple = cb->fun_simple;
 
             rC( fun_simple( lithis, tflags, userdata, cb->fun_counter, reldepth ) );
             fun_called++;
           }
-          else
-            rSETGOOD;
-          if ( rGOOD && cb && cb->fun_stat )
+          else if ( rGOOD && cb && cb->fun_stat && ( flags & MASXFS_CB_USE_STAT_CB ) )
           {
             masxfs_scan_fun_stat_t fun_stat = cb->fun_stat;
             struct stat *st = NULL;
@@ -172,28 +151,55 @@ masxfs_levinfo_scanf_entry_single_internal_scanner( masxfs_levinfo_t * lithis, m
     masxfs_entry_filter_t *entry_pfilter = scanner->entry_pfilter;
     masxfs_levinfo_flags_t flags = ( scanner->flags | more_flags ) & ~no_flags;
 
-    for ( masxfs_entry_callback_t * cb = scanner->cbs; cb && rGOOD && ( flags & MASXFS_CB_SINGLE_CB ) && ( cb->fun_simple || cb->fun_stat ); cb++ )
+    masxfs_entry_type_bit_t entry_bit = 1 << lithis->detype;
+
+    if ( entry_pfilter && ( entry_pfilter->typeflags & entry_bit ) )
     {
-      if ( ( flags & MASXFS_CB_UP_ROOT ) && reldepth <= 1 )          /* Once! ; ==1 for dir ; ==0 for file at initial path */
+      if ( lithis->lidepth )
       {
-      /* Here when/for --store -- to register upper (no scanned) dirs */
-        for ( masxfs_levinfo_t * li = lithis - lithis->lidepth; rGOOD && li < lithis; li++ )
+        int indx = ( flags & MASXFS_CB_COUNT ) ? 1 : 0;
+
+        if ( flags & MASXFS_CB_COUNT )
         {
-          assert( li->lidepth == ( masxfs_depth_t ) ( li - lithis + lithis->lidepth ) );
-          li->detype = MASXFS_ENTRY_DIR_NUM;                         /* force : it's dir */
-        /* scan self */
-          rC( masxfs_levinfo_scanf_entry_single_internal_1cb( li, entry_pfilter, cb, userdata, flags & ~MASXFS_CB_UP_ROOT, li - lithis ) );
+          if ( lithis->detype != MASXFS_ENTRY_DIR_NUM )
+            lithis[-1].leaf_count++;
+          else
+            lithis[-1].leaf_count += lithis->leaf_count;
+        }
+        {
+          if ( !( flags & MASXFS_CB_SKIP_EMPTY ) || lithis->leaf_count || lithis->detype != MASXFS_ENTRY_DIR_NUM )
+            lithis[-1].child_count_pair[indx]++;
         }
       }
-    /* scan self */
-      rC( masxfs_levinfo_scanf_entry_single_internal_1cb( lithis, entry_pfilter, cb, userdata, flags & ~MASXFS_CB_UP_ROOT, reldepth ) );
+
+      for ( masxfs_entry_callback_t * cb = scanner->cbs; cb && rGOOD && ( flags & MASXFS_CB_SINGLE_CB ) && ( cb->fun_simple || cb->fun_stat ); cb++ )
+      {
+        if ( ( flags & MASXFS_CB_UP_ROOT ) && reldepth <= 1 )        /* Once! ; ==1 for dir ; ==0 for file at initial path */
+        {
+        /* Here when/for --store -- to register upper (no scanned) dirs */
+          for ( masxfs_levinfo_t * li = lithis - lithis->lidepth; rGOOD && li < lithis; li++ )
+          {
+            assert( li->lidepth == ( masxfs_depth_t ) ( li - lithis + lithis->lidepth ) );
+            li->detype = MASXFS_ENTRY_DIR_NUM;                       /* force : it's dir */
+          /* scan self */
+            rC( masxfs_levinfo_scanf_entry_single_internal_1cb( li, entry_pfilter, cb, userdata, flags & ~MASXFS_CB_UP_ROOT, li - lithis ) );
+          }
+        }
+
+#if 0
+	if ( lithis && lithis->lidepth > 0 && 0 == strcmp( lithis->name, "libsql.bash" ) && ( flags & MASXFS_CB_COUNT ) )
+          WARN( "# ?? ##### %s / %s : %ld :: %d %p", lithis[-1].name, lithis->name, lithis[-1].leaf_count, ( flags & MASXFS_CB_COUNT ) ? 1 : 0, cb );
+#endif
+      /* scan self */
+        rC( masxfs_levinfo_scanf_entry_single_internal_1cb( lithis, entry_pfilter, cb, userdata, flags & ~MASXFS_CB_UP_ROOT, reldepth ) );
+      }
     }
   }
   rRET;
 }
 
  /* scan self, possibly UP_ROOT, checked */
-static int
+static int _uUu_
 masxfs_levinfo_scanf_entry_single_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * scanner, masxfs_levinfo_flags_t more_flags,
                                            masxfs_levinfo_flags_t no_flags, void *userdata, masxfs_depth_t reldepth )
 {
@@ -219,20 +225,19 @@ masxfs_levinfo_scanf_entry_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * sc
                                     masxfs_depth_t reldepth )
 {
   rDECLBAD;
+  masxfs_levinfo_flags_t flags = scanner->flags | more_flags;
 
   if ( li )
   {
-    masxfs_levinfo_flags_t flags = scanner->flags | more_flags;
-
     entry_scanner_cnt++;
     assert( !masxfs_levinfo_opened_dir( li, more_flags ) );
     assert( flags & ( MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB ) );
-#ifdef TRY_OPENED
+#if 0
     rC( masxfs_levinfo_opendir( li, flags, scanner->entry_pfilter ) );
 #endif
     if ( li->detype == MASXFS_ENTRY_DIR_NUM )
     {
-#ifdef TRY_OPENED
+#if 0
     /* scan all childs, for open  */
       rC( masxfs_levinfo_scanf_dir_scanner( li, scanner, more_flags | MASXFS_CB_COUNT | MASXFS_CB_SKIP | MASXFS_CB_SINGLE_CB, userdata, reldepth ) );
 #else
@@ -246,7 +251,7 @@ masxfs_levinfo_scanf_entry_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * sc
     QRLI( li, rCODE );
     if ( li->detype == MASXFS_ENTRY_DIR_NUM )
     {
-#ifdef TRY_OPENED
+#if 0
     /* scan all childs, for open  */
       rC( masxfs_levinfo_scanf_dir_scanner( li, scanner, more_flags, userdata, reldepth ) );
 #else
@@ -268,7 +273,7 @@ masxfs_levinfo_scanf_entry_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * sc
     {
     /* rSETBAD; */
     }
-#ifdef TRY_OPENED
+#if 0
     rC( masxfs_levinfo_closedir_force( li, flags, rCODE ) );
 #endif
   }
@@ -298,10 +303,11 @@ masxfs_levinfo_scanf_down_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * sca
 {
   rDECLBAD;
 
+  masxfs_levinfo_flags_t flags = scanner->flags | more_flags;
+
   if ( li )
   {
     masxfs_entry_filter_t *entry_pfilter = scanner->entry_pfilter;
-    masxfs_levinfo_flags_t flags = scanner->flags | more_flags;
     masxfs_depth_t lidepth = li->lidepth;
 
     assert( masxfs_levinfo_opened_dir( li, flags ) );
