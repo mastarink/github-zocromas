@@ -42,6 +42,7 @@ unsigned long long mas_mysqlpfs_mstmt_num_rows( mysqlpfs_mstmt_t * mstmt );
 unsigned long long mas_mysqlpfs_mstmt_affected_rows( mysqlpfs_mstmt_t * mstmt );
 unsigned long long mas_mysqlpfs_mstmt_insert_id( mysqlpfs_mstmt_t * mstmt );
 int mas_mysqlpfs_mstmt_store_result( mysqlpfs_mstmt_t * mstmt );
+int mas_mysqlpfs_mstmt_fetch_t( mysqlpfs_mstmt_t * mstmt, int *phas_data, int *ptruncated );
 int mas_mysqlpfs_mstmt_fetch( mysqlpfs_mstmt_t * mstmt, int *phas_data );
 int mas_mysqlpfs_mstmt_free_result( mysqlpfs_mstmt_t * mstmt );
 
@@ -49,5 +50,8 @@ int mas_mysqlpfs_mstmt_data_seek( mysqlpfs_mstmt_t * mstmt, unsigned long long o
 
 unsigned int mas_mysqlpfs_mstmt_errno( mysqlpfs_mstmt_t * mstmt );
 const char *mas_mysqlpfs_mstmt_error( mysqlpfs_mstmt_t * mstmt );
+
+/* int mas_mysqlpfs_mstmt_last_set_param_pos( const mysqlpfs_mstmt_t * mstmt ); */
+int mas_mysqlpfs_mstmt_bind_error( const mysqlpfs_mstmt_t * mstmt, int np );
 
 #endif

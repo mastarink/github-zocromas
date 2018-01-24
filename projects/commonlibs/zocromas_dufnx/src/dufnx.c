@@ -117,6 +117,7 @@ dufnx_config_store_fs2db( mucs_option_t * opt, void *userdata, void *extradata _
   {
     mas_dufnx_data_t *pdufnx_data = ( mas_dufnx_data_t * ) userdata;
 
+    assert( pdufnx_data );
     mas_qstd_t *qstd = dufnx_qstd( &pdufnx_data->mysql );
     const char *path = mucs_config_option_string_value( opt );
 
@@ -136,7 +137,7 @@ dufnx_config_store_fs2db( mucs_option_t * opt, void *userdata, void *extradata _
         };
 
         masxfs_entry_callback_t callback = {
-          .fun_simple=fillcb,.flags = MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT | MASXFS_CB_DIGESTS | MASXFS_CB_PATH /* | MASXFS_CB_NO_FD */
+          .fun_simple = fillcb,.flags = MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT | MASXFS_CB_DIGESTS | MASXFS_CB_PATH /* | MASXFS_CB_NO_FD */
         };
         rC( mas_qstd_start_transaction( qstd ) );
       /* TODO FIXME : limiting maxdepth here (filling db) leads to memleak when scanning db 20170320.140237 */
@@ -154,6 +155,20 @@ dufnx_config_store_fs2db( mucs_option_t * opt, void *userdata, void *extradata _
     /*20180109.1418 rC( mas_qstd_end_transaction( qstd ) ); */
     }
   }
+  rRET;
+}
+
+static int
+dufnx_config_create_tables( mucs_option_t * opt _uUu_, void *userdata, void *extradata _uUu_ )
+{
+  rDECLGOOD;
+  mas_dufnx_data_t *pdufnx_data = ( mas_dufnx_data_t * ) userdata;
+
+  assert( pdufnx_data );
+  mas_qstd_t *qstd = dufnx_qstd( &pdufnx_data->mysql );
+
+  assert( qstd );
+  rC( mas_qstd_create_tables( qstd ) );
   rRET;
 }
 
@@ -177,24 +192,25 @@ dufnx_config_disable_warn( mucs_option_t * opt _uUu_, void *userdata _uUu_, void
   minierr_disable( MAS_MIER_TYPE_WARN );
   rRET;
 }
+
 static int
 dufnx_test1( mucs_option_t * opt _uUu_, void *userdata _uUu_, void *extradata _uUu_ )
 {
   rDECLGOOD;
-  WARN("ONE");
+  WARN( "ONE" );
   rRET;
 }
+
 static int
 dufnx_test2( mucs_option_t * opt _uUu_, void *userdata _uUu_, void *extradata _uUu_ )
 {
   rDECLGOOD;
-  WARN("TWO");
+  WARN( "TWO" );
   rRET;
 }
 
-
-#if 0 
-static int 
+#if 0
+static int
 dufnx_config_arg_process( mucs_option_t * opt, void *userdata, void *extradata _uUu_ )
 {
   rDECLGOOD;
@@ -230,14 +246,18 @@ dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
  * run    --treedb mastest/  --no-empty-dirs --name='*.sh' --cb-up-root --max-size=100
  * run    --treedb mastest/  --no-empty-dirs  --cb-up-root --min-nsame=13
  * */
+#define LFLAGS d->levinfo_flags
+#define DFLAGS d->dufnx_flags
 #define FDV MUCS_FLAG_ONLY_DEF_NVALUE
 /* FDV : short for MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE */
   mucs_option_static_t soptions[] = {
-    {.name = "treedb",.rt = 'O',.p = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_DB,.f = FDV}
-    , {.name = "treefs",.rt = 'O',.p = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_MODE_FS,.flags = FDV}
+    {.name = "fromdb",.rt = 'O',.p = &LFLAGS,.def_nvalue.v_ulong = MASXFS_CB_MODE_DB,.f = FDV}
+    , {.name = "fromfs",.rt = 'O',.p = &LFLAGS,.def_nvalue.v_ulong = MASXFS_CB_MODE_FS,.flags = FDV}
+    , {.name = "tree",.rt = 'O',.p = &DFLAGS,.def_nvalue.v_ulong = MASDUFNX_TREE,.flags = FDV}
+    , {.name = "collect",.rt = 'O',.p = &DFLAGS,.def_nvalue.v_ulong = MASDUFNX_COLLECT,.flags = FDV}
 
-    , {.name = "no-empty-dirs",.rt = 'O',.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_SKIP_EMPTY,.flags = FDV}
-    , {.name = "empty-dirs",.rt = MUCS_RTYP_ULONG_NOR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_SKIP_EMPTY,.flags = FDV}
+    , {.name = "no-empty-dirs",.rt = 'O',.cust_ptr = &LFLAGS,.def_nvalue.v_ulong = MASXFS_CB_SKIP_EMPTY,.flags = FDV}
+    , {.name = "empty-dirs",.rt = MUCS_RTYP_ULONG_NOR,.cust_ptr = &LFLAGS,.def_nvalue.v_ulong = MASXFS_CB_SKIP_EMPTY,.flags = FDV}
     , {.name = "max-depth",.restype = 'u',.p = &d->entry_filter.maxdepth}
     , {.name = "min-size",.restype = MUCS_RTYP_ULONG_LONG,.p = &d->entry_filter.min_size}
     , {.name = "max-size",.restype = MUCS_RTYP_ULONG_LONG,.p = &d->entry_filter.max_size}
@@ -250,13 +270,15 @@ dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
     , {.name = "store",.restype = 'S',.f = MUCS_FLAG_OPTIONAL_VALUE,.cb = dufnx_config_store_fs2db,.cb_pass = 1}
     , {.name = "name",.shortn = '\0',.restype = MUCS_RTYP_STRING,.cust_ptr = &d->entry_filter.glob /*,.flags = MUCS_FLAG_AUTOFREE|MUCS_FLAG_USE_VPASS */ }
     , {.name = "drop-tables",.shortn = '\0',.cb = dufnx_config_drop_tables}
+    , {.name = "create-tables",.shortn = '\0',.cb = dufnx_config_create_tables}
     , {.name = "disable-warn",.cb = dufnx_config_disable_warn}
     , {.name = "test",.cb = dufnx_test1}
     , {.name = "test2",.cb = dufnx_test2}
-  /* , {.name = "updatedb",.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.p = &d->levinfo_flags, */
+  /* , {.name = "updatedb",.restype = MUCS_RTYP_ULONG | MUCS_RTYP_BW_OR,.p = &LFLAGS, */
   /*  .def_nvalue.v_ulong = MASXFS_CB_CAN_UPDATE_DB,.f = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE},                   */
     , {NULL}
   };
+#undef LFLAGS
 #undef FDV
   mucs_option_interface_t *interface =
           mucs_config_soption_interface_create_setup( "main-table", soptions, TRUE /* special_options */ , MUCS_FLAG_AUTOFREE );
@@ -267,14 +289,20 @@ void
 dufnx_config_cb_plus( mucs_option_interface_t * interface, mas_dufnx_data_t * pdufnx_data )
 {
   mas_dufnx_data_t *d = pdufnx_data;
-
+#define LFLAGS d->levinfo_flags
 #define FDV MUCS_FLAG_ONLY_DEF_NVALUE
   mucs_option_static_t soptions_cbplus[] = {
-    {.name = "cb-self",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_SELF,.flags = FDV}
-    , {.name = "cb-up",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_UP,.flags = FDV}
-    , {.name = "cb-from-root",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_FROM_ROOT,.flags = FDV}
-    , {.name = "cb-up-root",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &d->levinfo_flags,.def_nvalue.v_ulong = MASXFS_CB_UP_ROOT,.flags = FDV}
+    {.name = "cb-self",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &LFLAGS,.def_nvalue.v_ulong = MASXFS_CB_SELF,.flags = FDV}
+    , {.name = "cb-up",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &LFLAGS,.def_nvalue.v_ulong = MASXFS_CB_UP,.flags = FDV}
+    , {.name = "cb-from-root",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &LFLAGS,.def_nvalue.v_ulong = MASXFS_CB_FROM_ROOT,.flags = FDV}
+    , {.name = "cb-up-root",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &LFLAGS,.def_nvalue.v_ulong = MASXFS_CB_UP_ROOT,.flags = FDV}
+    , {.name = "cb-recursive",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &LFLAGS,.def_nvalue.v_ulong = MASXFS_CB_RECURSIVE,.flags = FDV}
+    , {.name = "cb-stat",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &LFLAGS,.def_nvalue.v_ulong = MASXFS_CB_USE_STAT_CB,.flags = FDV}
+    , {.name = "no-cb-stat",.rt = MUCS_RTYP_ULONG_NOR,.cust_ptr = &LFLAGS,.def_nvalue.v_ulong = MASXFS_CB_USE_STAT_CB,.flags = FDV}
+    , {.name = "cb-simple",.rt = MUCS_RTYP_ULONG_OR,.cust_ptr = &LFLAGS,.def_nvalue.v_ulong = MASXFS_CB_USE_SIMPLE_CB,.flags = FDV}
+    , {.name = "no-cb-simple",.rt = MUCS_RTYP_ULONG_NOR,.cust_ptr = &LFLAGS,.def_nvalue.v_ulong = MASXFS_CB_USE_SIMPLE_CB,.flags = FDV}
   };
+#undef LFLAGS
 #undef FDV
   mucs_config_soption_interface_tabnode_add( interface, "cb-plus-table", soptions_cbplus, MUCS_FLAG_AUTOFREE );
 }

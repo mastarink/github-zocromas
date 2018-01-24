@@ -1,4 +1,5 @@
 #
+# before 20180123
 # run  --mysql-table-prefix=pictures_  --drop-tables  
 #     --store=/home/mastar/.mas/lib/big/misc/media/photo  
 # #   --store=/home/mastar/.mas/lib/big/misc/media/photo/LG_G3  
@@ -10,6 +11,23 @@
 #     --store=/home/space/owncloud/data/mastarink/files/Camera
 #     --store=/home/mastar/Desktop/20160108/Camera_Uploads
 #     --store=/home/mastar/Desktop/20160108/Camera_Uploads_only
+#
+# from 20180123
+# run    --drop-tables  --create-tables --fromfs  --collect mastest
+# run --fromfs --tree mastest
+#
+# run  --mysql-table-prefix=pictures_  --drop-tables   --create-tables  --fromfs  --collect
+#     /home/mastar/.mas/lib/big/misc/media/photo  
+# #   /home/mastar/.mas/lib/big/misc/media/photo/LG_G3  
+# #   /home/mastar/.mas/lib/big/misc/media/photo/Pictures  
+# #   /home/mastar/.mas/lib/big/misc/media/photo/Pictures.R.20120207.164339 
+#     /home/space/sambaspace/2016 
+#     /home/space/sambaspace/2017 
+#     /home/space/sambaspace/2016x  
+#     /home/space/owncloud/data/mastarink/files/Camera
+#     /home/mastar/Desktop/20160108/Camera_Uploads
+#     /home/mastar/Desktop/20160108/Camera_Uploads_only
+#
 #
 # /home/mastar/.mas/lib/a/down/chromium/Camera.zip
 # /mnt/jotera/backup/photo/Camera Uploads.zip
@@ -24,3 +42,5 @@ mysql-table-prefix=dufnx_
 
 no-empty-dirs
 cb-self
+cb-simple
+cb-recursive

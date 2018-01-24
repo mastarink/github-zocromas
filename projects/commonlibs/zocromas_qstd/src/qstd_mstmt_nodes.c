@@ -17,6 +17,7 @@
 #include "qstd_enums.h"
 /* #include "qstd_mstmt.h" */
 #include "qstd_mstmt_base.h"
+#include "qstd_mstmt.h"
 
 #include "qstd_mstmt_nodes.h"
 
@@ -33,19 +34,25 @@ mas_qstd_mstmt_selget_node_id( mas_qstd_t * qstd, unsigned long long parent_id, 
     mysqlpfs_mstmt_t *mstmt_s = mas_qstd_mstmt_get( qstd, STD_MSTMT_SELECT_NODES_ID );
 
     QRGP( mstmt_s );
-    rC( mas_mysqlpfs_mstmt_ret_code( mstmt_s ) );
+    rC( mas_qstd_ret_code( qstd ) );
+    /* rC( mas_qstd_mstmt_ret_code( mstmt_s ) ); */
+    QRG( rCODE );
+    rC( mas_qstd_mstmt_set_param_longlong( mstmt_s, np++, parent_id, FALSE ) );
+    QRG( rCODE );
+    rC( mas_qstd_mstmt_set_param_string( mstmt_s, np++, name ) );
+    QRG( rCODE );
+    rC( mas_qstd_mstmt_execute_store( mstmt_s ) );
+    QRG( rCODE );
 
-    rC( mas_mysqlpfs_mstmt_set_param_longlong( mstmt_s, np++, parent_id, FALSE ) );
-    rC( mas_mysqlpfs_mstmt_set_param_string( mstmt_s, np++, name ) );
-    rC( mas_mysqlpfs_mstmt_execute_store( mstmt_s ) );
 
-    rC( mas_mysqlpfs_mstmt_fetch( mstmt_s, &has_data ) );
+    rC( mas_qstd_mstmt_fetch( mstmt_s, &has_data ) );
+    QRG( rCODE );
 
     if ( rGOOD && has_data )
     {
       unsigned is_null = 0;
 
-      rC( mas_mysqlpfs_mstmt_get_result_longlong( mstmt_s, nr++, &theid, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( mstmt_s, nr++, &theid, &is_null ) );
     /* WARN( "(%d) DATA for %lld, '%s' => %lld", rCODE, parent_id, name, theid ); */
       if ( rGOOD )
         assert( nr == STD_MSTMT_SELECT_NODES_NRESULTS );
@@ -56,7 +63,9 @@ mas_qstd_mstmt_selget_node_id( mas_qstd_t * qstd, unsigned long long parent_id, 
       WARN( "NO DATA for parent_id: %lld, name: '%s' - %llu", parent_id, name, theid );
     }
 #endif
-    mas_mysqlpfs_mstmt_free_result( mstmt_s );
+    mas_qstd_mstmt_free_result( mstmt_s );
+    QRG( rCODE );
   }
+  qstd->ret_code = rCODE;
   return theid;
 }

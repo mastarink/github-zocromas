@@ -7,6 +7,7 @@ struct mas_qstd_s
 {
   mysqlpfs_t *pfs;
   mysqlpfs_mstmt_t **std_mstmts;
+  int ret_code;
 };
 
 #endif

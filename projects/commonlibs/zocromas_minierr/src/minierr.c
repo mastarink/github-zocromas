@@ -71,11 +71,6 @@ minierr_vdie( int line, const char *func, const char *file, mas_minierr_type_t e
         MAS_MIER_PRN( "\x1b[0;1;%d;%dm", a, b );
     }
 #endif
-    if ( flags & MAS_MIER_FLAG_LINE )
-    {
-      prefwidth += 5;
-      MAS_MIER_PRN( " %d:", line );
-    }
     if ( flags & MAS_MIER_FLAG_FUNC )
     {
       prefwidth += 43;
@@ -85,6 +80,11 @@ minierr_vdie( int line, const char *func, const char *file, mas_minierr_type_t e
     {
       prefwidth += 43;
       MAS_MIER_PRN( " @ %s", pf );
+    }
+    if ( flags & MAS_MIER_FLAG_LINE )
+    {
+      prefwidth += 5;
+      MAS_MIER_PRN( ":%d ", line );
     }
     if ( a || b )
       MAS_MIER_PRN( "\x1b[%dm", 0 );

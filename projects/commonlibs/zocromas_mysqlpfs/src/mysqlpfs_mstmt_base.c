@@ -61,6 +61,7 @@ mas_mysqlpfs_mstmt_create_setup( mysqlpfs_t * pfs, int nparams, int nresults, co
     rC( mas_mysqlpfs_mstmt_prepare( mstmt, sqlop ) );
     mstmt->ret_code = rCODE;
   }
+  QRG( rCODE );
 /*if ( rBAD )
     WARN( "ERR sqlop: %s", sqlop );*/
   return mstmt;

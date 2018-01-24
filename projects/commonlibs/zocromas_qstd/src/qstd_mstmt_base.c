@@ -24,6 +24,12 @@
 
 static mas_qstd_t *instance = NULL;
 
+int
+mas_qstd_ret_code( mas_qstd_t * qstd )
+{
+  return qstd ? qstd->ret_code : -1;
+}
+
 void
 mas_qstd_init( mas_qstd_t * qstd, const char *host, const char *user, const char *passwd, const char *db, int port, const char *table_prefix )
 {
@@ -122,7 +128,7 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
     "START TRANSACTION",
     "CREATE TABLE IF NOT EXISTS " QSTD_TABLE_SIZES " ("              /* */
             "size BIGINT NOT NULL PRIMARY KEY"                       /* */
-            ", nsame INTEGER NOT NULL, INDEX nsame (nsame)"          /* */
+            ", nsame INTEGER NOT NULL DEFAULT 0, INDEX nsame (nsame)" /* */
             ", last_updated  DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
             ")",
     "CREATE TABLE IF NOT EXISTS " QSTD_TABLE_DATAS " ("              /* */
@@ -136,7 +142,7 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
             " )",
     "CREATE TABLE IF NOT EXISTS " QSTD_TABLE_PROPS " ("              /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
-            ", data_id INTEGER NOT NULL, UNIQUE INDEX data (data_id), FOREIGN KEY (data_id) REFERENCES " QSTD_TABLE_DATAS " (id)" /* */
+            ", data_id INTEGER NOT NULL DEFAULT 0, UNIQUE INDEX data (data_id), FOREIGN KEY (data_id) REFERENCES " QSTD_TABLE_DATAS " (id)" /* */
             ", detype ENUM('BLK','CHR','DIR','FIFO','LNK','REG','SOCK'), INDEX detype (detype)" /* */
             ", mode INTEGER"                                         /* */
             ", uid INTEGER, INDEX uid (uid)"                         /* */
@@ -144,7 +150,7 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
             ", atim DATETIME(6), INDEX atim (atim)"                  /* */
             ", mtim DATETIME(6), INDEX mtim (mtim)"                  /* */
             ", ctim DATETIME(6), INDEX ctim (ctim)"                  /* */
-            ", size BIGINT NOT NULL, INDEX size (size), FOREIGN KEY (size) REFERENCES " QSTD_TABLE_SIZES " (size)" /* */
+            ", size BIGINT NOT NULL DEFAULT 0, INDEX size (size), FOREIGN KEY (size) REFERENCES " QSTD_TABLE_SIZES " (size)" /* */
             ", last_updated DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
             ", rdev INTEGER"                                         /* */
             ", blksize INTEGER"                                      /* */
@@ -153,38 +159,38 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
     "CREATE TABLE IF NOT EXISTS " QSTD_TABLE_PARENTS " ("            /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
             ", dir_id INTEGER, UNIQUE INDEX dir (dir_id)"            /* */
-            ", nchilds INTEGER NOT NULL, INDEX nchilds (nchilds)"    /* */
+            ", nchilds INTEGER " /*" NOT NULL DEFAULT 0 " */ " , INDEX nchilds (nchilds)" /* */
             ", last_updated  DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
             ")",
     "CREATE TABLE IF NOT EXISTS " QSTD_TABLE_NAMES " ("              /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
-            ", parent_id INTEGER NOT NULL, INDEX parent (parent_id), FOREIGN KEY (parent_id) REFERENCES " QSTD_TABLE_PARENTS " (id)" /* */
+            ", parent_id INTEGER NOT NULL DEFAULT 0, INDEX parent (parent_id), FOREIGN KEY (parent_id) REFERENCES " QSTD_TABLE_PARENTS " (id)" /* */
             ", name VARCHAR(255) BINARY COMMENT 'NULL is root', INDEX name (name)" /* */
             ", last_updated  DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
-            ", data_id INTEGER NOT NULL, INDEX data (data_id), FOREIGN KEY (data_id) REFERENCES " QSTD_TABLE_DATAS " (id)" /* */
+            ", data_id INTEGER NOT NULL DEFAULT 0, INDEX data (data_id), FOREIGN KEY (data_id) REFERENCES " QSTD_TABLE_DATAS " (id)" /* */
           /* ", detype ENUM('BLK','CHR','DIR','FIFO','LNK','REG','SOCK'), INDEX detype (detype)" (* *) */
             ", UNIQUE INDEX parent_name (parent_id, name) COMMENT 'this pair is unique'" /* */
             ")",
     "CREATE TABLE IF NOT EXISTS " QSTD_TABLE_SHA1 " ("               /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
             ", sum BINARY(20), UNIQUE INDEX sum (sum)"               /* */
-            ", nsame INTEGER NOT NULL, INDEX nsame (nsame)"          /* */
+            ", nsame INTEGER NOT NULL DEFAULT 0, INDEX nsame (nsame)" /* */
             ")",
     "CREATE TABLE IF NOT EXISTS " QSTD_TABLE_SHA1DREF " ("           /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
-            ", data_id INTEGER NOT NULL, INDEX data (data_id), FOREIGN KEY (data_id) REFERENCES " QSTD_TABLE_DATAS " (id)" /* */
-            ", sum_id INTEGER NOT NULL, INDEX sum (sum_id), FOREIGN KEY (sum_id) REFERENCES " QSTD_TABLE_SHA1 " (id)" /* */
+            ", data_id INTEGER NOT NULL DEFAULT 0, INDEX data (data_id), FOREIGN KEY (data_id) REFERENCES " QSTD_TABLE_DATAS " (id)" /* */
+            ", sum_id INTEGER NOT NULL DEFAULT 0, INDEX sum (sum_id), FOREIGN KEY (sum_id) REFERENCES " QSTD_TABLE_SHA1 " (id)" /* */
             ", UNIQUE INDEX pair (data_id, sum_id) COMMENT 'this pair is unique'" /* */
             ")",
     "CREATE TABLE IF NOT EXISTS " QSTD_TABLE_MD5 " ("                /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
             ", sum BINARY(16), UNIQUE INDEX sum (sum)"               /* */
-            ", nsame INTEGER NOT NULL, INDEX nsame (nsame)"          /* */
+            ", nsame INTEGER NOT NULL DEFAULT 0, INDEX nsame (nsame)" /* */
             ")",
     "CREATE TABLE IF NOT EXISTS " QSTD_TABLE_MD5DREF " ("            /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
-            ", data_id INTEGER NOT NULL, INDEX data (data_id), FOREIGN KEY (data_id) REFERENCES " QSTD_TABLE_DATAS " (id)" /* */
-            ", sum_id INTEGER NOT NULL, INDEX sum (sum_id), FOREIGN KEY (sum_id) REFERENCES " QSTD_TABLE_MD5 " (id)" /* */
+            ", data_id INTEGER NOT NULL DEFAULT 0, INDEX data (data_id), FOREIGN KEY (data_id) REFERENCES " QSTD_TABLE_DATAS " (id)" /* */
+            ", sum_id INTEGER NOT NULL DEFAULT 0, INDEX sum (sum_id), FOREIGN KEY (sum_id) REFERENCES " QSTD_TABLE_MD5 " (id)" /* */
             ", UNIQUE INDEX pair (data_id, sum_id) COMMENT 'this pair is unique'" /* */
             ")",
     "CREATE OR REPLACE VIEW " QSTD_VIEW_ALL " AS "                   /* */
@@ -367,6 +373,7 @@ mas_qstd_mstmt_init_prepare_results_everything( mysqlpfs_mstmt_t * mstmt, int *p
  *      hex_sha1
  */
 
+/* TODO assert ( mysql_stmt_param_count(...) == (*pnr) ) */
   if ( rGOOD )
     assert( ( *pnr ) == STD_MSTMT_SELECT_EVERYTHING_NRESULTS );
   rC( mas_qstd_mstmt_bind_result( mstmt ) );
@@ -451,7 +458,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_NAMES_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
         QRGP( mstmt );
-        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
+        rC( mas_qstd_mstmt_ret_code( mstmt ) );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, np++, 255 ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
@@ -471,7 +478,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_NAMES_NFIELDS, STD_MSTMT_SELECT_NAMES_NRESULTS, selop );
         QRGP( mstmt );
-        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
+        rC( mas_qstd_mstmt_ret_code( mstmt ) );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, np++, 255 ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
@@ -491,7 +498,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_PARENTS_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
         QRGP( mstmt );
-        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
+        rC( mas_qstd_mstmt_ret_code( mstmt ) );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
@@ -507,7 +514,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_PARENTS_NFIELDS, STD_MSTMT_SELECT_PARENTS_NRESULTS, selop );
         QRGP( mstmt );
-        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
+        rC( mas_qstd_mstmt_ret_code( mstmt ) );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         if ( rGOOD )
@@ -527,7 +534,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_SIZES_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
         QRGP( mstmt );
-        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
+        rC( mas_qstd_mstmt_ret_code( mstmt ) );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
@@ -543,7 +550,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_SIZES_NFIELDS, STD_MSTMT_SELECT_SIZES_NRESULTS, selop );
         QRGP( mstmt );
-        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
+        rC( mas_qstd_mstmt_ret_code( mstmt ) );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         if ( rGOOD )
@@ -563,7 +570,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_DATAS_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
         QRGP( mstmt );
-        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
+        rC( mas_qstd_mstmt_ret_code( mstmt ) );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
@@ -581,7 +588,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_DATAS_NFIELDS, STD_MSTMT_SELECT_DATAS_NRESULTS, selop );
         QRGP( mstmt );
-        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
+        rC( mas_qstd_mstmt_ret_code( mstmt ) );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
@@ -606,7 +613,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_PROPS_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
         QRGP( mstmt );
-        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
+        rC( mas_qstd_mstmt_ret_code( mstmt ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
@@ -632,7 +639,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 1, selop );
         QRGP( mstmt );
-        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
+        rC( mas_qstd_mstmt_ret_code( mstmt ) );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
@@ -653,7 +660,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_SHA1_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
         QRGP( mstmt );
-        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
+        rC( mas_qstd_mstmt_ret_code( mstmt ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_binary( mstmt, np++, 20 ) );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
         if ( rGOOD )
@@ -668,7 +675,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_SHA1DREF_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
         QRGP( mstmt );
-        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
+        rC( mas_qstd_mstmt_ret_code( mstmt ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
@@ -684,7 +691,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 1, selop );
         QRGP( mstmt );
-        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
+        rC( mas_qstd_mstmt_ret_code( mstmt ) );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_binary( mstmt, np++, 20 ) );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
@@ -705,7 +712,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 1, selop );
         QRGP( mstmt );
-        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
+        rC( mas_qstd_mstmt_ret_code( mstmt ) );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_bind_param( mstmt ) );
@@ -726,7 +733,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_NODES_NFIELDS, STD_MSTMT_SELECT_NODES_NRESULTS, selop );
         QRGP( mstmt );
-        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
+        rC( mas_qstd_mstmt_ret_code( mstmt ) );
 
         rC( mas_mysqlpfs_mstmt_prepare_param_longlong( mstmt, np++ ) );
         rC( mas_mysqlpfs_mstmt_prepare_param_string( mstmt, np++, 255 ) );
@@ -754,9 +761,10 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_EVERYTHING_NFIELDS_PN, STD_MSTMT_SELECT_EVERYTHING_NRESULTS, selop );
         QRGP( mstmt );
-        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
+        rC( mas_qstd_mstmt_ret_code( mstmt ) );
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* parent_id */
         rC( mas_qstd_mstmt_prepare_param_string( mstmt, np++ ) );    /* name */
+      /* TODO assert ( mysql_stmt_param_count(...) == np ) */
         if ( rGOOD )
           assert( np == STD_MSTMT_SELECT_EVERYTHING_NFIELDS_PN );
 #if 1
@@ -798,13 +806,13 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_EVERYTHING_NFIELDS_P, STD_MSTMT_SELECT_EVERYTHING_NRESULTS, selop );
         QRGP( mstmt );
-        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
+        rC( mas_qstd_mstmt_ret_code( mstmt ) );
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* parent_id */
         if ( rGOOD )
           assert( np == STD_MSTMT_SELECT_EVERYTHING_NFIELDS_P );
 
-        if ( !rGOOD )
-          WARN( "%s", mas_mysqlpfs_mstmt_error( mstmt ) );
+        if ( rBAD )
+          WARN( "%s", mas_qstd_mstmt_error( mstmt ) );
 
 #if 1
         rC( mas_qstd_mstmt_init_prepare_results_everything( mstmt, &nr ) );
@@ -846,13 +854,13 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_EVERYTHINGX_NFIELDS_PN, STD_MSTMT_SELECT_EVERYTHINGX_NRESULTS, selop );
         QRGP( mstmt );
-        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
+        rC( mas_qstd_mstmt_ret_code( mstmt ) );
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* parent_id */
         rC( mas_qstd_mstmt_prepare_param_string( mstmt, np++ ) );    /* name */
         if ( rGOOD )
           assert( np == STD_MSTMT_SELECT_EVERYTHINGX_NFIELDS_PN );
-        if ( !rGOOD )
-          WARN( "%s", mas_mysqlpfs_mstmt_error( mstmt ) );
+        if ( rBAD )
+          WARN( "%s", mas_qstd_mstmt_error( mstmt ) );
 
         rC( mas_qstd_mstmt_init_prepare_results_everythingx( mstmt, &nr ) );
         if ( rGOOD )
@@ -875,12 +883,12 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_EVERYTHINGX_NFIELDS_P, STD_MSTMT_SELECT_EVERYTHINGX_NRESULTS, selop );
         QRGP( mstmt );
-        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
+        rC( mas_qstd_mstmt_ret_code( mstmt ) );
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* parent_id */
         if ( rGOOD )
           assert( np == STD_MSTMT_SELECT_EVERYTHINGX_NFIELDS_P );
-        if ( !rGOOD )
-          WARN( "%s", mas_mysqlpfs_mstmt_error( mstmt ) );
+        if ( rBAD )
+          WARN( "%s", mas_qstd_mstmt_error( mstmt ) );
 
         rC( mas_qstd_mstmt_init_prepare_results_everythingx( mstmt, &nr ) );
         if ( rGOOD )
@@ -900,11 +908,11 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
                 "     AND (detype IN ('DIR','LNK') "                 /* */
               /* ('BLK','CHR','DIR','FIFO','LNK','-REG','SOCK') */
                 "     OR ("                                          /* */
-                "          ( nsamesize>=? AND nsamesize<=? ) "        /* */
-                "         AND ( nsamesha1>=? AND nsamesha1<=? ) "     /* */
-                "         AND ( size>=? AND size<=? ) "               /* */
-                "         AND ( inode>=? AND inode<=? ) "             /* */
-                "         AND ( sha1id>=? AND sha1id<=? ) "           /* */
+                "          ( nsamesize>=? AND nsamesize<=? ) "       /* */
+                "         AND ( nsamesha1>=? AND nsamesha1<=? ) "    /* */
+                "         AND ( size>=? AND size<=? ) "              /* */
+                "         AND ( inode>=? AND inode<=? ) "            /* */
+                "         AND ( sha1id>=? AND sha1id<=? ) "          /* */
                 "         AND ( name REGEXP ? )  "                   /* */
                 "      ) "                                           /* */
                 "     ) "                                            /* */
@@ -912,7 +920,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_EVERYTHINGXX_NFIELDS_PN, STD_MSTMT_SELECT_EVERYTHINGXX_NRESULTS, selop );
         QRGP( mstmt );
-        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
+        rC( mas_qstd_mstmt_ret_code( mstmt ) );
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* parent_id */
         rC( mas_qstd_mstmt_prepare_param_string( mstmt, np++ ) );    /* name */
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* min_nsamesize */
@@ -928,8 +936,8 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         rC( mas_qstd_mstmt_prepare_param_string( mstmt, np++ ) );    /* regexp */
         if ( rGOOD )
           assert( np == STD_MSTMT_SELECT_EVERYTHINGXX_NFIELDS_PN );
-        if ( !rGOOD )
-          WARN( "%s", mas_mysqlpfs_mstmt_error( mstmt ) );
+        if ( rBAD )
+          WARN( "%s", mas_qstd_mstmt_error( mstmt ) );
 
         rC( mas_qstd_mstmt_init_prepare_results_everythingx( mstmt, &nr ) );
 
@@ -948,11 +956,11 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
                 "     AND (detype IN ('DIR','LNK') "                 /* */
               /* ('BLK','CHR','DIR','FIFO','LNK','-REG','SOCK') */
                 "     OR ("                                          /* */
-                "          ( nsamesize>=? AND nsamesize<=? ) "        /* */
-                "         AND ( nsamesha1>=? AND nsamesha1<=? ) "     /* */
-                "         AND ( size>=? AND size<=? ) "               /* */
-                "         AND ( inode>=? AND inode<=? ) "             /* */
-                "         AND ( sha1id>=? AND sha1id<=? ) "           /* */
+                "          ( nsamesize>=? AND nsamesize<=? ) "       /* */
+                "         AND ( nsamesha1>=? AND nsamesha1<=? ) "    /* */
+                "         AND ( size>=? AND size<=? ) "              /* */
+                "         AND ( inode>=? AND inode<=? ) "            /* */
+                "         AND ( sha1id>=? AND sha1id<=? ) "          /* */
                 "         AND ( name REGEXP ? )  "                   /* */
                 "      ) "                                           /* */
                 "     ) "                                            /* */
@@ -960,7 +968,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_EVERYTHINGXX_NFIELDS_P, STD_MSTMT_SELECT_EVERYTHINGXX_NRESULTS, selop );
         QRGP( mstmt );
-        rC( mas_mysqlpfs_mstmt_ret_code( mstmt ) );
+        rC( mas_qstd_mstmt_ret_code( mstmt ) );
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* parent_id */
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* min_nsamesize */
         rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* max_nsamesize */
@@ -975,8 +983,8 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         rC( mas_qstd_mstmt_prepare_param_string( mstmt, np++ ) );    /* regexp */
         if ( rGOOD )
           assert( np == STD_MSTMT_SELECT_EVERYTHINGXX_NFIELDS_P );
-        if ( !rGOOD )
-          WARN( "%s", mas_mysqlpfs_mstmt_error( mstmt ) );
+        if ( rBAD )
+          WARN( "%s", mas_qstd_mstmt_error( mstmt ) );
 
         rC( mas_qstd_mstmt_init_prepare_results_everythingx( mstmt, &nr ) );
       }
@@ -1011,6 +1019,7 @@ mas_qstd_mstmt_init( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 mysqlpfs_mstmt_t *
 mas_qstd_mstmt_get( mas_qstd_t * qstd, mas_qstd_id_t stdid )
 {
+  rDECLBAD;
   mysqlpfs_mstmt_t *mstmt = NULL;
 
   if ( qstd && stdid >= 0 && stdid < STD_MSTMT_MAX )
@@ -1024,6 +1033,8 @@ mas_qstd_mstmt_get( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       mstmt = mas_qstd_mstmt_init( qstd, stdid );
       QRGP( mstmt );
     }
+    if ( mstmt )
+      rSETGOOD;
     QRGP( mstmt );
   }
   else
@@ -1031,6 +1042,6 @@ mas_qstd_mstmt_get( mas_qstd_t * qstd, mas_qstd_id_t stdid )
     WARN( "qstd:%p; stdid:%d; STD_MSTMT_MAX:%d;", qstd, stdid, STD_MSTMT_MAX );
     QRG( -1 );
   }
-
+  qstd->ret_code = rCODE;
   return mstmt;
 }

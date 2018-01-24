@@ -29,7 +29,7 @@ mysqlpfs_init( mysqlpfs_t * pfs, const char *host, const char *user, const char 
   MYSQL *mysql = NULL;
 
 /* client_flag |= CLIENT_MULTI_STATEMENTS; */
-
+  mysql_init( &pfs->mysql );
   mysql = mysql_real_connect( &pfs->mysql, host, user, passwd, db, port, NULL /* unix_socket */ , 0 /* client_flag */  );
   QRGSP( mysql );
   if ( mysql )

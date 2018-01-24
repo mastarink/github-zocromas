@@ -249,11 +249,11 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int variant _
   if ( 1 )
   {
     masxfs_entry_callback_t callbacks[] = {
-      { /*MASXFS_ENTRY_REG | MASXFS_ENTRY_DIR, */ fscallback,.flags =
+      { /*MASXFS_ENTRY_REG | MASXFS_ENTRY_DIR, */ .cb_type = MASXFS_CBTYPE_SIMPLE,.fun_simple =fscallback,.flags =
        /* MASXFS_CB_OFF_NAME | */ MASXFS_CB_PATH | MASXFS_CB_TRAILINGSLASH /* | MASXFS_CB_NO_FD */ | MASXFS_CB_SKIP}
-      , { /*MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, */ fscallback2,.flags =
+      , { /*MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, */ .cb_type = MASXFS_CBTYPE_SIMPLE,.fun_simple =fscallback2,.flags =
          /* MASXFS_CB_OFF_NAME | MASXFS_CB_PATH | */ MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT /* | MASXFS_CB_NO_FD */}
-      , {NULL}
+      , {0}
     };
     WARN( "callbacks: %p", callbacks );
 #if 0

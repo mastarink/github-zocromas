@@ -40,8 +40,7 @@ mas_qstd_query( mas_qstd_t * qstd, const char *op )
     if ( !mas_mysqlpfs_query( qstd->pfs, op ) )
       rSETGOOD;
   }
-  else
-    QRGM( rCODE, "no qstd" );
+  QRGM( rCODE, "no qstd" );
   rRET;
 }
 
@@ -97,8 +96,8 @@ int
 mas_qstd_start_transaction( mas_qstd_t * qstd )
 {
   rDECLBAD;
-  rC( mas_qstd_query( qstd, "START TRANSACTION" ));
-  rC( mas_qstd_query( qstd, "SET autocommit = 1" ));
+  rC( mas_qstd_query( qstd, "START TRANSACTION" ) );
+  rC( mas_qstd_query( qstd, "SET autocommit = 1" ) );
   rRET;
 }
 

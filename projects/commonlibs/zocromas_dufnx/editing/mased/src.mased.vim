@@ -8,8 +8,8 @@ tab sfind mysql.h
 sfind mysql.c
 
 tab sfind dufnx.h
-sfind dufnx.c
 sfind dufnx_debug.c
+sfind dufnx.c
 
 tab sfind tree.h
 sfind tree.c

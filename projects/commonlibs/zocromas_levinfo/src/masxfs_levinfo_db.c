@@ -68,6 +68,7 @@ _masxfs_levinfo_db_open( masxfs_levinfo_t * li )
   if ( li->lidepth > 0 )
   {
     rC( masxfs_levinfo_db_open_as( li - 1, MASXFS_ENTRY_DIR_NUM ) );
+    QRLI( li, rCODE );
     assert(  /* !detype_tmp || detype_tmp == MASXFS_ENTRY_UNKNOWN_NUM || */ detype_tmp == li->detype );
   /* TODO
    * The only unknown type is for starting point, for instance, 'mastest' at:
@@ -79,12 +80,18 @@ _masxfs_levinfo_db_open( masxfs_levinfo_t * li )
     assert( rBAD || li->detype == MASXFS_ENTRY_DIR_NUM );
     if ( rGOOD && ( li->detype == MASXFS_ENTRY_DIR_NUM /* || li->detype == MASXFS_ENTRY_UNKNOWN_NUM */  ) )
     {
+      mas_qstd_t *qstd = mas_qstd_instance(  );
+
       if ( !li->db.node_id )
-        li->db.node_id = mas_qstd_mstmt_selget_node_id( mas_qstd_instance(  ), li[-1].db.node_id, li->name );
+      {
+        li->db.node_id = mas_qstd_mstmt_selget_node_id( qstd, li[-1].db.node_id, li->name );
+        if ( rGOOD )
+          rC( mas_qstd_ret_code( qstd ) );
+      }
 #if 0
       if ( !li->db.node_id && ( flags & MASXFS_CB_CAN_UPDATE_DB ) )
       {
-        li->db.node_id = masxfs_levinfo_db_store( li, flags );
+        li->db.node_id = masxfs_levinfo_db_store_id( li, flags, rCODE );
         WARN( "O li->db.node_id: %lld", li->db.node_id );
       }
 #endif
@@ -92,6 +99,7 @@ _masxfs_levinfo_db_open( masxfs_levinfo_t * li )
       {
         rSETBAD;
       /* 20180119.135237 QRLIM( li, rCODE, "can't get node_id for '%s' (D:%d)", li->name, li->lidepth ); */
+        QRLI( li, rCODE );
       }
       assert( rBAD || li->detype == MASXFS_ENTRY_DIR_NUM );
     }
@@ -121,6 +129,7 @@ masxfs_levinfo_db_open( masxfs_levinfo_t * li )
     if ( !li->db.node_id )
     {
       rC( _masxfs_levinfo_db_open( li ) );
+      QRLI( li, rCODE );
     }
   }
   else
@@ -173,7 +182,7 @@ masxfs_levinfo_db_stat( masxfs_levinfo_t * li, masxfs_entry_filter_t * entry_pfi
       if ( ( flags & MASXFS_CB_CAN_UPDATE_DB ) )
       {
         WARN( "li->name: %s", li->name );
-        li->db.node_id = masxfs_levinfo_db_store( li, flags );
+        li->db.node_id = masxfs_levinfo_db_store_id( li, flags, rCODE );
         WARN( "S li->db.node_id: %lld", li->db.node_id );
 
       /* FIXME  following NOT WORKING */
@@ -192,9 +201,22 @@ masxfs_levinfo_db_stat( masxfs_levinfo_t * li, masxfs_entry_filter_t * entry_pfi
   rRET;
 }
 
-unsigned long long
+int
 masxfs_levinfo_db_store( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
+  rDECLBAD;
+  int rc = 0;
+
+  masxfs_levinfo_db_store_id( li, flags, &rc );
+  rC( rc );
+
+  rRET;
+}
+
+unsigned long long
+masxfs_levinfo_db_store_id( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, int *pr )
+{
+  rDECLGOOD;
   const char *ename = masxfs_levinfo_name_ref( li, flags );
   masxfs_levinfo_flags_t take_flags = ( flags | MASXFS_CB_MODE_FS ) & ~MASXFS_CB_MODE_DB;
 
@@ -212,7 +234,6 @@ masxfs_levinfo_db_store( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
     size_t size = masxfs_levinfo_size_ref( li, take_flags );
 
     size_t thesize _uUu_ = mas_qstd_mstmt_selinsget_sizes_id( qstd, size );
-
   }
   {
     const masxfs_stat_t *stat = masxfs_levinfo_stat_ref( li, take_flags );
@@ -262,11 +283,14 @@ masxfs_levinfo_db_store( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
         if ( detype == MASXFS_ENTRY_DIR_NUM )
         {
           node_id = mas_qstd_mstmt_selinsget_parents_id( qstd, name_id );
+          rC( mas_qstd_ret_code( qstd ) );
+
           masxfs_levinfo_set_node_id( li, node_id );
         }
       }
     }
   }
-
+  if ( pr )
+    *pr = rCODE;
   return node_id;
 }

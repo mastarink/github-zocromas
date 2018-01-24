@@ -37,7 +37,7 @@ masxfs_levinfo_rewinddir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 }
 
 int
-masxfs_levinfo_opened_dir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
+masxfs_levinfo_opened_dir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, int def )
 {
   int f = 0;
 
@@ -45,6 +45,8 @@ masxfs_levinfo_opened_dir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
     f = masxfs_levinfo_fs_opened_dir( li );
   if ( flags & MASXFS_CB_MODE_DB )
     f = masxfs_levinfo_db_opened_dir( li );
+  if ( !( flags & ( MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB ) ) )
+    f = def;
   return f;
 }
 
@@ -65,14 +67,19 @@ int
 masxfs_levinfo_opendir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, masxfs_entry_filter_t * entry_pfilter )
 {
   rDECLGOOD;
-  assert( !masxfs_levinfo_opened_dir( li, flags ) );
+  assert( !masxfs_levinfo_opened_dir( li, flags, 0 ) );
 
   if ( flags & MASXFS_CB_MODE_FS )
+  {
     rC( masxfs_levinfo_fs_opendir( li ) );
+  /* WARN("[%d] %s", li->lidepth, li->name); */
+    assert( masxfs_levinfo_opened_dir( li, flags, 1 ) );
+  }
   if ( flags & MASXFS_CB_MODE_DB )
     rC( masxfs_levinfo_db_opendir( li, entry_pfilter ) );
-  assert( flags & ( MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB ) );
-  assert( masxfs_levinfo_opened_dir( li, flags ) );
+  QRLI( li, rCODE );
+/* assert(  (*any mode *) flags & ( MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB ) ); */
+  assert( rBAD || masxfs_levinfo_opened_dir( li, flags, 1 ) );
   rRET;
 }
 
@@ -86,7 +93,7 @@ masxfs_levinfo_closedir( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
     rC( masxfs_levinfo_fs_closedir( li ) );
   if ( flags & MASXFS_CB_MODE_DB )
     rC( masxfs_levinfo_db_closedir( li ) );
-  assert( flags & ( MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB ) );
+/* assert(  (*any mode *) flags & ( MASXFS_CB_MODE_FS | MASXFS_CB_MODE_DB ) ); */
   rRET;
 }
 

@@ -218,10 +218,12 @@ masxfs_levinfo_db_opendir( masxfs_levinfo_t * li, masxfs_entry_filter_t * entry_
     {
       if ( !masxfs_levinfo_db_opened( li ) )
         rC( masxfs_levinfo_db_open( li ) );
+      QRLI( li, rCODE );
       rC( masxfs_levinfo_db_prepare_execute_store( &li->db.scan.mstmt, li[1].name, ( long long ) li->db.node_id, entry_pfilter ) );
+      QRLI( li, rCODE );
       assert( rBAD || masxfs_levinfo_db_opened( li ) );
     }
-    assert( masxfs_levinfo_db_opened_dir( li ) );
+    assert( rBAD || masxfs_levinfo_db_opened_dir( li ) );
   }
   else
     QRLI( li, rCODE );
