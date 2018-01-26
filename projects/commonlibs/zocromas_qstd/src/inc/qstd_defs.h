@@ -16,9 +16,12 @@
 # define QSTD_TABLE_SHA1      QSTD_TABPREF "sha1"
 # define QSTD_TABLE_SHA1DREF  QSTD_TABPREF "sha1dref"
 
+# define QSTD_VIEW_EVERY      QSTD_TABPREF "everythingfull"
+# define QSTD_VIEW_EVERYX     QSTD_TABPREF "everythingfullx"
 # define QSTD_VIEW_ALL        QSTD_TABPREF "allfull"
+# define QSTD_VIEW_ALL_OLD    QSTD_TABPREF "allfull_old"
 # define QSTD_VIEW_DIRS       QSTD_TABPREF "dirfull"
 # define QSTD_VIEW_FILES      QSTD_TABPREF "filefull"
-# define QSTD_VIEW_FILES_OLD     QSTD_TABPREF "filefull1"
+# define QSTD_VIEW_FILES_OLD  QSTD_TABPREF "filefull_old"
 
 #endif

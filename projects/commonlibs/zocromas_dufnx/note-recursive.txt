@@ -1,0 +1,104 @@
+##########################################################################################
+
+WITH RECURSIVE
+EMPLOYEES_EXTENDED
+AS
+(
+  SELECT ID, NAME, MANAGER_ID
+  FROM EMPLOYEES
+UNION ALL
+  SELECT E.ID, E.NAME, M.MANAGER_ID
+  FROM EMPLOYEES M JOIN EMPLOYEES_EXTENDED E ON M.ID=E.MANAGER_ID
+),
+REPORTS_COUNT (ID, REPORTS)
+AS
+( SELECT MANAGER_ID, COUNT(*) FROM EMPLOYEES_EXTENDED GROUP BY MANAGER_ID )
+SELECT EMPLOYEES.*, REPORTS FROM EMPLOYEES JOIN REPORTS_COUNT
+ON EMPLOYEES.ID = REPORTS_COUNT.ID;
+
+##########################################################################################
+
+WITH RECURSIVE top AS
+(
+  SELECT * FROM dufnx_allfull
+    WHERE dufnx_allfull.parent_id=51
+UNION
+  SELECT f.* FROM dufnx_allfull AS f, top AS a    WHERE a.node_id = f.parent_id
+)
+SELECT parent_id, name FROM top;
+
+##########################################################################################
+
+WITH RECURSIVE top AS
+(
+  SELECT * FROM dufnx_allfull
+    WHERE dufnx_allfull.parent_id=51
+UNION
+  SELECT f.* FROM dufnx_allfull AS f JOIN top AS a  ON a.node_id = f.parent_id
+)
+SELECT parent_id, name FROM top;
+
+##########################################################################################
+
+WITH RECURSIVE top AS
+(
+  SELECT node_id, name, parent_id FROM dufnx_allfull
+    WHERE dufnx_allfull.parent_id=51
+UNION
+  SELECT f.node_id, f.name, f.parent_id FROM dufnx_allfull AS f JOIN top AS a  ON a.node_id = f.parent_id
+),
+chidren_count (id, children)
+AS
+( SELECT parent_id, COUNT(*) FROM top GROUP BY parent_id )
+SELECT top.*, children FROM top JOIN chidren_count ON top.node_id=chidren_count.id;
+
+##########################################################################################
+
+WITH RECURSIVE top AS
+(
+  SELECT parent_id as pid, node_id, name, parent_id FROM dufnx_allfull
+    WHERE dufnx_allfull.parent_id=51
+UNION
+  SELECT a.pid, f.node_id, f.name, f.parent_id FROM dufnx_allfull AS f JOIN top AS a  ON a.node_id = f.parent_id
+)
+SELECT parent_id, name FROM top;
+
+#### number of all descendants ###########################################################
+
+WITH RECURSIVE top AS
+(
+  SELECT parent_id as pid, node_id, name, parent_id, detype
+    FROM dufnx_allfull
+UNION
+  SELECT a.pid, f.node_id, f.name, f.parent_id, f.detype
+    FROM dufnx_allfull AS f
+    JOIN top AS a ON a.node_id = f.parent_id
+)
+SELECT af.detype, af.node_id, af.name, COUNT(*)
+  FROM top
+  LEFT JOIN dufnx_allfull as af ON pid=af.node_id
+  WHERE top.detype='REG'
+  GROUP BY pid;
+
+#### All descendants #####################################################################
+
+WITH RECURSIVE top AS
+(
+  SELECT parent_id as pid, node_id, name, parent_id, detype
+    FROM dufnx_allfull
+    WHERE dufnx_allfull.parent_id=15
+UNION
+  SELECT a.pid, f.node_id, f.name, f.parent_id, f.detype
+    FROM dufnx_allfull AS f JOIN top AS a ON a.node_id = f.parent_id
+)
+SELECT top.pid, top.parent_id, top.name, top.detype, AF.node_id, AF.name
+  FROM top
+  LEFT JOIN dufnx_allfull as AF ON(pid=AF.node_id)
+  WHERE top.detype='REG' ;
+
+##########################################################################################
+
+
+##########################################################################################
+
+

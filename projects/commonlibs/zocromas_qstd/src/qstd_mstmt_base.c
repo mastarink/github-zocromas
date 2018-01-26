@@ -173,68 +173,89 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
             ")",
     "CREATE TABLE IF NOT EXISTS " QSTD_TABLE_SHA1 " ("               /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
-            ", sum BINARY(20), UNIQUE INDEX sum (sum)"               /* */
+            ", digest BINARY(20), UNIQUE INDEX digest (digest)"      /* */
             ", nsame INTEGER NOT NULL DEFAULT 0, INDEX nsame (nsame)" /* */
+            ", last_updated  DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
             ")",
     "CREATE TABLE IF NOT EXISTS " QSTD_TABLE_SHA1DREF " ("           /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
             ", data_id INTEGER NOT NULL DEFAULT 0, INDEX data (data_id), FOREIGN KEY (data_id) REFERENCES " QSTD_TABLE_DATAS " (id)" /* */
-            ", sum_id INTEGER NOT NULL DEFAULT 0, INDEX sum (sum_id), FOREIGN KEY (sum_id) REFERENCES " QSTD_TABLE_SHA1 " (id)" /* */
-            ", UNIQUE INDEX pair (data_id, sum_id) COMMENT 'this pair is unique'" /* */
+            ", digest_id INTEGER NOT NULL DEFAULT 0, INDEX digest (digest_id), FOREIGN KEY (digest_id) REFERENCES " QSTD_TABLE_SHA1 " (id)" /* */
+            ", last_updated  DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
+            ", UNIQUE INDEX pair (data_id, digest_id) COMMENT 'this pair is unique'" /* */
             ")",
     "CREATE TABLE IF NOT EXISTS " QSTD_TABLE_MD5 " ("                /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
-            ", sum BINARY(16), UNIQUE INDEX sum (sum)"               /* */
+            ", digest BINARY(16), UNIQUE INDEX digest (digest)"      /* */
             ", nsame INTEGER NOT NULL DEFAULT 0, INDEX nsame (nsame)" /* */
+            ", last_updated  DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
             ")",
     "CREATE TABLE IF NOT EXISTS " QSTD_TABLE_MD5DREF " ("            /* */
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"                  /* */
             ", data_id INTEGER NOT NULL DEFAULT 0, INDEX data (data_id), FOREIGN KEY (data_id) REFERENCES " QSTD_TABLE_DATAS " (id)" /* */
-            ", sum_id INTEGER NOT NULL DEFAULT 0, INDEX sum (sum_id), FOREIGN KEY (sum_id) REFERENCES " QSTD_TABLE_MD5 " (id)" /* */
-            ", UNIQUE INDEX pair (data_id, sum_id) COMMENT 'this pair is unique'" /* */
+            ", digest_id INTEGER NOT NULL DEFAULT 0, INDEX digest (digest_id), FOREIGN KEY (digest_id) REFERENCES " QSTD_TABLE_MD5 " (id)" /* */
+            ", last_updated  DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP, INDEX last_updated (last_updated)" /* */
+            ", UNIQUE INDEX pair (data_id, digest_id) COMMENT 'this pair is unique'" /* */
             ")",
-    "CREATE OR REPLACE VIEW " QSTD_VIEW_ALL " AS "                   /* */
+    "CREATE OR REPLACE VIEW " QSTD_VIEW_EVERY " AS "                 /* */
             " SELECT "                                               /* */
-            " fn.name, fn.parent_id, fn.id AS name_id, fd.id AS data_id, p.id AS node_id, fp.detype, fd.inode " /* */
-            "  , fp.atim AS atim, fp.mtim AS mtim, fp.ctim AS ctim " /* */
-            "  , fs.nsame AS nsamesize"                              /* */
-            "  , fd.dev, fp.mode, fd.nlink, fp.uid, fp.gid, fp.size, fp.blksize, fp.blocks, fp.rdev " /* */
-            "  , sha.nsame AS nsamesha1, sha.id AS sha1id, LOWER(HEX(sha.sum)) AS hex_sha1" /* */
-            "        , GREATEST(fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS latest_updated " /* */
-            "        , LEAST(   fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS least_updated " /* */
+            "  fn.id AS name_id, fn.parent_id, fn.data_id AS fndata_id, fn.name, fn.last_updated AS fnlast_updated " /* */
+            ", p.id AS node_id, p.nchilds, p.dir_id, p.last_updated AS plast_updated " /* */
+            ", fd.id AS data_id, dev, fd.inode, nlink, nlinkdb, fd.last_updated AS fdlast_updated" /* */
+            ", fp.id AS props_id, fp.data_id AS fpdata_id, fp.detype, fp.mode, fp.uid, fp.gid, fp.atim, fp.mtim, fp.ctim, fp.size AS fpsize " /* */
+            ", fp.rdev, fp.blksize, fp.blocks, fp.last_updated AS fplast_updated" /* */
+            ", fs.size, fs.nsame AS nsamesize, fs.last_updated AS fslast_updated" /* */
+            ", shd.id AS sha1dref_id, shd.data_id AS shddata_id, shd.digest_id, shd.last_updated AS shdlast_updated" /* */
+            ", sha.id AS sha1_id, sha.digest, sha.nsame AS nsamesha1, sha.last_updated AS shalast_updated" /* */
             "      FROM " QSTD_TABLE_NAMES "    AS fn "              /* */
             " LEFT JOIN " QSTD_TABLE_PARENTS "  AS  p ON (fn.id=p.dir_id) " /* */
             " LEFT JOIN " QSTD_TABLE_DATAS "    AS fd ON (fn.data_id=fd.id) " /* */
             "      JOIN " QSTD_TABLE_PROPS "    AS fp ON (fp.data_id=fd.id) " /* */
             " LEFT JOIN " QSTD_TABLE_SIZES "    AS fs ON (fp.size=fs.size) " /* */
             " LEFT JOIN " QSTD_TABLE_SHA1DREF " AS shd ON (shd.data_id=fd.id) " /* */
-            " LEFT JOIN " QSTD_TABLE_SHA1 "     AS sha ON (shd.sum_id=sha.id) " /* */
+            " LEFT JOIN " QSTD_TABLE_SHA1 "     AS sha ON (shd.digest_id=sha.id) " /* */
             ,
-    "CREATE OR REPLACE VIEW " QSTD_VIEW_FILES_OLD " AS "             /* */
-            " SELECT  "                                              /* */
+    "CREATE OR REPLACE VIEW " QSTD_VIEW_EVERYX " AS "                /* */
+            " SELECT yx.* "                                          /* */
+            "      , LOWER(HEX(digest)) AS hex_sha1"                 /* */
+            "      , GREATEST(fnlast_updated,fdlast_updated,fplast_updated,fslast_updated " /* */
+          /*",plast_updated,shdlast_updated,shalast_updated" *//* */
+            ") AS latest_updated "                                   /* */
+            "      , LEAST(   fnlast_updated,fdlast_updated,fplast_updated,fslast_updated " /* */
+          /*",plast_updated,shdlast_updated,shalast_updated" *//* */
+            ") AS least_updated "                                    /* */
+            " FROM " QSTD_VIEW_EVERY " AS yx "                       /* */
+            ,
+    "CREATE OR REPLACE VIEW " QSTD_VIEW_ALL " AS "                   /* */
+            " SELECT "                                               /* */
+            " name, parent_id, name_id, data_id, node_id, detype, inode " /* */
+            "  , atim, mtim, ctim, nsamesize"                        /* */
+            "  , dev, mode, nlink, uid, gid, size, blksize, blocks, rdev " /* */
+            "  , nsamesha1, sha1_id, hex_sha1, latest_updated, least_updated " /* */
+            "      FROM " QSTD_VIEW_EVERYX "    AS yx "              /* */
+            ,
+    "CREATE OR REPLACE VIEW " QSTD_VIEW_ALL_OLD " AS "               /* */
+            " SELECT "                                               /* */
             " fn.name, fn.parent_id, fn.id AS name_id, fd.id AS data_id, p.id AS node_id, fp.detype, fd.inode " /* */
             "  , fp.atim AS atim, fp.mtim AS mtim, fp.ctim AS ctim " /* */
             "  , fs.nsame AS nsamesize"                              /* */
             "  , fd.dev, fp.mode, fd.nlink, fp.uid, fp.gid, fp.size, fp.blksize, fp.blocks, fp.rdev " /* */
-            "  , sha.nsame AS nsamesha1, sha.id AS sha1id, LOWER(HEX(sha.sum)) AS hex_sha1" /* */
+            "  , sha.nsame AS nsamesha1, sha.id AS sha1id, LOWER(HEX(sha.digest)) AS hex_sha1" /* */
             "        , GREATEST(fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS latest_updated " /* */
             "        , LEAST(   fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS least_updated " /* */
-            "   FROM " QSTD_TABLE_NAMES " AS fn "                    /* */
-            "   LEFT JOIN " QSTD_TABLE_PARENTS "  AS  p  ON (fn.id=p.dir_id) " /* */
-            "   LEFT JOIN " QSTD_TABLE_DATAS "    AS fd  ON (fn.data_id=fd.id) " /* */
-            "        JOIN " QSTD_TABLE_PROPS "    AS fp  ON (fp.data_id=fd.id) " /* */
-            "   LEFT JOIN " QSTD_TABLE_SIZES "    AS fs  ON (fp.size=fs.size) " /* */
-            "        JOIN " QSTD_TABLE_SHA1DREF " AS shd ON (shd.data_id=fd.id) " /* */
-            "	LEFT JOIN " QSTD_TABLE_SHA1 "     AS sha ON (shd.sum_id=sha.id) " /* */
+            "      FROM " QSTD_TABLE_NAMES "    AS fn "              /* */
+            " LEFT JOIN " QSTD_TABLE_PARENTS "  AS  p  ON (fn.id=p.dir_id) " /* */
+            " LEFT JOIN " QSTD_TABLE_DATAS "    AS fd  ON (fn.data_id=fd.id) " /* */
+            "      JOIN " QSTD_TABLE_PROPS "    AS fp  ON (fp.data_id=fd.id) " /* */
+            " LEFT JOIN " QSTD_TABLE_SIZES "    AS fs  ON (fp.size=fs.size) " /* */
+            " LEFT JOIN " QSTD_TABLE_SHA1DREF " AS shd ON (shd.data_id=fd.id) " /* */
+            " LEFT JOIN " QSTD_TABLE_SHA1 "     AS sha ON (shd.digest_id=sha.id) " /* */
             " WHERE p.id IS NULL"                                    /* */
-          /* " HAVING node_id IS NULL"                                    (* *) */
+          /* " HAVING node_id IS NULL" */
             ,
-    "CREATE OR REPLACE VIEW " QSTD_VIEW_FILES " AS "                 /* */
-            " SELECT * FROM " QSTD_VIEW_ALL " HAVING node_id IS NULL" /* */
-            ,
-  /* " WHERE fp.detype='REG'", */
     "CREATE OR REPLACE VIEW " QSTD_VIEW_DIRS " AS "                  /* */
-            " SELECT p.id AS node_id, fn.parent_id AS parent_id, fn.name AS name, fn.id AS name_id, fd.id AS data_id, fp.mtim AS mtim" /* */
+            " SELECT "                                               /* */
+            " p.id AS node_id, fn.parent_id AS parent_id, fn.name AS name, fn.id AS name_id, fd.id AS data_id, fp.mtim AS mtim" /* */
             "        , GREATEST(fn.last_updated,p.last_updated,fd.last_updated,fp.last_updated) AS latest_updated " /* */
             "        , LEAST(   fn.last_updated,p.last_updated,fd.last_updated,fp.last_updated) AS least_updated " /* */
             "   FROM " QSTD_TABLE_NAMES " AS fn "                    /* */
@@ -243,6 +264,36 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
             "   JOIN " QSTD_TABLE_PROPS "       AS fp ON (fp.data_id=fd.id) " /* */
             " WHERE p.id IS NOT NULL",
   /* " WHERE fp.detype='DIR'", */
+/* XXX TODO dirs with descendants counters
+WITH RECURSIVE top AS (   SELECT parent_id as pid, node_id, name, parent_id, detype     FROM dufnx_allfull UNION   SELECT a.pid, f.node_id, f.name, f.parent_id, f.detype     FROM dufnx_allfull AS f     JOIN top AS a ON a.node_id = f.parent_id ) SELECT af.detype, af.node_id, af.name, COUNT(*) AS num   FROM top   LEFT JOIN dufnx_allfull as af ON pid=af.node_id   WHERE top.detype='REG'    GROUP BY pid;
+
+XXX SIZE not tested!:
+WITH RECURSIVE top AS (   SELECT parent_id as pid, node_id, name, parent_id, detype, size     FROM dufnx_allfull UNION   SELECT a.pid, f.node_id, f.name, f.parent_id, f.detype, f.size     FROM dufnx_allfull AS f     JOIN top AS a ON a.node_id = f.parent_id ) SELECT af.detype, af.node_id, af.name, COUNT(*) AS num, SUM(top.size) AS totsize   FROM top   LEFT JOIN dufnx_allfull as af ON pid=af.node_id   WHERE top.detype='REG'    GROUP BY pid;
+ */
+
+    "CREATE OR REPLACE VIEW " QSTD_VIEW_FILES " AS "                 /* */
+            " SELECT * FROM " QSTD_VIEW_ALL " HAVING node_id IS NULL" /* */
+  /* " WHERE fp.detype='REG'", */
+            ,
+    "CREATE OR REPLACE VIEW " QSTD_VIEW_FILES_OLD " AS "             /* */
+            " SELECT  "                                              /* */
+            " fn.name, fn.parent_id, fn.id AS name_id, fd.id AS data_id, p.id AS node_id, fp.detype, fd.inode " /* */
+            "  , fp.atim AS atim, fp.mtim AS mtim, fp.ctim AS ctim " /* */
+            "  , fs.nsame AS nsamesize"                              /* */
+            "  , fd.dev, fp.mode, fd.nlink, fp.uid, fp.gid, fp.size, fp.blksize, fp.blocks, fp.rdev " /* */
+            "  , sha.nsame AS nsamesha1, sha.id AS sha1_id, LOWER(HEX(sha.digest)) AS hex_sha1" /* */
+            "        , GREATEST(fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS latest_updated " /* */
+            "        , LEAST(   fn.last_updated,fd.last_updated,fp.last_updated,fs.last_updated) AS least_updated " /* */
+            "   FROM " QSTD_TABLE_NAMES " AS fn "                    /* */
+            "   LEFT JOIN " QSTD_TABLE_PARENTS "  AS  p  ON (fn.id=p.dir_id) " /* */
+            "   LEFT JOIN " QSTD_TABLE_DATAS "    AS fd  ON (fn.data_id=fd.id) " /* */
+            "        JOIN " QSTD_TABLE_PROPS "    AS fp  ON (fp.data_id=fd.id) " /* */
+            "   LEFT JOIN " QSTD_TABLE_SIZES "    AS fs  ON (fp.size=fs.size) " /* */
+            "        JOIN " QSTD_TABLE_SHA1DREF " AS shd ON (shd.data_id=fd.id) " /* */
+            "	LEFT JOIN " QSTD_TABLE_SHA1 "     AS sha ON (shd.digest_id=sha.id) " /* */
+            " WHERE p.id IS NULL"                                    /* */
+          /* " HAVING node_id IS NULL"                                    (* *) */
+            ,
     "COMMIT",
   };
 
@@ -369,7 +420,7 @@ mas_qstd_mstmt_init_prepare_results_everything( mysqlpfs_mstmt_t * mstmt, int *p
  *   +  blocks
  *   +  rdev
  *      nsamesha1
- *      sha1id
+ *      sha1_id
  *      hex_sha1
  */
 
@@ -402,7 +453,7 @@ mas_qstd_mstmt_init_prepare_results_everythingx( mysqlpfs_mstmt_t * mstmt, int *
   rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* ctim */
   rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* nsamesize */
   rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* nsamesha1 */
-  rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* sha1id */
+  rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* sha1_id */
   rC( mas_qstd_mstmt_prepare_result_string( mstmt, ( *pnr )++ ) );   /* hex_sha1 */
 /*
  *   +  name
@@ -426,7 +477,7 @@ mas_qstd_mstmt_init_prepare_results_everythingx( mysqlpfs_mstmt_t * mstmt, int *
  *   +  blocks
  *   +  rdev
  *   +  nsamesha1
- *   +  sha1id
+ *   +  sha1_id
  *   +  hex_sha1
  */
 
@@ -473,7 +524,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       {
         int np = 0;
         int nr = 0;
-        char *selop = "SELECT id FROM " QSTD_TABLE_NAMES " AS fn "   /* "LEFT JOIN "QSTD_TABLE_PARENTS" as p ON (fn.parent_id=p.id)" */
+        char *selop = "SELECT id FROM " QSTD_TABLE_NAMES " AS fn "   /* "LEFT JOIN "QSTD_TABLE_PARENTS" AS p ON (fn.parent_id=p.id)" */
                 " WHERE BINARY name=? AND fn.parent_id<=>?";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_NAMES_NFIELDS, STD_MSTMT_SELECT_NAMES_NRESULTS, selop );
@@ -656,7 +707,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       {
         int np = 0;
 
-        char *insop = "INSERT  INTO " QSTD_TABLE_SHA1 "(sum) VALUES (?)";
+        char *insop = "INSERT  INTO " QSTD_TABLE_SHA1 "(digest) VALUES (?)";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_SHA1_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
         QRGP( mstmt );
@@ -671,7 +722,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       {
         int np = 0;
 
-        char *insop = "INSERT  INTO " QSTD_TABLE_SHA1DREF "(data_id,sum_id) VALUES (?,?)";
+        char *insop = "INSERT  INTO " QSTD_TABLE_SHA1DREF "(data_id,digest_id) VALUES (?,?)";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_SHA1DREF_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
         QRGP( mstmt );
@@ -687,7 +738,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       {
         int np = 0;
         int nr = 0;
-        char *selop = "SELECT id FROM " QSTD_TABLE_SHA1 " WHERE sum=?";
+        char *selop = "SELECT id FROM " QSTD_TABLE_SHA1 " WHERE digest=?";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 1, selop );
         QRGP( mstmt );
@@ -846,7 +897,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         char *selop = "SELECT "                                      /* */
                 "  name, inode, node_id "                            /* */
                 ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev, atim, mtim, ctim" /* */
-                ", nsamesize, nsamesha1, sha1id, hex_sha1 "          /* */
+                ", nsamesize, nsamesha1, sha1_id, hex_sha1 "         /* */
                 "   FROM " QSTD_VIEW_ALL                             /* */
                 "    WHERE parent_id=? AND name=? "                  /* */
               /* "     AND (detype!='REG' OR (nsamesha1>10 AND nsamesize>1)) "              (* *) */
@@ -875,7 +926,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         char *selop = "SELECT "                                      /* */
                 "  name, inode, node_id "                            /* */
                 ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev, atim, mtim, ctim" /* */
-                ", nsamesize, nsamesha1, sha1id, hex_sha1 "          /* */
+                ", nsamesize, nsamesha1, sha1_id, hex_sha1 "         /* */
                 "   FROM " QSTD_VIEW_ALL                             /* */
                 "    WHERE parent_id=? "                             /* */
               /* "     AND (detype!='REG' OR (nsamesha1>10 AND nsamesize>1)) "              (* *) */
@@ -902,7 +953,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         char *selop = "SELECT "                                      /* */
                 "  name, inode, node_id "                            /* */
                 ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev, atim, mtim, ctim" /* */
-                ", nsamesize, nsamesha1, sha1id, hex_sha1 "          /* */
+                ", nsamesize, nsamesha1, sha1_id, hex_sha1 "         /* */
                 "   FROM " QSTD_VIEW_ALL                             /* */
                 "    WHERE parent_id=? AND name=? "                  /* */
                 "     AND (detype IN ('DIR','LNK') "                 /* */
@@ -912,7 +963,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
                 "         AND ( nsamesha1>=? AND nsamesha1<=? ) "    /* */
                 "         AND ( size>=? AND size<=? ) "              /* */
                 "         AND ( inode>=? AND inode<=? ) "            /* */
-                "         AND ( sha1id>=? AND sha1id<=? ) "          /* */
+                "         AND ( sha1_id>=? AND sha1_id<=? ) "        /* */
                 "         AND ( name REGEXP ? )  "                   /* */
                 "      ) "                                           /* */
                 "     ) "                                            /* */
@@ -950,7 +1001,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         char *selop = "SELECT "                                      /* */
                 "  name, inode, node_id "                            /* */
                 ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev, atim, mtim, ctim" /* */
-                ", nsamesize, nsamesha1, sha1id, hex_sha1 "          /* */
+                ", nsamesize, nsamesha1, sha1_id, hex_sha1 "         /* */
                 "   FROM " QSTD_VIEW_ALL                             /* */
                 "    WHERE parent_id=? "                             /* */
                 "     AND (detype IN ('DIR','LNK') "                 /* */
@@ -960,7 +1011,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
                 "         AND ( nsamesha1>=? AND nsamesha1<=? ) "    /* */
                 "         AND ( size>=? AND size<=? ) "              /* */
                 "         AND ( inode>=? AND inode<=? ) "            /* */
-                "         AND ( sha1id>=? AND sha1id<=? ) "          /* */
+                "         AND ( sha1_id>=? AND sha1_id<=? ) "        /* */
                 "         AND ( name REGEXP ? )  "                   /* */
                 "      ) "                                           /* */
                 "     ) "                                            /* */

@@ -73,11 +73,11 @@ mas_qstd_update_summary( mas_qstd_t * qstd )
             "    AS fx ON (fs.size=fx.size) SET fs.nsame=fx.nsame",
     "UPDATE " QSTD_TABLE_SHA1 " AS sha "                             /* */
             " LEFT JOIN "                                            /* */
-            "   (SELECT ishd.sum_id, COUNT(*) AS nsame "             /* */
+            "   (SELECT ishd.digest_id, COUNT(*) AS nsame "             /* */
             "     FROM " QSTD_TABLE_SHA1DREF " AS ishd "             /* */
-            "     LEFT JOIN " QSTD_TABLE_SHA1 " AS isha ON (isha.id=ishd.sum_id) " /* */
-            "     GROUP BY ishd.sum_id ) "                           /* */
-            "    AS fx ON (sha.id=fx.sum_id) SET sha.nsame=fx.nsame",
+            "     LEFT JOIN " QSTD_TABLE_SHA1 " AS isha ON (isha.id=ishd.digest_id) " /* */
+            "     GROUP BY ishd.digest_id ) "                           /* */
+            "    AS fx ON (sha.id=fx.digest_id) SET sha.nsame=fx.nsame",
     "COMMIT"
   };
   for ( size_t i = 0; i < sizeof( updop ) / sizeof( updop[0] ) && rGOOD; i++ )
