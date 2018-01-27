@@ -224,10 +224,8 @@ dufnx_tree( const char *real_path, masxfs_entry_filter_t * entry_pfilter, FILE *
 #else
   masxfs_entry_filter_t entry_filter = *entry_pfilter;
 
-  WARN( "%d", xflags2 & MASXFS_CB_USE_SIMPLE_CB ? 1 : 0 );
   entry_filter.typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR;
-  rC( masxfs_pathinfo_scanf_cbs( pi, &entry_filter, callbacks, fil /* userdata */ , walkflags | xflags2,
-                                 0 /* maxdepth */  ) );
+  rC( masxfs_pathinfo_scanf_cbs( pi, &entry_filter, callbacks, fil /* userdata */ , walkflags | xflags2 ) );
 #endif
   masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_ALL );
   rRET;
@@ -266,7 +264,7 @@ dufnx_data_path2db( const char *path, int npos, void *userdata, void *extradata 
         WARN( "(%d) ******** fill scan ******* %lx : %lx", rCODE, flagsfs | xflags1, pdufnx_data->levinfo_flags | flagsfs | xflags1 );
         {
 
-          rC( masxfs_pathinfo_scanf_cbs( pi, &entry_filter, &callback, qstd, cflags | flagsfs | xflags1, 0 ) );
+          rC( masxfs_pathinfo_scanf_cbs( pi, &entry_filter, &callback, qstd, cflags | flagsfs | xflags1 ) );
         }
         WARN( "******** /fill scan *******" );
       }

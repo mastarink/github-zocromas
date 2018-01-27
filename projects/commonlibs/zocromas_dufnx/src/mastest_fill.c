@@ -95,7 +95,7 @@ testfillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv _uU
 }
 
 int
-testfill( const char *path, masxfs_depth_t maxdepth )
+testfill( const char *path )
 {
   rDECLBAD;
 
@@ -129,7 +129,8 @@ testfill( const char *path, masxfs_depth_t maxdepth )
           masxfs_levinfo_flags_t xflags1 _uUu_ = MASXFS_CB_UP_ROOT;
           masxfs_levinfo_flags_t xflags2 _uUu_ = MASXFS_CB_FROM_ROOT | MASXFS_CB_SELF_N_UP;
 
-          rC( masxfs_pathinfo_scan_cbs( pi, typeflags, &callbacks[0], qstd, flagsfs | xflags1, maxdepth ) );
+          rC( masxfs_pathinfo_scan_cbs( pi, typeflags, &callbacks[0], qstd, flagsfs | xflags1 ) );
+        /* rC( masxfs_pathinfo_scanf_cbs( pi, &entry_filter, &callback, qstd, flagsfs | xflags1 ) ); */
           WARN( "******** /testfill scan *******" );
           rC( mas_qstd_end_transaction( qstd ) );
         }

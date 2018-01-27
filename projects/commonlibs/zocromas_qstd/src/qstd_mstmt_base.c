@@ -216,7 +216,7 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
             " LEFT JOIN " QSTD_TABLE_SHA1 "     AS sha ON (shd.digest_id=sha.id) " /* */
             ,
     "CREATE OR REPLACE VIEW " QSTD_VIEW_EVERYX " AS "                /* */
-            " SELECT yx.* "                                          /* */
+            " SELECT y.* "                                          /* */
             "      , LOWER(HEX(digest)) AS hex_sha1"                 /* */
             "      , GREATEST(fnlast_updated,fdlast_updated,fplast_updated,fslast_updated " /* */
           /*",plast_updated,shdlast_updated,shalast_updated" *//* */
@@ -224,7 +224,7 @@ mas_qstd_create_tables( mas_qstd_t * qstd )
             "      , LEAST(   fnlast_updated,fdlast_updated,fplast_updated,fslast_updated " /* */
           /*",plast_updated,shdlast_updated,shalast_updated" *//* */
             ") AS least_updated "                                    /* */
-            " FROM " QSTD_VIEW_EVERY " AS yx "                       /* */
+            " FROM " QSTD_VIEW_EVERY " AS y "                       /* */
             ,
     "CREATE OR REPLACE VIEW " QSTD_VIEW_ALL " AS "                   /* */
             " SELECT "                                               /* */

@@ -48,7 +48,7 @@ treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *d
 }
 
 int
-testtreefromfs( const char *path, masxfs_depth_t maxdepth, FILE * fil )
+testtreefromfs( const char *path, FILE * fil )
 {
   rDECL( 0 );
 
@@ -68,17 +68,16 @@ testtreefromfs( const char *path, masxfs_depth_t maxdepth, FILE * fil )
       masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 /* depth limit */ , 0 );
 
       {
-        masxfs_levinfo_flags_t walkflags _uUu_ = MASXFS_CB_RECURSIVE | MASXFS_CB_STAT | MASXFS_CB_SINGLE_CB;
+        masxfs_levinfo_flags_t walkflags _uUu_ = 0 | MASXFS_CB_RECURSIVE | /* MASXFS_CB_STAT */ MASXFS_CB_SINGLE_CB;
         masxfs_type_flags_t typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR;
-        masxfs_levinfo_flags_t xflags1 _uUu_ = MASXFS_CB_UP_ROOT;
 
+      /* masxfs_levinfo_flags_t xflags1 _uUu_ = MASXFS_CB_UP_ROOT; */
       /* masxfs_levinfo_flags_t xflags2 _uUu_ = MASXFS_CB_FROM_ROOT | MASXFS_CB_SELF_N_UP; */
-        masxfs_levinfo_flags_t xflags2 _uUu_ = MASXFS_CB_FROM_ROOT | MASXFS_CB_SELF;
+        masxfs_levinfo_flags_t xflags2 _uUu_ = /* 20180127.122923n/w: MASXFS_CB_FROM_ROOT | */ MASXFS_CB_SELF; // XXX Not working
 
-        walkflags |= MASXFS_CB_MODE_FS;
+        walkflags |= MASXFS_CB_MODE_FS | MASXFS_CB_USE_SIMPLE_CB | MASXFS_CB_SKIP_EMPTY;
         numline_treecb = 0;
-        rC( masxfs_pathinfo_scan_cbs( pi, typeflags, callbacks, fil /* data */ , walkflags | xflags2,
-                                      maxdepth ) );
+        rC( masxfs_pathinfo_scan_cbs( pi, typeflags, callbacks, fil /* data */ , walkflags | xflags2 ) );
       }
       masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_ALL );
     }

@@ -145,7 +145,7 @@ dufnx_config_store_fs2db( mucs_option_t * opt, void *userdata, void *extradata _
         masxfs_levinfo_flags_t xflags2 _uUu_ = MASXFS_CB_FROM_ROOT | MASXFS_CB_SELF_N_UP;
 
         WARN( "(%d) ******** fill scan *******", rCODE );
-        rC( masxfs_pathinfo_scanf_cbs( pi, &entry_filter, &callback, qstd, flagsfs | xflags1, 0 ) );
+        rC( masxfs_pathinfo_scanf_cbs( pi, &entry_filter, &callback, qstd, flagsfs | xflags1 ) );
         WARN( "******** /fill scan *******" );
         rC( mas_qstd_end_transaction( qstd ) );
 /* TODO commit !! */
@@ -289,6 +289,7 @@ void
 dufnx_config_cb_plus( mucs_option_interface_t * interface, mas_dufnx_data_t * pdufnx_data )
 {
   mas_dufnx_data_t *d = pdufnx_data;
+
 #define LFLAGS d->levinfo_flags
 #define FDV MUCS_FLAG_ONLY_DEF_NVALUE
   mucs_option_static_t soptions_cbplus[] = {

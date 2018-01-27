@@ -49,7 +49,8 @@ masxfs_pathinfo_scanf_scanner( masxfs_pathinfo_t * pi, masxfs_scanner_t * scanne
 /* if ( r >= 0 ) */
   {
 //  maxdepth = maxdepth ? pi->pidepth + maxdepth : 0;
-    if ( ( pi->flags | flags ) & MASXFS_CB_FROM_ROOT )
+
+    if ( ( pi->flags | flags ) & MASXFS_CB_FROM_ROOT ) // XXX not working!? needless?!
     {
       masxfs_depth_t reldepth = 1 - pi->pidepth;
 
@@ -74,18 +75,18 @@ masxfs_pathinfo_scanf_scanner( masxfs_pathinfo_t * pi, masxfs_scanner_t * scanne
 
 int
 masxfs_pathinfo_scanf_cbs( masxfs_pathinfo_t * pi, masxfs_entry_filter_t * entry_pfilter, masxfs_entry_callback_t * cbs, void *userdata,
-                           masxfs_levinfo_flags_t flags, masxfs_depth_t maxdepth )
+                           masxfs_levinfo_flags_t flags )
 {
-  masxfs_scanner_t scanner = {.entry_pfilter = entry_pfilter,.cbs = cbs,.flags = flags,.maxdepth = maxdepth };
+  masxfs_scanner_t scanner = {.entry_pfilter = entry_pfilter,.cbs = cbs,.flags = flags };
   return masxfs_pathinfo_scanf_scanner( pi, &scanner, userdata );
 }
 
 int
 masxfs_pathinfo_scan_cbs( masxfs_pathinfo_t * pi, masxfs_type_flags_t typeflags, masxfs_entry_callback_t * cbs, void *userdata,
-                          masxfs_levinfo_flags_t flags, masxfs_depth_t maxdepth )
+                          masxfs_levinfo_flags_t flags )
 {
   masxfs_entry_filter_t entry_filter = {.typeflags = typeflags };
-  return masxfs_pathinfo_scanf_cbs( pi, &entry_filter, cbs, userdata, flags, maxdepth );
+  return masxfs_pathinfo_scanf_cbs( pi, &entry_filter, cbs, userdata, flags );
 }
 
 masxfs_levinfo_t *

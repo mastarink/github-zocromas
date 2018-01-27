@@ -48,7 +48,7 @@ treecb( masxfs_levinfo_t * li _uUu_, masxfs_levinfo_flags_t flags _uUu_, void *d
 }
 
 int
-testtreefromdb( const char *path, masxfs_depth_t maxdepth, FILE * fil )
+testtreefromdb( const char *path, FILE * fil )
 {
   rDECL( 0 );
 
@@ -77,8 +77,7 @@ testtreefromdb( const char *path, masxfs_depth_t maxdepth, FILE * fil )
 
         walkflags |= MASXFS_CB_MODE_DB;
         numline_treecb = 0;
-        rC( masxfs_pathinfo_scan_cbs( pi, typeflags, callbacks, fil /* data */ , walkflags | xflags2,
-                                      maxdepth ) );
+        rC( masxfs_pathinfo_scan_cbs( pi, typeflags, callbacks, fil /* data */ , walkflags | xflags2 ) );
       }
       masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_ALL );
     }

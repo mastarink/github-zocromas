@@ -58,7 +58,7 @@ masxfs_levinfo_db_open_as( masxfs_levinfo_t * li, masxfs_entry_type_t detype )
   }
   rRET;
 }
-
+/* result: set li->db.node_id's by li names */
 static int
 _masxfs_levinfo_db_open( masxfs_levinfo_t * li )
 {

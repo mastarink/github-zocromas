@@ -31,7 +31,7 @@
 
 #define MX_CLOSE(_fd) { int r=0;if ( _fd ) r = close( _fd ); _fd=0; if ( r < 0 ) WARN( "close error %s", strerror( errno ) ); }
 #define MX_FPUTS_O(_text) { int r=0; if (_text) r=fputs(_text, stdout); if ( r == EOF ) WARN( "fputs error %s", strerror( errno ) ); }
-
+static int busy_fds = 3;
 int variant = 0;
 int beep_on_error = 1;
 int assert_on_error = 0;
@@ -53,6 +53,12 @@ destructor_main( int argc __attribute__ ( ( unused ) ), char **argv __attribute_
   if ( !exam_silent && tests_count )
     fprintf( stderr, "**** \x1b[0;1;44;37m* * * * TESTS DONE: %ld (OK:%ld / Fail:%ld) * * * *\x1b[0m ****\n\n", tests_count, tests_count_good,
              tests_count_bad );
+}
+
+int
+masexam_busy_fds( void )
+{
+  return busy_fds;
 }
 
 long
@@ -146,6 +152,7 @@ masexam_test_fork( int argc, const char *argv[], masexam_fun_t func, int nseries
   int pipe_wr;
 
   pipe( filedes );
+  busy_fds += 2;
 
   pipe_wr = filedes[1];
   pipe_rd = filedes[0];
@@ -221,7 +228,7 @@ masexam_test_call_th( void *ptr )
 
   if ( 1 )
   {
-    /* FIXME This is WRONG; needs something like mutex */
+  /* FIXME This is WRONG; needs something like mutex */
 /* struct timespec ts={0,999999999}; */
     struct timespec ts = { 0, 100000 };
     struct timespec tsr = { 0 };
@@ -346,6 +353,7 @@ masexam_test( int argc, const char *argv[], masexam_do_t * funlist )
           pthread_t thread2 = 0;
 
           pipe( joint_data.iopipe );
+          busy_fds += 2;
           r1 = pthread_create( &thread1, NULL, masexam_test_call_th, ( void * ) &joint_data );
           RGESRM( r1, "pthread_join %s", strerror( r1 ) );
 

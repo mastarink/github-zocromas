@@ -9,8 +9,8 @@ end
 handle SIGPIPE nostop noprint
 set breakpoint pending on
 
-# b masxfs_levinfo.c:345
-# b masxfs_pathinfo.c:60
+# b masxfs_pathinfo_base.c:68
+# b masxfs_levinfo_scan.c:540
 run
 
 # display pdi.pathinfo->levinfo[d].itemname

@@ -45,8 +45,8 @@ masxfs_levinfo_fs_open_at( masxfs_levinfo_t * li, int fdparent )
         if ( rCODE > 0 && li->detype == MASXFS_ENTRY_UNKNOWN_NUM && ( openflags & O_DIRECTORY ) )
           li->detype = MASXFS_ENTRY_DIR_NUM;
         if ( rCODE < 0 /* && li->detype == MASXFS_ENTRY_UNKNOWN_NUM */  )
-          WARN( "NOT OPEN (%d) %s %d %d %d", fdparent, li->name, li->detype == MASXFS_ENTRY_DIR_NUM, li->detype == MASXFS_ENTRY_UNKNOWN_NUM,
-                openflags & O_DIRECTORY ? 1 : 0 );
+          WARN( "NOT OPEN (fdparent:%d) fd:%d %s %d %d %d", fdparent, li->fd, li->name, li->detype == MASXFS_ENTRY_DIR_NUM,
+                li->detype == MASXFS_ENTRY_UNKNOWN_NUM, openflags & O_DIRECTORY ? 1 : 0 );
       }
     }
   }

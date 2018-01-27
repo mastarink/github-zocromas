@@ -32,6 +32,7 @@ struct masexam_call_s
   int iopipe[2];
 };
 
+int masexam_busy_fds( void );
 int masexam_count( void );
 int masexam_test( int argc, const char *argv[], masexam_do_t * funlist );
 
@@ -45,6 +46,9 @@ int masexam_fds( void );
 
 /* for special mas_strcmp -- includes NULL's  */
 # include <mastar/tools/mas_arg_tools.h>
+
+/* # define EXAM_BUSY_FDS masexam_busy_fds() */
+# define EXAM_BUSY_FDS 5
 
 # define EXAMX( _q, _fmt, ... ) masexam_exam(__func__, __LINE__, __FILE__, \
     		(_q), "Test OK", "Test Error", _fmt, __VA_ARGS__ )

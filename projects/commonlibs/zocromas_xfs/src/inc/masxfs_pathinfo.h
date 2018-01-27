@@ -7,9 +7,9 @@
 
 char *masxfs_pathinfo_pi2path( masxfs_pathinfo_t * pi );
 int masxfs_pathinfo_scan_cbs( masxfs_pathinfo_t * pi, masxfs_type_flags_t typeflags, masxfs_entry_callback_t * callbacks, void *udata,
-                              masxfs_levinfo_flags_t flags, masxfs_depth_t maxdepth );
+                              masxfs_levinfo_flags_t flags);
 int masxfs_pathinfo_scanf_cbs( masxfs_pathinfo_t * pi, masxfs_entry_filter_t * entry_pfilter, masxfs_entry_callback_t * cbs, void *userdata,
-                               masxfs_levinfo_flags_t flags, masxfs_depth_t maxdepth );
+                               masxfs_levinfo_flags_t flags);
 int masxfs_pathinfo_scanf_scanner( masxfs_pathinfo_t * pi, masxfs_scanner_t * scanner, void *userdata );
 
 masxfs_levinfo_t *masxfs_pathinfo_tail( masxfs_pathinfo_t * pi, masxfs_depth_t offset );
