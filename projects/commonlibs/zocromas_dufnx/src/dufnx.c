@@ -51,112 +51,14 @@
  *
  * run   --store=mastest --disable-warn
  * run   --drop-tables
+ *
+ * 20180127.145635:
+ * run  --stat  --save=4.tmp --fromdb --path --list --digest   mastest 2>/dev/null | tab2space | cut -c-$COLUMNS
+ * run  --stat  --save=4.tmp --fromdb --tree --list --digest   mastest
+ * run  --stat               --fromdb --tree --list --digest   mastest
+ * run  --stat               --fromfs --tree --list            mastest
+ * run                       --fromdb        --list --digest   mastest
  * */
-static int test_num = 0;
-static int
-fillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv _uUu_, unsigned long serial _uUu_, masxfs_depth_t reldepth _uUu_ )
-{
-  rDECLGOOD;
-
-  masxfs_entry_type_t detype = masxfs_levinfo_detype( li, flags );
-
-  if ( detype == MASXFS_ENTRY_REG_NUM && ( flags & MASXFS_CB_DIGESTS ) )
-  {
-    int fd = masxfs_levinfo_fd_ref( li, flags );
-
-    if ( fd )
-    {
-      int sz = 0;
-      const unsigned char *dg = NULL;
-
-      assert( !li->digests );
-      li->digests = masxfs_digests_create_setup( fd, 1024 * 25, 0, 0 );
-
-    /* rC( masxfs_digests_add( li->digests, MASXFS_DIGEST_MD5 ) ); */
-      rC( masxfs_digests_add( li->digests, MASXFS_DIGEST_SHA1 ) );
-    /* rC( masxfs_digests_add( li->digests, MASXFS_DIGEST_MAGIC ) ); */
-    /* rC( masxfs_digests_add( li->digests, MASXFS_DIGEST_SHA1 ) ); */
-      rC( masxfs_digests_compute( li->digests ) );
-      sz = masxfs_digests_getn( li->digests, 0, &dg );
-      if ( sz )
-      {
-        char sbuffer[512] = { 0 };
-        char *psbuf = sbuffer;
-
-        for ( ssize_t i = 0; i < sz; i++ )
-        {
-          snprintf( psbuf, sizeof( sbuffer ) - ( psbuf - sbuffer ), "%02x", dg[i] );
-          psbuf += 2;
-        }
-#if 0
-        const char *epath = masxfs_levinfo_path_ref( li, flags );
-
-        WARN( "sz:%d - %s - %s", sz, sbuffer, epath );
-#endif
-      }
-    /* masxfs_digests_delete( li->digests ); */
-    }
-  }
-  ++test_num;
-  if ( 0 )
-  {
-    char *path = masxfs_levinfo_li2path( li );
-
-    WARN( "db_store %d : %s", test_num, path );
-    mas_free( path );
-  }
-  masxfs_levinfo_db_store( li, flags );
-  rRET;
-}
-
-static int
-dufnx_config_store_fs2db( mucs_option_t * opt, void *userdata, void *extradata _uUu_ )
-{
-  rDECLGOOD;
-  if ( opt && mucs_config_option_npos( opt ) > 0 )                   /* to skip argv[0] */
-  {
-    mas_dufnx_data_t *pdufnx_data = ( mas_dufnx_data_t * ) userdata;
-
-    assert( pdufnx_data );
-    mas_qstd_t *qstd = dufnx_qstd( &pdufnx_data->mysql );
-    const char *path = mucs_config_option_string_value( opt );
-
-    assert( qstd );
-    rC( mas_qstd_create_tables( qstd ) );
-    WARN( "________________________ %p '%s'", pdufnx_data, path );
-
-    if ( rGOOD )
-    {
-    /*20180109.1418 rC( mas_qstd_start_transaction( qstd ) ); */
-      {
-        masxfs_pathinfo_t *pi = masxfs_pathinfo_create_setup( path, 128 /* depth limit */ , 0 );
-        masxfs_levinfo_flags_t flagsfs _uUu_ = MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS | MASXFS_CB_SINGLE_CB;
-
-//      masxfs_type_flags_t typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR;
-        masxfs_entry_filter_t entry_filter = {.typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR /*, .maxdepth=pdufnx_data->max_depth */
-        };
-
-        masxfs_entry_callback_t callback = {
-          .fun_simple = fillcb,.flags = MASXFS_CB_PREFIX | MASXFS_CB_TRAILINGSLASH | MASXFS_CB_STAT | MASXFS_CB_DIGESTS | MASXFS_CB_PATH /* | MASXFS_CB_NO_FD */
-        };
-        rC( mas_qstd_start_transaction( qstd ) );
-      /* TODO FIXME : limiting maxdepth here (filling db) leads to memleak when scanning db 20170320.140237 */
-        masxfs_levinfo_flags_t xflags1 _uUu_ = MASXFS_CB_UP_ROOT;
-        masxfs_levinfo_flags_t xflags2 _uUu_ = MASXFS_CB_FROM_ROOT | MASXFS_CB_SELF_N_UP;
-
-        WARN( "(%d) ******** fill scan *******", rCODE );
-        rC( masxfs_pathinfo_scanf_cbs( pi, &entry_filter, &callback, qstd, flagsfs | xflags1 ) );
-        WARN( "******** /fill scan *******" );
-        rC( mas_qstd_end_transaction( qstd ) );
-/* TODO commit !! */
-        rC( mas_qstd_update_summary( qstd ) );
-        masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_ALL );
-      }
-    /*20180109.1418 rC( mas_qstd_end_transaction( qstd ) ); */
-    }
-  }
-  rRET;
-}
 
 static int
 dufnx_config_create_tables( mucs_option_t * opt _uUu_, void *userdata, void *extradata _uUu_ )
@@ -253,7 +155,11 @@ dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
   mucs_option_static_t soptions[] = {
     {.name = "fromdb",.rt = 'O',.p = &LFLAGS,.def_nvalue.v_ulong = MASXFS_CB_MODE_DB,.f = FDV}
     , {.name = "fromfs",.rt = 'O',.p = &LFLAGS,.def_nvalue.v_ulong = MASXFS_CB_MODE_FS,.flags = FDV}
-    , {.name = "tree",.rt = 'O',.p = &DFLAGS,.def_nvalue.v_ulong = MASDUFNX_TREE,.flags = FDV}
+    , {.name = "path",.rt = 'O',.p = &LFLAGS,.def_nvalue.v_ulong = MASXFS_CB_PATH,.flags = FDV}
+    , {.name = "stat",.rt = 'O',.p = &LFLAGS,.def_nvalue.v_ulong = MASXFS_CB_STAT,.flags = FDV}
+    , {.name = "digest",.rt = 'O',.p = &LFLAGS,.def_nvalue.v_ulong = MASXFS_CB_DIGESTS,.flags = FDV}
+    , {.name = "tree",.rt = 'O',.p = &LFLAGS,.def_nvalue.v_ulong = MASXFS_CB_PREFIX,.flags = FDV}
+    , {.name = "list",.rt = 'O',.p = &DFLAGS,.def_nvalue.v_ulong = MASDUFNX_LIST,.flags = FDV}
     , {.name = "collect",.rt = 'O',.p = &DFLAGS,.def_nvalue.v_ulong = MASDUFNX_COLLECT,.flags = FDV}
 
     , {.name = "no-empty-dirs",.rt = 'O',.cust_ptr = &LFLAGS,.def_nvalue.v_ulong = MASXFS_CB_SKIP_EMPTY,.flags = FDV}
@@ -267,8 +173,8 @@ dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
   /* , {.name = MUCS_NONOPT_NAME,.restype = 'T',.p = &d->targv,.callback = dufnx_config_arg_process,.cb_pass = 1} */
     , {.name = MUCS_NONOPT_NAME,.restype = 'T',.p = &d->targv,.callback_s = dufnx_data_tree,.cb_pass = 1}
 
-    , {.name = "store",.restype = 'S',.f = MUCS_FLAG_OPTIONAL_VALUE,.cb = dufnx_config_store_fs2db,.cb_pass = 1}
     , {.name = "name",.shortn = '\0',.restype = MUCS_RTYP_STRING,.cust_ptr = &d->entry_filter.glob /*,.flags = MUCS_FLAG_AUTOFREE|MUCS_FLAG_USE_VPASS */ }
+    , {.name = "save",.restype = MUCS_RTYP_STRING,.cust_ptr = &d->savefname}
     , {.name = "drop-tables",.shortn = '\0',.cb = dufnx_config_drop_tables}
     , {.name = "create-tables",.shortn = '\0',.cb = dufnx_config_create_tables}
     , {.name = "disable-warn",.cb = dufnx_config_disable_warn}

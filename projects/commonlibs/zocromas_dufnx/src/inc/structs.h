@@ -19,13 +19,13 @@ enum mas_dufnx_flag_e
 {
   MASDUFNX_DUMMY_NUM,
   MASDUFNX_COLLECT_NUM,
-  MASDUFNX_TREE_NUM,
+  MASDUFNX_LIST_NUM,
 };
 enum mas_dufnx_flag_bit_e
 {
   MASDUFNX_DUMMY = 1UL << MASDUFNX_DUMMY_NUM,
   MASDUFNX_COLLECT = 1UL << MASDUFNX_COLLECT_NUM,
-  MASDUFNX_TREE = 1UL << MASDUFNX_TREE_NUM,
+  MASDUFNX_LIST = 1UL << MASDUFNX_LIST_NUM,
 };
 typedef unsigned long mas_dufnx_flags_t;
 
@@ -37,6 +37,7 @@ struct mas_dufnx_data_s
   mas_dufnx_mysql_data_t mysql;
 //  masxfs_depth_t max_depth;                                          /* maxdepth OR 0 for all */
   masxfs_entry_filter_t entry_filter;
+  char *savefname;
 };
 
 #endif

@@ -27,7 +27,7 @@ static inline const struct stat *
   const struct stat *st = NULL;
 
   li = masxfs_levinfo_offset( li, offset );
-  st = li ? ( tflags & MASXFS_CB_MODE_FS ? li->fs.stat : ( tflags & MASXFS_CB_MODE_DB ? li->db.stat : 0 ) ) : 0;
+  st = li ? ( tflags & MASXFS_CB_MODE_FS ? li->fs.stat : ( tflags & MASXFS_CB_MODE_DB ? li->db.stat : NULL ) ) : NULL;
   if ( !st )
   {
     WARN( "STAT ERR (%s) for '%s'", tflags & MASXFS_CB_MODE_FS ? "FS" : ( tflags & MASXFS_CB_MODE_DB ? "DB" : "??" ), li->name );
@@ -37,19 +37,19 @@ static inline const struct stat *
 
 #if 1
 const struct stat *
-masxfs_levinfo_stat_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags)
+masxfs_levinfo_stat_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
 {
   rDECLBAD;
   const struct stat *st = NULL;
 
   if ( li && ( tflags & MASXFS_CB_STAT ) )
   {
-    rC( masxfs_levinfo_stat( li, tflags, NULL /* entry_pfilter */, NULL /* stat */  ) );
+    rC( masxfs_levinfo_stat( li, tflags, NULL /* entry_pfilter */ , NULL /* stat */  ) );
     if ( rGOOD )
       st = masxfs_levinfo_stat_val( li, 0, tflags );
     else
     {
-      WARN( "STAT ERR" );
+    /* WARN( "STAT ERR" ); */
     }
   }
   return st;
@@ -71,20 +71,12 @@ masxfs_levinfo_size_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_le
 }
 
 off_t
-masxfs_levinfo_size_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags)
+masxfs_levinfo_size_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
 {
-  rDECLBAD;
   off_t size = 0;
-  if ( li )
-  {
-  /* if ( tflags & MASXFS_CB_MODE_DB )                                               */
-  /*   WARN( "DETYPE * : %d '%s' (%d)", li->detype, li->name, li->db.stat ? 1 : 0 ); */
-    rC( masxfs_levinfo_stat( li, tflags, NULL /* entry_pfilter */, NULL /* stat */  ) );
-  /* if ( tflags & MASXFS_CB_MODE_DB )                                               */
-  /*   WARN( "DETYPE * : %d '%s' (%d)", li->detype, li->name, li->db.stat ? 1 : 0 ); */
-    if ( rGOOD )
-      size = masxfs_levinfo_size_val( li, 0, tflags );
-  }
+
+  if ( masxfs_levinfo_stat_ref( li, tflags ) )
+    size = masxfs_levinfo_size_val( li, 0, tflags );
   return size;
 }
 #endif
@@ -104,17 +96,12 @@ masxfs_levinfo_inode_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_l
 }
 
 ino_t
-masxfs_levinfo_inode_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags)
+masxfs_levinfo_inode_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
 {
-  rDECLBAD;
   ino_t inode = 0;
 
-  if ( li )
-  {
-    rC( masxfs_levinfo_stat( li, tflags, NULL /* entry_pfilter */, NULL /* stat */  ) );
-    if ( rGOOD )
-      inode = masxfs_levinfo_inode_val( li, 0, tflags );
-  }
+  if ( masxfs_levinfo_stat_ref( li, tflags ) )
+    inode = masxfs_levinfo_inode_val( li, 0, tflags );
   return inode;
 }
 #else
@@ -242,12 +229,10 @@ masxfs_levinfo_detype( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
 
   if ( li )
   {
+    rSETGOOD;
     if ( li->detype == MASXFS_ENTRY_UNKNOWN_NUM )
     {
-    /* WARN( "%d: '%s'", li->detype, li->name ); */
-      rC( masxfs_levinfo_stat( li, tflags, NULL /* entry_pfilter */, NULL /* stat */  ) );
-
-      if ( rGOOD )
+      if ( masxfs_levinfo_stat_ref( li, tflags ) )
         detype = li->detype;
     }
     else
@@ -298,4 +283,12 @@ int
 masxfs_levinfo_parent_id( masxfs_levinfo_t * li )
 {
   return masxfs_levinfo_node_id_off( li, -1 );
+}
+
+int
+masxfs_levinfo_has_stat( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags )
+{
+  const struct stat *stat = masxfs_levinfo_stat_ref( li, tflags );
+
+  return stat ? 1 : 0;
 }
