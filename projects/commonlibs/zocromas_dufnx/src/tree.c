@@ -136,7 +136,7 @@ treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, uns
     const char *name = epath && li->detype != MASXFS_ENTRY_DIR_NUM ? epath : ( ename ? ename : "" );
     char lab[128] = "";
 
-    const char *treeprefix = masxfs_levinfo_prefix_ref( li, "    ", "└── ", "│   ", "├── ", top_depth + 1, flags );
+    const char *treeprefix = masxfs_levinfo_prefix_ref( li, "    ", "└── ", "│  ", "├── ", top_depth + 1, flags );
 
     if ( li->detype == MASXFS_ENTRY_DIR_NUM )
     {
@@ -180,7 +180,7 @@ treestatcb( const char *ename, struct stat *st, void *userdata, unsigned depth _
   FILE *fil = ( FILE * ) userdata;
 
 /* /usr/bin/tree -U --inodes -s -a mastest | nl -ba -nrn -w4 > tree-U--inodes-s-a.tree */
-  fprintf( fil, "%4ld\t%s[%-10ld %10ld]  %-35s\n", serial, treeprefix ? treeprefix : "", st->st_ino, st->st_size,
+  fprintf( fil, "%4ld %s[%-10ld %10ld]  %-35s\n", serial, treeprefix ? treeprefix : "", st->st_ino, st->st_size,
            ename ? ename : "" /*, epath ? epath : "" */  );
   return 0;
 }
