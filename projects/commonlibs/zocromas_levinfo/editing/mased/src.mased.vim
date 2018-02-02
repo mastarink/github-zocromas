@@ -38,7 +38,26 @@ tab sfind masxfs_levinfo_path.h
 sfind masxfs_levinfo_path.c
 
 tab sfind masxfs_levinfo_ref.h
+tab sfind masxfs_levinfo_refdef.h
 sfind masxfs_levinfo_ref.c
+
+tab sfind masxfs_levinfo_ref_size.h
+sfind masxfs_levinfo_ref_size.c
+
+tab sfind masxfs_levinfo_ref_nodeid.h
+sfind masxfs_levinfo_ref_nodeid.c
+
+tab sfind masxfs_levinfo_ref_fd.h
+sfind masxfs_levinfo_ref_fd.c
+
+tab sfind masxfs_levinfo_ref_name.h
+sfind masxfs_levinfo_ref_name.c
+
+tab sfind masxfs_levinfo_ref_depth.h
+sfind masxfs_levinfo_ref_depth.c
+
+tab sfind masxfs_levinfo_ref_inode.h
+sfind masxfs_levinfo_ref_inode.c
 
 tab sfind masxfs_levinfo_ref_xstat.h
 sfind masxfs_levinfo_ref_xstat.c

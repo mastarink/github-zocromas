@@ -24,7 +24,13 @@
 
 #include "masxfs_levinfo_tools.h"
 /* #include "masxfs_levinfo_base.h" */
+
 #include "masxfs_levinfo_ref.h"
+#include "masxfs_levinfo_ref_depth.h"
+#include "masxfs_levinfo_ref_size.h"
+#include "masxfs_levinfo_ref_name.h"
+#include "masxfs_levinfo_ref_nodeid.h"
+
 #include "masxfs_levinfo_fs.h"
 #include "masxfs_levinfo_digest.h"
 

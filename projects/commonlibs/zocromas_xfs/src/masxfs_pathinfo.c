@@ -10,7 +10,10 @@
 #include <mastar/levinfo/masxfs_levinfo_structs.h>
 #include <mastar/levinfo/masxfs_levinfo_io_dir.h>
 #include <mastar/levinfo/masxfs_levinfo_path.h>
+
+#include <mastar/levinfo/masxfs_levinfo_refdef.h>
 #include <mastar/levinfo/masxfs_levinfo_ref.h>
+
 #include <mastar/levinfo/masxfs_levinfo_scan.h>
 
 #include "masxfs_structs.h"

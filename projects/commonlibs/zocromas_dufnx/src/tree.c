@@ -20,7 +20,13 @@
 
 #include <mastar/levinfo/masxfs_levinfo_tools.h>
 #include <mastar/levinfo/masxfs_levinfo_structs.h>
+
 #include <mastar/levinfo/masxfs_levinfo_ref.h>
+#include <mastar/levinfo/masxfs_levinfo_ref_depth.h>
+#include <mastar/levinfo/masxfs_levinfo_ref_name.h>
+#include <mastar/levinfo/masxfs_levinfo_ref_fd.h>
+#include <mastar/levinfo/masxfs_levinfo_ref_inode.h>
+#include <mastar/levinfo/masxfs_levinfo_ref_size.h>
 #include <mastar/levinfo/masxfs_levinfo_ref_xstat.h>
 
 #include <mastar/levinfo/masxfs_levinfo_path.h>
@@ -100,6 +106,11 @@ treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, uns
   ino_t inode = masxfs_levinfo_inode_ref( li, flags );
   const char *ename = masxfs_levinfo_name_ref( li, flags );
   unsigned long nsamedigest = masxfs_levinfo_nsamedigest_ref( li, flags );
+
+#if 0
+  unsigned long node_id _uUu_ = masxfs_levinfo_nodeid_ref( li, flags );
+  unsigned long name_id _uUu_ = masxfs_levinfo_nodeid_ref( li, flags );
+#endif
 
   if ( !serial && depth )
     top_depth = depth - 1;

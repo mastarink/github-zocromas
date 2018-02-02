@@ -10,6 +10,11 @@
 #include <mastar/exam/masexam.h>
 
 #include <mastar/levinfo/masxfs_levinfo_structs.h>
+#include <mastar/levinfo/masxfs_levinfo_ref_depth.h>
+#include <mastar/levinfo/masxfs_levinfo_ref_inode.h>
+#include <mastar/levinfo/masxfs_levinfo_ref_size.h>
+#include <mastar/levinfo/masxfs_levinfo_ref_name.h>
+#include <mastar/levinfo/masxfs_levinfo_ref_fd.h>
 #include <mastar/levinfo/masxfs_levinfo_ref.h>
 
 #include <mastar/masxfs/masxfs_pathinfo_base.h>

@@ -10,7 +10,11 @@
 #include "masxfs_levinfo_structs.h"
 #include "masxfs_levinfo_base.h"
 #include "masxfs_levinfo_io_dir.h"
+
 #include "masxfs_levinfo_ref.h"
+#include "masxfs_levinfo_ref_depth.h"
+#include "masxfs_levinfo_ref_name.h"
+
 #include "masxfs_levinfo_tools.h"
 
 #include "masxfs_levinfo_io.h"
@@ -99,7 +103,7 @@ masxfs_levinfo_scanf_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxf
           else
             rSETGOOD;
 
-          QRLI( li, rCODE );
+          QRLI( lithis, rCODE );
           break;
         case MASXFS_CBTYPE_STAT:
           if ( cb->fun_stat && ( flags & MASXFS_CB_USE_STAT_CB ) )
@@ -128,23 +132,23 @@ masxfs_levinfo_scanf_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxf
           }
           else
             rSETGOOD;
-          QRLI( li, rCODE );
+          QRLI( lithis, rCODE );
           break;
         case MASXFS_CBTYPE_NONE:
           WARN( "MASXFS_CBTYPE_NONE" );
           rSETGOOD;
           rSETBAD;
-          QRLI( li, rCODE );
+          QRLI( lithis, rCODE );
           break;
         default:
           WARN( "MASXFS_CBTYPE_?" );
           assert( 0 );
           rSETGOOD;
           rSETBAD;
-          QRLI( li, rCODE );
+          QRLI( lithis, rCODE );
           break;
         }
-        QRLI( li, rCODE );
+        QRLI( lithis, rCODE );
 #else
         if ( cb && cb->fun_simple && cb->cb_type == MASXFS_CBTYPE_SIMPLE )
         {
@@ -180,7 +184,7 @@ masxfs_levinfo_scanf_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxf
         else
           rSETGOOD;
 #endif
-        QRLI( li, rCODE );
+        QRLI( lithis, rCODE );
         if ( fun_called )
           cb->fun_counter++;
       }
@@ -192,7 +196,7 @@ masxfs_levinfo_scanf_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxf
   }
   else
     rSETGOOD;
-  QRLI( li, rCODE );
+  QRLI( lithis, rCODE );
 
   rRET;
 }

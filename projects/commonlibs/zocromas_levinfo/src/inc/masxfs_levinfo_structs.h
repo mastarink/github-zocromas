@@ -65,6 +65,7 @@ struct masxfs_xstatc_s
   unsigned long nsamesize;
   unsigned long nsamedigest;
   unsigned long digestid;
+  unsigned long parentid;
   const char *hex_digest;
 };
 struct masxfs_xstat_s

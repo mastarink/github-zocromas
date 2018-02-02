@@ -19,7 +19,14 @@
 /* #include <mastar/levinfo/masxfs_levinfo_base.h> */
 #include <mastar/levinfo/masxfs_levinfo_io.h>
 #include <mastar/levinfo/masxfs_levinfo_path.h>
+
+#include <mastar/levinfo/masxfs_levinfo_ref_inode.h>
+#include <mastar/levinfo/masxfs_levinfo_ref_size.h>
+#include <mastar/levinfo/masxfs_levinfo_ref_depth.h>
+#include <mastar/levinfo/masxfs_levinfo_ref_fd.h>
+#include <mastar/levinfo/masxfs_levinfo_ref_name.h>
 #include <mastar/levinfo/masxfs_levinfo_ref.h>
+
 #include <mastar/levinfo/masxfs_levinfo.h>
 
 #include "masxfs_structs.h"

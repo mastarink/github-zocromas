@@ -34,32 +34,30 @@
 #include "masxfs_levinfo_db.h"
 #include "masxfs_levinfo_db_dir.h"
 
-/* TODO move to qstd */
+/* TODO move to qstd?! */
+/* make pmstmt to fetch record(s) by name and parent_id or parent_id only */
 static int
-masxfs_levinfo_db_prepare_execute_store( mysqlpfs_mstmt_t ** pmstmt, const char *name, unsigned long long node_id,
+masxfs_levinfo_db_prepare_execute_store( mysqlpfs_mstmt_t ** pmstmt, const char *name, unsigned long long parent_id,
                                          masxfs_entry_filter_t * entry_pfilter )
 {
   rDECLBAD;
   if ( pmstmt )
   {
     rSETGOOD;
+    assert( !( *pmstmt ) );
 
     if ( !( *pmstmt ) )
     {
-#if 0
-      ( *pmstmt ) = mas_qstd_mstmt_init_prepare( mas_qstd_instance(  ), name ? STD_MSTMT_SELECT_EVERYTHINGX_PN : STD_MSTMT_SELECT_EVERYTHINGX_P );
-#else
       ( *pmstmt ) = mas_qstd_mstmt_init_prepare( mas_qstd_instance(  ), name ? STD_MSTMT_SELECT_EVERYTHINGXX_PN : STD_MSTMT_SELECT_EVERYTHINGXX_P );
-#endif
       {
         int np = 0;
 
-        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, node_id, FALSE ) );
-        QRLI( li, rCODE );
+        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, parent_id, FALSE ) );
+        QRG( rCODE );
         if ( name )
         {
           rC( mas_qstd_mstmt_set_param_string( ( *pmstmt ), np++, name ) );
-          QRLI( li, rCODE );
+          QRG( rCODE );
         }
       /* TODO filter here ! 20171228.144707 */
 #if 0
@@ -92,11 +90,11 @@ masxfs_levinfo_db_prepare_execute_store( mysqlpfs_mstmt_t ** pmstmt, const char 
 #endif
       /* assert( np == numpar ); */
         rC( mas_qstd_mstmt_execute_store( ( *pmstmt ) ) );
-        QRLI( li, rCODE );
+        QRG( rCODE );
       }
     }
   }
-  QRLI( li, rCODE );
+  QRG( rCODE );
   rRET;
 }
 
@@ -130,6 +128,7 @@ masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_st
     unsigned long long nsamesize = 0;
     unsigned long long nsamedigest = 0;
     unsigned long long digestid = 0;
+    unsigned long long parentid = 0;
 
     const char *hex_digest = NULL;
 
@@ -158,6 +157,7 @@ masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_st
       rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &nsamedigest, &is_null ) );
       rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &digestid, &is_null ) );
       rC( mas_qstd_mstmt_get_result_string_na( mstmt, nr++, &hex_digest ) );
+      rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &parentid, &is_null ) );
       assert( nr == STD_MSTMT_SELECT_EVERYTHINGX_NRESULTS );
 
       if ( rGOOD && stat )
@@ -184,6 +184,7 @@ masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_st
         xstat->nsamedigest = nsamedigest;
         xstat->digestid = digestid;
         xstat->hex_digest = hex_digest;
+        xstat->parentid = parentid;
       }
       if ( pname )
         *pname = name;

@@ -12,7 +12,8 @@
 
 #include "masxfs_levinfo_io.h"
 
-#include "masxfs_levinfo_ref.h"
+#include "masxfs_levinfo_refdef.h"
+/* #include "masxfs_levinfo_ref.h" */
 #include "masxfs_levinfo_ref_xstat.h"
 
 static inline const masxfs_xstat_t *
