@@ -101,7 +101,7 @@ masxfs_levinfo_db_prepare_execute_store( mysqlpfs_mstmt_t ** pmstmt, const char 
 /* TODO move to qstd */
 /* allocates stat */
 static int
-masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_stat_t * stat, masxfs_xstatc_t * xstat, unsigned long long *pnode_id,
+masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_stat_t * stat, masxfs_xstatc_t * xstatc, unsigned long long *pnode_id,
                          int *phas_data )
 {
   rDECLBAD;
@@ -129,6 +129,8 @@ masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_st
     unsigned long long nsamedigest = 0;
     unsigned long long digestid = 0;
     unsigned long long parentid = 0;
+    unsigned long long nameid = 0;
+    unsigned long long dataid = 0;
 
     const char *hex_digest = NULL;
 
@@ -156,10 +158,11 @@ masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_st
       rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &nsamesize, &is_null ) );
       rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &nsamedigest, &is_null ) );
       rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &digestid, &is_null ) );
-      rC( mas_qstd_mstmt_get_result_string_na( mstmt, nr++, &hex_digest ) );
       rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &parentid, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &nameid, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &dataid, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_string_na( mstmt, nr++, &hex_digest ) );
       assert( nr == STD_MSTMT_SELECT_EVERYTHINGX_NRESULTS );
-
       if ( rGOOD && stat )
       {
         memset( stat, 0, sizeof( masxfs_stat_t ) );
@@ -178,13 +181,17 @@ masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_st
         stat->st_mtim.tv_sec = mtim_tv_sec;
         stat->st_ctim.tv_sec = ctim_tv_sec;
       }
-      if ( rGOOD && xstat )
+      if ( rGOOD && xstatc )
       {
-        xstat->nsamesize = nsamesize;
-        xstat->nsamedigest = nsamedigest;
-        xstat->digestid = digestid;
-        xstat->hex_digest = hex_digest;
-        xstat->parentid = parentid;
+        xstatc->dg.nsamesize = nsamesize;
+        xstatc->dg.nsamedigest = nsamedigest;
+        xstatc->dg.digestid = digestid;
+
+        xstatc->chex_digest = hex_digest;
+
+        xstatc->id.parentid = parentid;
+        xstatc->id.nameid = nameid;
+        xstatc->id.dataid = dataid;
       }
       if ( pname )
         *pname = name;
@@ -276,11 +283,11 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_entry_filter_t * entry_
       unsigned long long node_id = 0;
       const char *dename = NULL;
       masxfs_stat_t stat = { 0 };
-      masxfs_xstatc_t xstat = { 0 };
+      masxfs_xstatc_t xstatc = { 0 };
 
       do
       {
-        rC( masxfs_levinfo_db_fetch( li->db.scan.mstmt, &dename, &stat, &xstat, &node_id, &has_data ) );
+        rC( masxfs_levinfo_db_fetch( li->db.scan.mstmt, &dename, &stat, &xstatc, &node_id, &has_data ) );
         detype = dename && rGOOD ? masxfs_levinfo_stat2entry( &stat ) : MASXFS_ENTRY_UNKNOWN_NUM;
       } while ( rGOOD && dename && has_data && !masxfs_levinfo_name_valid( dename, detype, entry_pfilter ) );
       if ( rGOOD )
@@ -293,7 +300,7 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_entry_filter_t * entry_
 #if 0
           {
             assert( !li[1].db.stat );
-            masxfs_levinfo_init( li + 1, li->lidepth + 1, dename, detype, &stat, &xstat, node_id );
+            masxfs_levinfo_init( li + 1, li->lidepth + 1, dename, detype, &stat, &xstatc, node_id );
             assert( li[1].db.stat );
             {
               validx = masxfs_levinfo_stat_valid( li + 1, entry_pfilter, MASXFS_CB_MODE_DB )
@@ -306,7 +313,7 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_entry_filter_t * entry_
             }
           }
 #else
-          validx = masxfs_levinfo_init_valid( li + 1, li->lidepth + 1, entry_pfilter, dename, detype, node_id, &stat, &xstat );
+          validx = masxfs_levinfo_init_valid( li + 1, li->lidepth + 1, entry_pfilter, dename, detype, node_id, &stat, &xstatc );
 #endif
         }
       }

@@ -42,7 +42,7 @@ masxfs_levinfo_create( void )
 void
 masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *name, size_t len,
                        masxfs_entry_type_t detype /*, ino_t d_inode _uUu_ */ ,
-                       unsigned long long node_id, masxfs_stat_t * stat, masxfs_xstatc_t * xstat _uUu_ )
+                       unsigned long long node_id, masxfs_stat_t * stat, masxfs_xstatc_t * xstatc _uUu_ )
 {
   if ( li && name )
   {
@@ -70,12 +70,15 @@ masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char
       mas_free( li->db.xstat );
       li->db.xstat = NULL;
     }
-    if ( xstat )
+    if ( xstatc )
     {
       li->db.xstat = mas_malloc( sizeof( masxfs_xstat_t ) );
-      li->db.xstat->nsamesize = xstat->nsamesize;
-      li->db.xstat->nsamedigest = xstat->nsamedigest;
-      li->db.xstat->hex_digest = mas_strdup( xstat->hex_digest );
+      li->db.xstat->dg = xstatc->dg;
+      li->db.xstat->id = xstatc->id;
+      /* li->db.xstat->nsamesize = xstatc->x.nsamesize;     */
+      /* li->db.xstat->nsamedigest = xstatc->x.nsamedigest; */
+      /* li->db.xstat->nameid = xstatc->x.nameid;           */
+      li->db.xstat->hex_digest = mas_strdup( xstatc->chex_digest );
     }
   }
   else
@@ -158,14 +161,14 @@ masxfs_levinfo_delete_lia( masxfs_levinfo_t * li, masxfs_depth_t sz, masxfs_levi
 
 int
 masxfs_levinfo_init_valid( masxfs_levinfo_t * li, masxfs_depth_t lidepth, masxfs_entry_filter_t * entry_pfilter, const char *dename,
-                           masxfs_entry_type_t detype, unsigned long long node_id, masxfs_stat_t * stat, masxfs_xstatc_t * xstat )
+                           masxfs_entry_type_t detype, unsigned long long node_id, masxfs_stat_t * stat, masxfs_xstatc_t * xstatc )
 {
   int validx = 0;
 
   if ( li )
   {
     assert( !li->db.stat );
-    masxfs_levinfo_init( li, lidepth, dename, detype, stat, xstat, node_id );
+    masxfs_levinfo_init( li, lidepth, dename, detype, stat, xstatc, node_id );
     assert( li->db.stat );
     {
       validx = masxfs_levinfo_stat_valid( li, entry_pfilter, MASXFS_CB_MODE_DB )

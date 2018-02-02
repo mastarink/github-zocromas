@@ -454,8 +454,10 @@ mas_qstd_mstmt_init_prepare_results_everythingx( mysqlpfs_mstmt_t * mstmt, int *
   rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* nsamesize */
   rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* nsamesha1 */
   rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* sha1_id */
+  rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* parent_id */
+  rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* name_id */
+  rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* data_id */
   rC( mas_qstd_mstmt_prepare_result_string( mstmt, ( *pnr )++ ) );   /* hex_sha1 */
-  rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* parentid */
 /*
  *   +  name
  *      parent_id
@@ -939,6 +941,30 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         rC( mas_qstd_mstmt_init_prepare_results_everything( mstmt, &nr ) );
       }
       break;
+    case STD_MSTMT_SELECT_EVERYTHINGDT:
+      {
+        int np = 0;
+        int nr = 0;
+        char *selop = "SELECT "                                      /* */
+                "  name, inode, node_id "                            /* */
+                ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev, atim, mtim, ctim" /* */
+                "   FROM " QSTD_VIEW_ALL                             /* */
+                "    WHERE data_id=? "                               /* */
+                ;
+
+        mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_EVERYTHINGDT_NFIELDS, STD_MSTMT_SELECT_EVERYTHINGDT_NRESULTS, selop );
+        QRGP( mstmt );
+        rC( mas_qstd_mstmt_ret_code( mstmt ) );
+        rC( mas_qstd_mstmt_prepare_param_longlong( mstmt, np++ ) );  /* node_id */
+        if ( rGOOD )
+          assert( np == STD_MSTMT_SELECT_EVERYTHINGDT_NFIELDS );
+
+        if ( rBAD )
+          WARN( "%s", mas_qstd_mstmt_error( mstmt ) );
+
+        rC( mas_qstd_mstmt_init_prepare_results_everything( mstmt, &nr ) );
+      }
+      break;
     case STD_MSTMT_SELECT_EVERYTHINGX_PN:
       {
         int np = 0;
@@ -946,8 +972,9 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         char *selop = "SELECT "                                      /* */
                 "  name, inode, node_id "                            /* */
                 ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev, atim, mtim, ctim" /* */
-                ", nsamesize, nsamesha1, sha1_id, hex_sha1 "         /* */
-                ", parent_id"                                        /* */
+                ", nsamesize, nsamesha1, sha1_id"                    /* */
+                ", parent_id, name_id, data_id"                      /* */
+                ", hex_sha1 "                                        /* */
                 "   FROM " QSTD_VIEW_ALL                             /* */
                 "    WHERE parent_id=? AND name=? "                  /* */
               /* "     AND (detype!='REG' OR (nsamesha1>10 AND nsamesize>1)) "              (* *) */
@@ -976,8 +1003,9 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         char *selop = "SELECT "                                      /* */
                 "  name, inode, node_id "                            /* */
                 ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev, atim, mtim, ctim" /* */
-                ", nsamesize, nsamesha1, sha1_id, hex_sha1 "         /* */
-                ", parent_id"                                        /* */
+                ", nsamesize, nsamesha1, sha1_id "                   /* */
+                ", parent_id, name_id, data_id"                      /* */
+                ", hex_sha1 "                                        /* */
                 "   FROM " QSTD_VIEW_ALL                             /* */
                 "    WHERE parent_id=? "                             /* */
               /* "     AND (detype!='REG' OR (nsamesha1>10 AND nsamesize>1)) "              (* *) */
@@ -1004,8 +1032,9 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         char *selop = "SELECT "                                      /* */
                 "  name, inode, node_id "                            /* */
                 ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev, atim, mtim, ctim" /* */
-                ", nsamesize, nsamesha1, sha1_id, hex_sha1 "         /* */
-                ", parent_id"                                        /* */
+                ", nsamesize, nsamesha1, sha1_id "                   /* */
+                ", parent_id, name_id, data_id"                      /* */
+                ", hex_sha1 "                                        /* */
                 "   FROM " QSTD_VIEW_ALL                             /* */
                 "    WHERE parent_id=? AND name=? "                  /* */
                 "     AND (detype IN ('DIR','LNK') "                 /* */
@@ -1053,8 +1082,9 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
         char *selop = "SELECT "                                      /* */
                 "  name, inode, node_id "                            /* */
                 ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev, atim, mtim, ctim" /* */
-                ", nsamesize, nsamesha1, sha1_id, hex_sha1 "         /* */
-                ", parent_id"                                        /* */
+                ", nsamesize, nsamesha1, sha1_id "                   /* */
+                ", parent_id, name_id, data_id"                      /* */
+                ", hex_sha1 "                                        /* */
                 "   FROM " QSTD_VIEW_ALL                             /* */
                 "    WHERE parent_id=? "                             /* */
                 "     AND (detype IN ('DIR','LNK') "                 /* */

@@ -23,6 +23,8 @@ typedef struct masxfs_entry_callback_s masxfs_entry_callback_t;
 typedef struct masxfs_entry_filter_s masxfs_entry_filter_t;
 
 typedef struct masxfs_xstat_s masxfs_xstat_t;
+typedef struct masxfs_xstati_s masxfs_xstati_t;
+typedef struct masxfs_xstatd_s masxfs_xstatd_t;
 typedef struct masxfs_xstatc_s masxfs_xstatc_t;
 
 typedef struct masxfs_levinfo_s masxfs_levinfo_t;

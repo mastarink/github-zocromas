@@ -10,4 +10,11 @@ unsigned long masxfs_levinfo_nsamedigest_ref( masxfs_levinfo_t * li, masxfs_levi
 const char *masxfs_levinfo_hexdigest_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags );
 const char *masxfs_levinfo_hexdigest_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags );
 
+unsigned long masxfs_levinfo_nameid_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags );
+unsigned long masxfs_levinfo_nameid_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags );
+unsigned long masxfs_levinfo_parentid_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags );
+unsigned long masxfs_levinfo_parentid_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags );
+unsigned long masxfs_levinfo_dataid_val( masxfs_levinfo_t * li, masxfs_depth_t offset, masxfs_levinfo_flags_t tflags );
+unsigned long masxfs_levinfo_dataid_ref( masxfs_levinfo_t * li, masxfs_levinfo_flags_t tflags );
+
 #endif

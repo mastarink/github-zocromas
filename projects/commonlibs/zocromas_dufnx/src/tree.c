@@ -26,6 +26,7 @@
 #include <mastar/levinfo/masxfs_levinfo_ref_name.h>
 #include <mastar/levinfo/masxfs_levinfo_ref_fd.h>
 #include <mastar/levinfo/masxfs_levinfo_ref_inode.h>
+#include <mastar/levinfo/masxfs_levinfo_ref_nodeid.h>
 #include <mastar/levinfo/masxfs_levinfo_ref_size.h>
 #include <mastar/levinfo/masxfs_levinfo_ref_xstat.h>
 
@@ -107,10 +108,11 @@ treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, uns
   const char *ename = masxfs_levinfo_name_ref( li, flags );
   unsigned long nsamedigest = masxfs_levinfo_nsamedigest_ref( li, flags );
 
-#if 0
-  unsigned long node_id _uUu_ = masxfs_levinfo_nodeid_ref( li, flags );
-  unsigned long name_id _uUu_ = masxfs_levinfo_nodeid_ref( li, flags );
-#endif
+  unsigned long parent_id = masxfs_levinfo_up_id( li, flags );
+  unsigned long parentid = masxfs_levinfo_parentid_ref( li, flags );
+  unsigned long node_id = masxfs_levinfo_nodeid_ref( li, flags );
+  unsigned long name_id = masxfs_levinfo_nameid_ref( li, flags );
+  unsigned long data_id = masxfs_levinfo_dataid_ref( li, flags );
 
   if ( !serial && depth )
     top_depth = depth - 1;
@@ -149,10 +151,11 @@ treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, uns
 
     const char *treeprefix = masxfs_levinfo_prefix_ref( li, "    ", "└── ", "│  ", "├── ", top_depth + 1, flags );
 
+    assert( parentid == parent_id );
     if ( li->detype == MASXFS_ENTRY_DIR_NUM )
     {
 
-      fprintf( fil, "%4ld %s[", serial, treeprefix ? treeprefix : "" );
+      fprintf( fil, "%4ld %4ld->%-4ld {%4ld:%4ld} %s[", serial, parent_id, node_id, name_id, data_id, treeprefix ? treeprefix : "" );
       if ( masxfs_levinfo_has_stat( li, flags ) )
         fprintf( fil, "%-10ld ", inode );
       snprintf( lab, sizeof( lab ), "DIR =%ld]", li->leaf_count );
@@ -160,7 +163,7 @@ treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, uns
     }
     else
     {
-      fprintf( fil, "%4ld %s", serial, treeprefix ? treeprefix : "" );
+      fprintf( fil, "%4ld %4ld->%-4ld {%4ld:%4ld} %s", serial, parent_id, node_id, name_id, data_id, treeprefix ? treeprefix : "" );
       if ( masxfs_levinfo_has_stat( li, flags ) )
         fprintf( fil, "[%-10ld %10ld]", inode, size );
       fprintf( fil, "%-35s", name );

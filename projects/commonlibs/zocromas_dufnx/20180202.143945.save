@@ -1,0 +1,1320 @@
+# run  --fromdb --tree  --list --digest --stat --save=`datemt`.save  mastest 
+# N    parent_id  name_id
+#         /          /        inode  size       name       ##  sha1
+#      node_id    data_id
+   0   13->14   {  13:  14} [109953122  DIR =1271]mastest
+   1   14->15   {  14:  15} └── [109953123  DIR =1271]tree
+   2   15->0    {  15:  16}     ├── [109847862       26955]Makefile.in                        ## 1d1f8bc43f0ffcf2503af8609812cd23eff94369 	++
+   3   15->16   {  16:  17}     ├── [109953124  DIR =13]  sh0
+   4   16->0    {  17:  18}     │  ├── [109848237         596]tarme.sh                           ## 0eb2f0eb097b046dc79a4bf7f6de7468758c8acf 	++
+   5   16->0    {  18:  19}     │  ├── [109848238         121]findgarbage.sh                     ## 3fdc8a66db2491af3d56e3273d949014bee67c87 	++
+   6   16->0    {  19:  20}     │  ├── [109848239          65]debug_mas_duf.cmd                  ## 8c805470aa42a98c2ee4d8e1790fa07e53a177c0 	++
+   7   16->0    {  20:  21}     │  ├── [109848240         157]debug_duf.sh                       ## 42daaca939123c9a78f4018e53e7c50091c3a915 	++
+   8   16->0    {  21:  22}     │  ├── [109848241          39]build.sh                           ## 82559552c5c280b4c981fcf37dd93edab7fdd5ec 	++
+   9   16->0    {  22:  23}     │  ├── [109848242          48]grepfunexclude.txt                 ## 3e7658ceaac68bfa96254e5184c4460e19d526b3 	++
+  10   16->0    {  23:  24}     │  ├── [109848243        1295]testdist.sh                        ## d0218b2f25b8d96a6b144b8a351574a9e13bf9ff 	++
+  11   16->0    {  24:  25}     │  ├── [109848244         808]gdbcore_any.sh                     ## 3c8dad13cb01ff005659cced4423614f6b775a5b 	++
+  12   16->0    {  25:  26}     │  ├── [109848245         551]make.sh                            ## 80f28e44d23a1e250a6d16a15f6957a5b9511c0b 	++
+  13   16->0    {  26:  27}     │  ├── [109848246         706]run_any.sh                         ## 6b4aa0a6c29289ce96a58d99977d34ddbe510bc7 	++
+  14   16->0    {  27:  28}     │  ├── [109848247          98]tmp.cmd                            ## 61ba01085cb5a5c02c3a2b2892dbb4ed34aeb036 	++
+  15   16->0    {  28:  29}     │  ├── [109848248          94]run_duf.sh                         ## bdcdf3b5c70a082ffab09b326cef4470480c70af 	++
+  16   16->0    {  29:  30}     │  └── [109848249        1536]debug_any.sh                       ## 3a847a205c7256ec12e41a3c7e2320f8922d816d 	++
+  17   15->0    {  30:  31}     ├── [109848226        7223]config.h.in                        ## 62a9435cb6d57d48450b4a7098124c5cedd83cb0 	++
+  18   15->17   {  31:  32}     ├── [109953125  DIR =2]   md5sha
+  19   17->0    {  32:  33}     │  ├── [109848250       40737]t2.html                            ## d2da4f8bfeb1d06ca1a821b99bd614fa45116790 	++
+  20   17->0    {  33:  34}     │  └── [109848251       40737]t1.html                            ## 9a2b6e9de9c2343a26084ab64e6d902aab6e2b1d 	++
+  21   15->0    {  34:  35}     ├── [109848227          14].localrc                           
+  22   15->18   {  35:  36}     ├── [109953126  DIR =775] tree.r
+  23   18->0    {  36:  37}     │  ├── [109848252       26955]Makefile.in                        ## 1d1f8bc43f0ffcf2503af8609812cd23eff94369 	++
+  24   18->19   {  37:  38}     │  ├── [109953127  DIR =13]  sh0
+  25   19->0    {  38:  39}     │  │  ├── [109848264         596]tarme.sh                           ## 0eb2f0eb097b046dc79a4bf7f6de7468758c8acf 	++
+  26   19->0    {  39:  40}     │  │  ├── [109848265         121]findgarbage.sh                     ## 3fdc8a66db2491af3d56e3273d949014bee67c87 	++
+  27   19->0    {  40:  41}     │  │  ├── [109848266          65]debug_mas_duf.cmd                  ## 8c805470aa42a98c2ee4d8e1790fa07e53a177c0 	++
+  28   19->0    {  41:  42}     │  │  ├── [109848267         157]debug_duf.sh                       ## 42daaca939123c9a78f4018e53e7c50091c3a915 	++
+  29   19->0    {  42:  43}     │  │  ├── [109848268          39]build.sh                           ## 82559552c5c280b4c981fcf37dd93edab7fdd5ec 	++
+  30   19->0    {  43:  44}     │  │  ├── [109848269          48]grepfunexclude.txt                 ## 3e7658ceaac68bfa96254e5184c4460e19d526b3 	++
+  31   19->0    {  44:  45}     │  │  ├── [109848270        1295]testdist.sh                        ## d0218b2f25b8d96a6b144b8a351574a9e13bf9ff 	++
+  32   19->0    {  45:  46}     │  │  ├── [109848271         808]gdbcore_any.sh                     ## 3c8dad13cb01ff005659cced4423614f6b775a5b 	++
+  33   19->0    {  46:  47}     │  │  ├── [109848272         551]make.sh                            ## 80f28e44d23a1e250a6d16a15f6957a5b9511c0b 	++
+  34   19->0    {  47:  48}     │  │  ├── [109848273         706]run_any.sh                         ## 6b4aa0a6c29289ce96a58d99977d34ddbe510bc7 	++
+  35   19->0    {  48:  49}     │  │  ├── [109848274          98]tmp.cmd                            ## 61ba01085cb5a5c02c3a2b2892dbb4ed34aeb036 	++
+  36   19->0    {  49:  50}     │  │  ├── [109848275          94]run_duf.sh                         ## bdcdf3b5c70a082ffab09b326cef4470480c70af 	++
+  37   19->0    {  50:  51}     │  │  └── [109848276        1536]debug_any.sh                       ## 3a847a205c7256ec12e41a3c7e2320f8922d816d 	++
+  38   18->20   {  51:  52}     │  ├── [109953128  DIR =279] .auxdir
+  39   20->21   {  52:  53}     │  │  ├── [109953129  DIR =268] .build
+  40   21->0    {  53:  54}     │  │  │  ├── [109848284       28573]Makefile                           ## 9cbbf79a2f7b8640902b357c1e1422d1eb2ae7ac 	+
+  41   21->0    {  54:  55}     │  │  │  ├── [109848285          23]stamp-h1                           ## 5e810a94c86ff057849bfa992bd176d8f743d160 	+
+  42   21->0    {  55:  56}     │  │  │  ├── [109848286       74068]config.status                      ## 20beb4c3cf379db2c58c7df3909efda744287449 	+
+  43   21->22   {  56:  57}     │  │  │  ├── [109953130  DIR =263] src
+  44   22->0    {  57:  58}     │  │  │  │  ├── [109848289       51232]zocromas_duf-mod_filenames_uni.o   ## b5ba6aa92d579f1edc3c9b9e2dd8b8590100c65c 	+
+  45   22->0    {  58:  59}     │  │  │  │  ├── [109848290       31008]zocromas_duf-duf_utils_path.o      ## b8aa93d58f09516afc38c866a200e8048cd0caa9 	+
+  46   22->0    {  59:  60}     │  │  │  │  ├── [109848291       58336]zocromas_duf-duf.o                 ## 1084b6c3e256fb6adfcc766da56744511220f032 	+
+  47   22->0    {  60:  61}     │  │  │  │  ├── [109848292       38152]zocromas_duf-data_optable_io.o     ## f9d6e894cb36e4bd730a0bc4949af2a75cb131c0 	+
+  48   22->0    {  61:  62}     │  │  │  │  ├── [109848293       74936]zocromas_duf-mod_collect_mime_uni.o## ba6ef420f6df15eda1f77bd46b778d1e9e2ffa0c 	+
+  49   22->0    {  62:  63}     │  │  │  │  ├── [109848294       97208]zocromas_duf-duf_ufilter_bind.o    ## 0aae5af2b4cad9c4284f352b8613ee004c24ee42 	+
+  50   22->23   {  63:  64}     │  │  │  │  ├── [109953131  DIR =1]   inc
+  51   23->0    {  64:  65}     │  │  │  │  │  └── [109848412       19996]Makefile                           ## 813630380ec6e61e96d8fe9690ad4cd23c7794e1 	+
+  52   22->0    {  65:  66}     │  │  │  │  ├── [109848295       39864]zocromas_duf-duf_option_tmpdb.o    ## 1b857b4f0a685d8f5b3d1a809613191d8ed2e9bc 	+
+  53   22->0    {  66:  67}     │  │  │  │  ├── [109848296       44256]zocromas_duf-duf_leaf_scan2.o      ## 0dd7ed24335f438d8fb4126fc6d5516e4b484586 	+
+  54   22->0    {  67:  68}     │  │  │  │  ├── [109848297       36976]zocromas_duf-data_optable_interactive.o## e44057aac24b76d29aca75c3bc78ccbb538b1590 	+
+  55   22->0    {  68:  69}     │  │  │  │  ├── [109848298       36768]zocromas_duf-data_optable_debug.o  ## 0b3feadb2466f20b7d99fbdf795a94b6e17ac54f 	+
+  56   22->0    {  69:  70}     │  │  │  │  ├── [109848299       51288]zocromas_duf-duf_options_interactive.o## 969db2938dab7a964994aacb1c507658819836bd 	+
+  57   22->0    {  70:  71}     │  │  │  │  ├── [109848300       40272]zocromas_duf-data_optable_help.o   ## ce226db9052dc41556d535695dad1c69b00582a9 	+
+  58   22->0    {  71:  72}     │  │  │  │  ├── [109848301       45800]zocromas_duf-data_optable_trace.o  ## a5fb24c4d3ba81f0d54cecb77b68e6505a7d6ac5 	+
+  59   22->0    {  72:  73}     │  │  │  │  ├── [109848302       48872]zocromas_duf-duf_path2dirid.o      ## edfc6c6393ff5f51cc874fee501f593434ba1dc2 	+
+  60   22->0    {  73:  74}     │  │  │  │  ├── [109848303       80640]zocromas_duf-duf_option.o          ## 193c90982053540254c8931d053ceceb8226bc24 	+
+  61   22->0    {  74:  75}     │  │  │  │  ├── [109848304       36304]zocromas_duf-duf_sccb_begfin.o     ## 23d2c4e97da81b185d3e4b7eaf0d3cb55065a8e0 	+
+  62   22->0    {  75:  76}     │  │  │  │  ├── [109848305        9328]zocromas_duf-std_mod_sets.o        ## 36476fa6a970cf1f86f8109c7b59c4f7cf9b4c1c 	+
+  63   22->0    {  76:  77}     │  │  │  │  ├── [109848306       34152]zocromas_duf-duf_dbg.o             ## 1df7da6f2f2431e1e9fbdd87fae748bc38f1558e 	+
+  64   22->0    {  77:  78}     │  │  │  │  ├── [109848307       37456]zocromas_duf-data_optable.o        ## 333c56a2945d5ec35642e4215f019433f776c4d0 	+
+  65   22->0    {  78:  79}     │  │  │  │  ├── [109848308       35088]zocromas_duf-mod_directories_uni.o ## ca7c6521f127afafa490d22c05a782fbb2f226f2 	+
+  66   22->0    {  80:  81}     │  │  │  │  ├── [109848309       50256]zocromas_duf-duf_sel_cb_node.o     ## eb9d414d7dda0354d564ebc6d1805b03d4f078d8 	+
+  67   22->0    {  81:  82}     │  │  │  │  ├── [109848310        5048]zocromas_duf-sql_beginning_tables.o## 08aac27a81b9d6687dbaefd4fb55ed4732507dfc 	+
+  68   22->0    {  82:  83}     │  │  │  │  ├── [109848311       79752]zocromas_duf-duf_options_cli.o     ## af90f96f9db753ae6007cdaee17fb037bc97c670 	+
+  69   22->0    {  83:  84}     │  │  │  │  ├── [109848312       50472]zocromas_duf-duf_sel_cb_leaf.o     ## 4277161264fff3b634cc2d6e48c4a143ab7afb8e 	+
+  70   22->0    {  84:  85}     │  │  │  │  ├── [109848313       28216]zocromas_duf-duf_sccb_eval_std.o   ## 7d8cbdc1d7a99391d3addeefe259c47539d227d6 	+
+  71   22->0    {  85:  86}     │  │  │  │  ├── [109848314       33000]zocromas_duf-duf_option_misc.o     ## 08b29c4694a9aeb7b239c101cff7e7e7cdbeaac2 	+
+  72   22->0    {  86:  87}     │  │  │  │  ├── [109848315       63112]zocromas_duf-duf_levinfo_openclose.o## 643c05bb386673036d6fde500c3e73824cc4d937 	+
+  73   22->0    {  87:  88}     │  │  │  │  ├── [109848316       63728]zocromas_duf-duf_tags.o            ## 91595b38e81acad1cb23d85ef70793bc1e2a4116 	+
+  74   22->0    {  88:  89}     │  │  │  │  ├── [109848317       38392]zocromas_duf-data_optable_str.o    ## 72e740d9e6df3d84b80cea9f3372b4aded300a3f 	+
+  75   22->0    {  89:  90}     │  │  │  │  ├── [109848318       36384]zocromas_duf-data_optable_uplus.o  ## 4705b786aabd184cf2ab29b44eeba4c6f4f49c07 	+
+  76   22->0    {  90:  91}     │  │  │  │  ├── [109848319       53352]zocromas_duf-duf_config.o          ## 49fd8c2b617e191b69165a0ef7ba7d66359b8215 	+
+  77   22->0    {  91:  92}     │  │  │  │  ├── [109848320       60704]zocromas_duf-duf_dirent_scan2.o    ## 7092aaa3990ae97086a637c440b69acc38f3cbb6 	+
+  78   22->0    {  92:  93}     │  │  │  │  ├── [109848321       37720]zocromas_duf-duf_option_extended.o ## a66b09f4bdd338c6b0b542b8ffb06400966c79e7 	+
+  79   22->0    {  93:  94}     │  │  │  │  ├── [109848322       31232]zocromas_duf-duf_levinfo_credel.o  ## dc2bdfd545695ebae61ed8cdcc5983431e6a4632 	+
+  80   22->0    {  94:  95}     │  │  │  │  ├── [109848323       54952]zocromas_duf-mod_dir_print_uni.o   ## 6e87e4ea05db8e23fcb9d38343f75df9c17b8ed7 	+
+  81   22->0    {  95:  96}     │  │  │  │  ├── [109848324       77344]zocromas_duf-duf_option_old.o      ## e372b2fa2b02195a38c8611f9e8f9b2ea544e24c 	+
+  82   22->0    {  96:  97}     │  │  │  │  ├── [109848325       25112]zocromas_duf-duf_options_table.o   ## f551b2131cadc6a7233f6b9ad519a6fdf1972ee9 	+
+  83   22->0    {  97:  98}     │  │  │  │  ├── [109848326       45416]zocromas_duf-duf_option_sccb.o     ## 9de1b17a0782fd169e86fabdb39a15c13d2f75ca 	+
+  84   22->0    {  98:  99}     │  │  │  │  ├── [109848327       11160]zocromas_duf-duf_utils_print.o     ## 4c5f7b1429b6b48b8b117cbbb75d145f7ef90bb6 	+
+  85   22->0    {  99: 100}     │  │  │  │  ├── [109848328       35232]zocromas_duf-duf_pathinfo_credel.o ## 44b347ce637895f5892d4aae45f29e597cb9175e 	+
+  86   22->0    { 100: 101}     │  │  │  │  ├── [109848329       42968]zocromas_duf-duf_option_names.o    ## 5c339b8fb2d240f221050aee25aabdc64fbead10 	+
+  87   22->0    { 101: 102}     │  │  │  │  ├── [109848330       39344]zocromas_duf-data_optable_format.o ## 736790fe6e1e879a49699b5990633b36523b09a2 	+
+  88   22->0    { 102: 103}     │  │  │  │  ├── [109848331       47208]zocromas_duf-data_optable_filter.o ## 7b4ba64c34558093514664c09163a1593673b0f8 	+
+  89   22->0    { 103: 104}     │  │  │  │  ├── [109848332       36256]zocromas_duf-duf_levinfo.o         ## d47b4afb6104c153e3fbe2771b9574cdaf843a9b 	+
+  90   22->0    { 104: 105}     │  │  │  │  ├── [109848333       77144]zocromas_duf-duf_option_find.o     ## 42bcd1a6b4ea6d9a8fc8dd2c76db0ee23c125f88 	+
+  91   22->0    { 105: 106}     │  │  │  │  ├── [109848334       25048]zocromas_duf-duf_dirent.o          ## f5a3941b8cd726de456b2b24282323a2dbc72f28 	+
+  92   22->0    { 106: 107}     │  │  │  │  ├── [109848335       18560]zocromas_duf-duf_sccb.o            ## bb361b20a6b0093f7aeabe5f2f7822976de5c6b2 	+
+  93   22->0    { 107: 108}     │  │  │  │  ├── [109848336       37336]zocromas_duf-data_optable_sflag.o  ## 5e4b17a58916d323431cf459e506d930bf5765db 	+
+  94   22->0    { 108: 109}     │  │  │  │  ├── [109848337       85216]zocromas_duf-duf_options_file.o    ## 451e1824c5c365291a789c23571eaa56fe58b785 	+
+  95   22->0    { 109: 110}     │  │  │  │  ├── [109848338       78040]zocromas_duf-mod_sd5_uni.o         ## e6669612d951abb8cf3a7b02019e5d9dae0177fb 	+
+  96   22->0    { 110: 111}     │  │  │  │  ├── [109848339       37640]zocromas_duf-data_optable_flag_obsolete.o## 89766b7a2a04fb4775beb30230101bfb89c43224 	+
+  97   22->0    { 111: 112}     │  │  │  │  ├── [109848340       15904]zocromas_duf-mod_filedata_uni.o    ## 52e7edb4ad4032073d2b8b830e1f2d013a3ecd11 	+
+  98   22->0    { 112: 113}     │  │  │  │  ├── [109848341        2712]zocromas_duf-duf_maindb_info.o     ## 73cea5178926627b74c1196b4a41e627cd95fb19 	+
+  99   22->0    { 113: 114}     │  │  │  │  ├── [109848342       15792]zocromas_duf-duf_utils.o           ## 1b63c00f91fbd409d184284d636179bee05222e3 	+
+ 100   22->0    { 114: 115}     │  │  │  │  ├── [109848343       10272]zocromas_duf-sql_beginning_selected.o## e18ec22f441cd44b46211cfb8bfe8914a5587457 	+
+ 101   22->0    { 115: 116}     │  │  │  │  ├── [109848344       36512]zocromas_duf-duf_options_env.o     ## fc5654785c73e13a982d643e8292fc33ec406520 	+
+ 102   22->0    { 116: 117}     │  │  │  │  ├── [109848345        6328]zocromas_duf-duf_sql_field.o       ## a51690f1e636be31d4bc3394dcf80413176bfcd0 	+
+ 103   22->0    { 117: 118}     │  │  │  │  ├── [109848346       72464]zocromas_duf-duf_filedata.o        ## 013c083401803e37e27f2a822492ddc1bca07987 	+
+ 104   22->0    { 118: 119}     │  │  │  │  ├── [109848347       15248]zocromas_duf-mod_integrity_uni.o   ## 6f727ec8287cd21633629d3e3276df9a5516b0d8 	+
+ 105   22->0    { 119: 120}     │  │  │  │  ├── [109848348       71928]zocromas_duf-mod_crc32_uni.o       ## b3feb3211391a8b3a32a2242707fd974f279e495 	+
+ 106   22->0    { 120: 121}     │  │  │  │  ├── [109848349       79192]zocromas_duf-mod_save_to.o         ## 2c6f05b964ef72912c5860a3386c2445ac8e71cd 	+
+ 107   22->0    { 121: 122}     │  │  │  │  ├── [109848350       32104]zocromas_duf-duf_ufilter_ref.o     ## 6b37483b07d6347861317ffcdd4347cd17136c91 	+
+ 108   22->0    { 122: 123}     │  │  │  │  ├── [109848351       33416]zocromas_duf-duf_sys_wrap.o        ## f2dd4584eb2e9411a1cb7e9d7f96dcebbe4bdf6a 	+
+ 109   22->0    { 123: 124}     │  │  │  │  ├── [109848352        3784]zocromas_duf-sql_beginning_common.o## bfdf1a70f89325d4bc7239e4f791054698c9a660 	+
+ 110   22->0    { 124: 125}     │  │  │  │  ├── [109848353       80288]zocromas_duf-duf_dir_scan2_stages.o## 37189343a50becfc76c2d17e281fb79f63d2fe86 	+
+ 111   22->0    { 125: 126}     │  │  │  │  ├── [109848354        2680]zocromas_duf-duf_eval_at_config.o  ## d80fc56316543069c07034c530d87c69ad914ee9 	+
+ 112   22->0    { 126: 127}     │  │  │  │  ├── [109848355       94536]zocromas_duf-duf_sccbh_eval.o      ## a26fffd81ad3d1a27aaea16e0c5cefb30d257121 	+
+ 113   22->0    { 127: 128}     │  │  │  │  ├── [109848356       76960]zocromas_duf-mod_dumplet.o         ## 5280592aad7960df72096da8302c8fe8c6a58a51 	+
+ 114   22->0    { 128: 129}     │  │  │  │  ├── [109848357       45136]zocromas_duf-duf_levinfo_stat.o    ## bb6a9319c1b5f590ed08d55b2d936c34a1030d17 	+
+ 115   22->0    { 129: 130}     │  │  │  │  ├── [109848358       79168]zocromas_duf-mod_md5_uni.o         ## afe68ecfe39425519c878693970679db78789ca2 	+
+ 116   22->0    { 130: 131}     │  │  │  │  ├── [109848359       39208]zocromas_duf-duf_sql_field2.o      ## a4b3dd44921fc00193b0a1b0890b3e7ba58ba536 	+
+ 117   22->0    { 131: 132}     │  │  │  │  ├── [109848360       37072]zocromas_duf-data_optable_info.o   ## e5c7dd1307efa5e8182255b421496bc7186dc7f1 	+
+ 118   22->0    { 132: 133}     │  │  │  │  ├── [109848361        3656]zocromas_duf-sql_beginning_vacuum.o## 26bfef42e575a6733d0668f2464191760dafae50 	+
+ 119   22->0    { 133: 134}     │  │  │  │  ├── [109848362       68064]zocromas_duf-mod_dummy_uni.o       ## d7519181fbd4d769351ccad83ec4973c1e5e8c29 	+
+ 120   22->0    { 134: 135}     │  │  │  │  ├── [109848363       41696]zocromas_duf-duf_option_descr.o    ## 1fb7eed46c72e114be70f64ac5eb131bd33fe3a1 	+
+ 121   22->0    { 135: 136}     │  │  │  │  ├── [109848364       32696]zocromas_duf-duf_status.o          ## 4d59663610fc46cb7a31943f1815b07456d53159 	+
+ 122   22->0    { 136: 137}     │  │  │  │  ├── [109848365       67040]zocromas_duf-mod_tree_print_uni.o  ## 28fe0397d9d2f00a8ffbaef795e8b6a91a01c827 	+
+ 123   22->0    { 137: 138}     │  │  │  │  ├── [109848366        4968]zocromas_duf-std_selectors.o       ## 41b68ee7a669fc262b8408b36425539cfec55a79 	+
+ 124   22->0    { 138: 139}     │  │  │  │  ├── [109848367       30224]zocromas_duf-duf_pdi_attach.o      ## 21f78913d6a169347d7fee199b673a837f5a2b42 	+
+ 125   22->0    { 139: 140}     │  │  │  │  ├── [109848368       14246]mtest                              ## 3e5b2ee5c1ec42ca9ab8d3ab8a7d9e7a3620635c 	+
+ 126   22->0    { 140: 141}     │  │  │  │  ├── [109848369       62528]zocromas_duf-duf_options.o         ## 5cc9730441caf8c2ba2526acbf68e96d8fae82f8 	+
+ 127   22->0    { 141: 142}     │  │  │  │  ├── [109848370       63992]zocromas_duf-duf_sccb_handle.o     ## 80d4053f6526c0034070e2c594ba55250ca31de6 	+
+ 128   22->0    { 142: 143}     │  │  │  │  ├── [109848371       74320]zocromas_duf-mod_tagit.o           ## 308836b6a9cee25df88133658325fd0ed627a2b7 	+
+ 129   22->0    { 143: 144}     │  │  │  │  ├── [109848372       46312]zocromas_duf-duf_sccb_eval.o       ## 96d0aee616bb824a336b2f03fd4114bd3ea64178 	+
+ 130   22->0    { 144: 145}     │  │  │  │  ├── [109848373       37576]zocromas_duf-data_optable_sccb.o   ## 7ee95a14516737923b216eeb570cf8d7a2bfc79c 	+
+ 131   22->0    { 145: 146}     │  │  │  │  ├── [109848374       35504]zocromas_duf-duf_pdi_credel.o      ## 405dc4eb4099ce60462d22856afbefbfdf9b444b 	+
+ 132   22->0    { 146: 147}     │  │  │  │  ├── [109848375       10240]zocromas_duf-duf_li_credel.o       ## 0a3c69c983508e4a7d1eaeb19c82473951a6a999 	+
+ 133   22->0    { 147: 148}     │  │  │  │  ├── [109848376       38984]zocromas_duf-duf_pdi_ref.o         ## 8c61e6bcf84b57d645f3dfe71553ec67b36cf179 	+
+ 134   22->0    { 148: 149}     │  │  │  │  ├── [109848377       38072]zocromas_duf-duf_trace.o           ## 930f735da8ed84b656974fc0b9d788044c80627b 	+
+ 135   22->0    { 149: 150}     │  │  │  │  ├── [109848378       37328]zocromas_duf-data_optable_redo_and_obsolete.o## 45096a6ea37077d39dd759a828da2fe830f463e2 	+
+ 136   22->0    { 150: 151}     │  │  │  │  ├── [109848379       31768]zocromas_duf-duf_fileinfo.o        ## 2ba05c436e06df36ebc29a6cdc6559d1658ee8a1 	+
+ 137   22->0    { 151: 152}     │  │  │  │  ├── [109848380        6192]zocromas_duf-duf_context.o         ## 61c0b88429e1f43af033f373f521dbba6854eb8e 	+
+ 138   22->0    { 152: 153}     │  │  │  │  ├── [109848381       30992]zocromas_duf-duf_service.o         ## 879a8de2288c9549ce6245e3aafe0b6992529015 	+
+ 139   22->0    { 153: 154}     │  │  │  │  ├── [109848382       53440]zocromas_duf-duf_pathinfo_ref.o    ## a9248ae9e8bf283cf7e9a200325941ef31e8c36a 	+
+ 140   22->0    { 154: 155}     │  │  │  │  ├── [109848383       56328]zocromas_duf-duf_item_scan2.o      ## 5493d63db674faa5696b662b5e83e26de1746c88 	+
+ 141   22->0    { 155: 156}     │  │  │  │  ├── [109848384       52832]zocromas_duf-duf_pdi_reinit.o      ## 403b69f43ef3a530fcb9e4bfb9f822a9f527be78 	+
+ 142   22->0    { 156: 157}     │  │  │  │  ├── [109848385       60152]zocromas_duf-duf_prepare_actions.o ## 20738c333ccd332769b4d3df7c12b18f79667872 	+
+ 143   22->0    { 157: 158}     │  │  │  │  ├── [109848386       43800]zocromas_duf-evsql_selector.o      ## c530d60721f9b978c15b03e2d7615bdf72082943 	+
+ 144   22->0    { 158: 159}     │  │  │  │  ├── [109848387       13128]zocromas_duf-duf_pdi_context.o     ## 5a0c7a14a5924a11be95e866d1b183b898384577 	+
+ 145   22->0    { 159: 160}     │  │  │  │  ├── [109848388        8096]zocromas_duf-std_fieldsets.o       ## 86a82c12cbd68619188b11233bcd58781eae2dc2 	+
+ 146   22->0    { 160: 161}     │  │  │  │  ├── [109848389       12144]zocromas_duf-duf_levinfo_context.o ## ff0a9e1a3ee0b74d2579f4584f9107e49f86d419 	+
+ 147   22->0    { 161: 162}     │  │  │  │  ├── [109848390       52392]zocromas_duf-duf_sccb_eval_dirs.o  ## 714b8af108efc03ffc8c0d4823dc263056650b02 	+
+ 148   22->0    { 162: 163}     │  │  │  │  ├── [109848391       37640]zocromas_duf-data_optable_experimental.o## 23357a482e622d877506631f92fa436c44a29d47 	+
+ 149   22->0    { 163: 164}     │  │  │  │  ├── [109848392       36648]zocromas_duf-duf_options_string.o  ## 15c02762988f12db260b0b38ade540c5b054df68 	+
+ 150   22->0    { 164: 165}     │  │  │  │  ├── [109848393       37848]zocromas_duf-duf_pdi_stmt.o        ## e39bca4d81bb74d3d76675d8638fd3d8bb5aced1 	+
+ 151   22->0    { 165: 166}     │  │  │  │  ├── [109848394       18600]zocromas_duf-duf_action_table.o    ## 9d1d0dacd4ac2f950e819b15f7ec9bcc28e22e57 	+
+ 152   22->0    { 166: 167}     │  │  │  │  ├── [109848395       15784]zocromas_duf-sql_beginning_create.o## b686e41a53e4c6161cd2ebf70848d6b9261af5bd 	+
+ 153   22->0    { 167: 168}     │  │  │  │  ├── [109848396       32352]zocromas_duf-duf_pstmt_levinfo.o   ## 89b8cf286e0949e86fba9d28b377af27422fb5a5 	+
+ 154   22->0    { 168: 169}     │  │  │  │  ├── [109848397       53768]zocromas_duf-evsql_begfin.o        ## 483f8b1633782579339c7f4b0b0292b12497ee11 	+
+ 155   22->0    { 169: 170}     │  │  │  │  ├── [109848398       38224]zocromas_duf-duf_selector.o        ## 1a6a90711f9c4dbab382c8361a32b2afe4b80a2a 	+
+ 156   22->0    { 170: 171}     │  │  │  │  ├── [109848399       68960]zocromas_duf-duf_pdi.o             ## a5809f45348d5577887129b88ca370d044eedaa4 	+
+ 157   22->0    { 171: 172}     │  │  │  │  ├── [109848400       33688]zocromas_duf-duf_errors.o          ## 3f72ed6856729489169dcb4d6c11423f7d68351f 	+
+ 158   22->0    { 172: 173}     │  │  │  │  ├── [109848401       62872]zocromas_duf-duf_levinfo_ref.o     ## 014596b1b92d72c81c6df2e70ae770e951ac80d4 	+
+ 159   22->25   { 173: 174}     │  │  │  │  ├── [109953133  DIR =139] .deps
+ 160   25->0    { 174: 175}     │  │  │  │  │  ├── [109848413       11188]zocromas_duf-duf_options_cli.Po    ## c6d421fe285ad95dfd63d3dcae2f098f0cd0d982 	+
+ 161   25->0    { 175: 176}     │  │  │  │  │  ├── [109848414       12037]zocromas_duf-evsql_selector.Po     ## eb826584d251df708aa5446821fe5c8dc6fb6a44 	+
+ 162   25->0    { 176: 177}     │  │  │  │  │  ├── [109848415        6637]zocromas_duf-data_optable.Po       ## ad4af2e21fab1bd4cbe7558684bcc0713e7b7d6d 	+
+ 163   25->0    { 177: 178}     │  │  │  │  │  ├── [109848416       11043]zocromas_duf-duf_leaf_scan2.Po     ## 2176a87c9ac484896b399a51b6e59e7294f429b6 	+
+ 164   25->0    { 178: 179}     │  │  │  │  │  ├── [109848417        6452]zocromas_duf-data_optable_format.Po## 11f5014004346ecbaa9b2ca645c84bcdeaff80dd 	+
+ 165   25->0    { 179: 180}     │  │  │  │  │  ├── [109848418       10829]zocromas_duf-duf_levinfo_updown.Po ## 874c4ac4cd4bb0091f60c01f6402b946cb3b4264 	+
+ 166   25->0    { 180: 181}     │  │  │  │  │  ├── [109848419       11237]zocromas_duf-duf_print.Po          ## 8b9ca4300f00f049a235b107f208ccff4821e1d7 	+
+ 167   25->0    { 181: 182}     │  │  │  │  │  ├── [109848420        6450]zocromas_duf-data_optable_debug.Po ## 233aeeee234f4f451054297f028c4bf7a29f73ee 	+
+ 168   25->0    { 182: 183}     │  │  │  │  │  ├── [109848421       15998]zocromas_duf-duf_maindb.Po         ## f5bc3bc3953ba1da0c37fd8142fcdc43c6143e72 	+
+ 169   25->0    { 183: 184}     │  │  │  │  │  ├── [109848422        6068]zocromas_duf-data_optable_flag_obsolete.Po## e2c66775b83705f68f4ddfd09307a57204f8e01a 	+
+ 170   25->0    { 184: 185}     │  │  │  │  │  ├── [109848423        9758]zocromas_duf-duf_trace.Po          ## 4fac45ca114d424855ff89311a38d6834297c575 	+
+ 171   25->0    { 185: 186}     │  │  │  │  │  ├── [109848424       13054]zocromas_duf-duf_option_misc.Po    ## 1ec19d895f323466c1f6169163e28a92da2ca13c 	+
+ 172   25->0    { 186: 187}     │  │  │  │  │  ├── [109848425       10792]zocromas_duf-duf_sqlite.Po         ## 2799f6a5df3c21b79cef744bf22a7c1ab1d417ec 	+
+ 173   25->0    { 187: 188}     │  │  │  │  │  ├── [109848426       10930]zocromas_duf-duf_option_tmpdb.Po   ## b1d7c254a473ad1822c16d42189c37675118f9f2 	+
+ 174   25->0    { 188: 189}     │  │  │  │  │  ├── [109848427       11834]zocromas_duf-duf_options_file.Po   ## 526bbc13171d4fe964989ceb026dd2a84a06a25c 	+
+ 175   25->0    { 189: 190}     │  │  │  │  │  ├── [109848428       11834]zocromas_duf-duf_selector.Po       ## cc9a039bf63cd3b63e79f26865a31803ed36fb4a 	+
+ 176   25->0    { 190: 191}     │  │  │  │  │  ├── [109848429       10601]zocromas_duf-duf_sccb.Po           ## bcb8f84291fd72994f4a069266f73cbb6e02ca38 	+
+ 177   25->0    { 191: 192}     │  │  │  │  │  ├── [109848430        3274]zocromas_duf-sql_update_selected.Po## 1e48dc9ecee08e2d3d3f852e4b0974a627da6c21 	+
+ 178   25->0    { 192: 193}     │  │  │  │  │  ├── [109848431        7073]zocromas_duf-duf_options_table.Po  ## ef71bb1215885454ff3d06de4d7e1f46149bc683 	+
+ 179   25->0    { 193: 194}     │  │  │  │  │  ├── [109848432       10426]zocromas_duf-duf_li_credel.Po      ## 9cca3e45523f4984f6a84419da5f96ecaea87a0d 	+
+ 180   25->0    { 194: 195}     │  │  │  │  │  ├── [109848433       11246]zocromas_duf-duf_options_env.Po    ## f29639a711cf734c139f163cd5e201a80ab58458 	+
+ 181   25->0    { 195: 196}     │  │  │  │  │  ├── [109848434       11031]zocromas_duf-duf_levinfo_stat.Po   ## 221edd413cae46d0f7f6e6e7f667f08d65a38735 	+
+ 182   25->0    { 196: 197}     │  │  │  │  │  ├── [109848435        6450]zocromas_duf-data_optable_uplus.Po ## 3822d4da113223bea034b57078edb8ef93a7e244 	+
+ 183   25->0    { 197: 198}     │  │  │  │  │  ├── [109848436       10907]zocromas_duf-duf_errors.Po         ## 18fe28e3a584151a23b566576efdf0ebf240741d 	+
+ 184   25->0    { 198: 199}     │  │  │  │  │  ├── [109848437       11646]zocromas_duf-duf_option_descr.Po   ## 96e5862a6322a106d20e2dc622c09c5f24312197 	+
+ 185   25->0    { 199: 200}     │  │  │  │  │  ├── [109848438       12633]zocromas_duf-duf_item_scan2.Po     ## b496fdff5c909fe40f8943cabc6eda75e35dce53 	+
+ 186   25->0    { 200: 201}     │  │  │  │  │  ├── [109848439       11445]zocromas_duf-mod_directories_uni.Po## e9a5659e9aaddfd538c083e38b9c2ecf5574501e 	+
+ 187   25->0    { 201: 202}     │  │  │  │  │  ├── [109848440        3079]zocromas_duf-sql_beginning_create.Po## 25ea3d1ae38139a89c3985d4c3b47c6c6d5c5c68 	+
+ 188   25->0    { 202: 203}     │  │  │  │  │  ├── [109848441       11246]zocromas_duf-duf_option_names.Po   ## f567149863961aa99aa2617a628e0b0f7c475c44 	+
+ 189   25->0    { 203: 204}     │  │  │  │  │  ├── [109848442       12277]zocromas_duf-mod_dummy_uni.Po      ## 060ad3051ade0e6bfc6cbc64802f9e1fbd2fc940 	+
+ 190   25->0    { 204: 205}     │  │  │  │  │  ├── [109848443       10957]zocromas_duf-duf_sccb_begfin.Po    ## fb7408bfdc16873da146ca893ef873d50e822d96 	+
+ 191   25->0    { 205: 206}     │  │  │  │  │  ├── [109848444       11660]zocromas_duf-duf_ufilter_bind.Po   ## d82386010465bcad2469e7b19061345571b1b219 	+
+ 192   25->0    { 206: 207}     │  │  │  │  │  ├── [109848445       11313]zocromas_duf-duf_options_string.Po ## 56551e5eed2044f4d6bc22be98846355c2cccd07 	+
+ 193   25->0    { 207: 208}     │  │  │  │  │  ├── [109848446        3280]zocromas_duf-sql_beginning_selected.Po## 75d0885d860cadd0606523dc8d1ed4e76d5ca7a6 	+
+ 194   25->0    { 208: 209}     │  │  │  │  │  ├── [109848447       13789]zocromas_duf-duf_sccbh_eval.Po     ## c2e1a9a9ddf1098409e36efd81aca2b3a7eaffc6 	+
+ 195   25->0    { 209: 210}     │  │  │  │  │  ├── [109848448       11634]zocromas_duf-duf_dir_scan2_stages.Po## 99b1452f6dd1123749c44849e1c72c051ac0e7ab 	+
+ 196   25->0    { 210: 211}     │  │  │  │  │  ├── [109848449       11087]zocromas_duf-duf_service.Po        ## 73e1663b6a1dd3645cd3e7f60ef359b722ee2f76 	+
+ 197   25->0    { 211: 212}     │  │  │  │  │  ├── [109848450       10834]zocromas_duf-duf_option_env.Po     ## d9f10dcb5a55f39e7eaae1dc68a8b672abf7aa87 	+
+ 198   25->0    { 212: 213}     │  │  │  │  │  ├── [109848451       10690]zocromas_duf-duf_tags.Po           ## 1dc4203a340e63835ad080977f679f32272de0b8 	+
+ 199   25->0    { 213: 214}     │  │  │  │  │  ├── [109848452       11146]zocromas_duf-std_fieldsets.Po      ## db72bed70a983354851710658ca994a5e0aebabc 	+
+ 200   25->0    { 214: 215}     │  │  │  │  │  ├── [109848453       12350]zocromas_duf-mod_filenames_uni.Po  ## 783953670c8e4bed59db3042955ca67b2a06ac45 	+
+ 201   25->0    { 215: 216}     │  │  │  │  │  ├── [109848454       11452]zocromas_duf-duf_config.Po         ## 80253bf64e77c716e8e59b8eee8615f5a2d82402 	+
+ 202   25->0    { 216: 217}     │  │  │  │  │  ├── [109848455       11029]zocromas_duf-duf_prepare_actions.Po## 83bedfd8d951cf68bbd922ef9e08689152ea2433 	+
+ 203   25->0    { 217: 218}     │  │  │  │  │  ├── [109848456       10628]zocromas_duf-duf_pstmt_levinfo.Po  ## c4c029a8fc457408c5408615160e17306cabc61d 	+
+ 204   25->0    { 218: 219}     │  │  │  │  │  ├── [109848457        6862]zocromas_duf-data_optable_experimental.Po## f1ef2f4145010e761dfdd3857687673c6e42181f 	+
+ 205   25->0    { 219: 220}     │  │  │  │  │  ├── [109848458       11349]zocromas_duf-std_selectors.Po      ## 8c18e77469f2f5d68cc815ac075829135c41e012 	+
+ 206   25->0    { 220: 221}     │  │  │  │  │  ├── [109848459       11542]zocromas_duf-duf_maindb_info.Po    ## ddc9940113777dbd676d7b532157b24897e8d472 	+
+ 207   25->0    { 221: 222}     │  │  │  │  │  ├── [109848460       10637]zocromas_duf-duf_ufilter_ref.Po    ## 9e132d74c5571781b3ce0331f4a38aa3e995005c 	+
+ 208   25->0    { 222: 223}     │  │  │  │  │  ├── [109848461       10840]zocromas_duf-duf_levinfo_openclose.Po## f0832df8fdaa80befb8835e2502fb4204821b700 	+
+ 209   25->0    { 223: 224}     │  │  │  │  │  ├── [109848462       12718]zocromas_duf-duf_path2dirid.Po     ## 2d1482231cb8b34b23c0c05a984381a727f25a93 	+
+ 210   25->0    { 224: 225}     │  │  │  │  │  ├── [109848463        6474]zocromas_duf-data_optable_redo_and_obsolete.Po## f61d61bce2e61f35b978ae62107cc00124a905f3 	+
+ 211   25->0    { 225: 226}     │  │  │  │  │  ├── [109848464       12688]zocromas_duf-duf_options_interactive.Po## baaf949f55a8d2acc853ab62db591f1dd7fcc7cf 	+
+ 212   25->0    { 226: 227}     │  │  │  │  │  ├── [109848465       13355]zocromas_duf-duf_sccb_handle.Po    ## 7a0d3648d71811a18ee78c93f93d64e056baa9f0 	+
+ 213   25->0    { 227: 228}     │  │  │  │  │  ├── [109848466        2870]zocromas_duf-sql_beginning_tables.Po## 95d8819d625f2ed85297bb8bbd2133f9e667a08f 	+
+ 214   25->0    { 228: 229}     │  │  │  │  │  ├── [109848467        1872]mtest-duftest.Po                   ## 8ba008a7cfdc03a1a5c27050174c3ed6535a6f67 	+
+ 215   25->0    { 229: 230}     │  │  │  │  │  ├── [109848468       10923]zocromas_duf-duf_sql.Po            ## 99345f51e33e96df27ce29e7e09a6245aacc5927 	+
+ 216   25->0    { 230: 231}     │  │  │  │  │  ├── [109848469       12047]zocromas_duf-duf_sccb_eval_dirs.Po ## 3971acab3fc20715567b42d21e3e48dd190df8c9 	+
+ 217   25->0    { 231: 232}     │  │  │  │  │  ├── [109848470       10441]zocromas_duf-duf_sccb_eval_std.Po  ## 42fc409e998b4d158c507285612a3fb2b4823bc6 	+
+ 218   25->0    { 232: 233}     │  │  │  │  │  ├── [109848471        6336]zocromas_duf-duf_status.Po         ## 33110253fe81874c5aedc10d529a60bae40e6dcc 	+
+ 219   25->0    { 233: 234}     │  │  │  │  │  ├── [109848472       10730]zocromas_duf-duf_pdi_stmt.Po       ## 2ab995758ba0d4c43e51bbd1192ac4c930ef78fa 	+
+ 220   25->0    { 234: 235}     │  │  │  │  │  ├── [109848473       13347]zocromas_duf-duf_pdi.Po            ## 65baba0fe2aa89e09d276c4bc339af7121654351 	+
+ 221   25->0    { 235: 236}     │  │  │  │  │  ├── [109848474       10167]zocromas_duf-duf_context.Po        ## 1ed6cafe52b691d8f4db7c7f252e92e3b727f315 	+
+ 222   25->0    { 236: 237}     │  │  │  │  │  ├── [109848475       14284]zocromas_duf-mod_save_to.Po        ## fc1397723806290c290d7adc411744a0606e7022 	+
+ 223   25->0    { 237: 238}     │  │  │  │  │  ├── [109848476       10991]zocromas_duf-duf_cli_options.Po    ## e8474636c463f3edfcb7a860b7254447dbe8e1f5 	+
+ 224   25->0    { 238: 239}     │  │  │  │  │  ├── [109848477       10997]zocromas_duf-duf_sql_field2.Po     ## 4d7c567adfb7e206dbf45a264051dc059fbdba1c 	+
+ 225   25->0    { 239: 240}     │  │  │  │  │  ├── [109848478       11405]zocromas_duf-duf_levinfo.Po        ## f3cba68a21abe6412091d6366c76c103952dd815 	+
+ 226   25->0    { 240: 241}     │  │  │  │  │  ├── [109848479       15758]zocromas_duf-duf_pdi_attach.Po     ## a055942751962e1a34d66c08e4ee012c1c69a1e3 	+
+ 227   25->0    { 241: 242}     │  │  │  │  │  ├── [109848480        6647]zocromas_duf-data_optable_info.Po  ## e449dad55350279eff55311653d8feb0a0f56d04 	+
+ 228   25->0    { 242: 243}     │  │  │  │  │  ├── [109848481        6813]zocromas_duf-duf_dbg.Po            ## c55e7a78367b709564def39f49568d71560ac20b 	+
+ 229   25->0    { 243: 244}     │  │  │  │  │  ├── [109848482       11237]zocromas_duf-duf_option_file.Po    ## f6421f78f263f89572414675327c329de23f95af 	+
+ 230   25->0    { 244: 245}     │  │  │  │  │  ├── [109848483       10854]zocromas_duf-duf_levinfo_credel.Po ## c4bee3068de65a716ccb5d2b59bc4103c177f24d 	+
+ 231   25->0    { 245: 246}     │  │  │  │  │  ├── [109848484       11821]zocromas_duf-duf_option_help.Po    ## 08dbd345441f7db70bcd6ffd714b7f14815e2ae6 	+
+ 232   25->0    { 246: 247}     │  │  │  │  │  ├── [109848485       10456]zocromas_duf-duf_option_extended.Po## fa264b228a04b228f3dcfdc4314659f9c1ee6e3c 	+
+ 233   25->0    { 247: 248}     │  │  │  │  │  ├── [109848486       12438]zocromas_duf-mod_tree_print_uni.Po ## f9d95acddb77850e772c666c4e4af9abc0710013 	+
+ 234   25->0    { 248: 249}     │  │  │  │  │  ├── [109848487       12091]zocromas_duf-duf_option_typed.Po   ## e3fc7abfd3f532f40a45eacc4bed723215e1e8ff 	+
+ 235   25->0    { 249: 250}     │  │  │  │  │  ├── [109848488        6452]zocromas_duf-data_optable_filter.Po## 429ea7070e53f48dcb68d5d1692d6ff6dba82678 	+
+ 236   25->0    { 250: 251}     │  │  │  │  │  ├── [109848489       10596]zocromas_duf-duf_sys_wrap.Po       ## cd936a9b833108cd0893beb2886cb059aafbc886 	+
+ 237   25->0    { 251: 252}     │  │  │  │  │  ├── [109848490        9941]zocromas_duf-duf_levinfo_context.Po## ee84165b98e91c8be61e0f6da0561e15cb91623c 	+
+ 238   25->0    { 252: 253}     │  │  │  │  │  ├── [109848491       10844]zocromas_duf-duf_option_find.Po    ## 4791259e93df5380127207c18f95053577e5cc14 	+
+ 239   25->0    { 253: 254}     │  │  │  │  │  ├── [109848492       10413]zocromas_duf-duf_sccb_eval.Po      ## 8d661e202e8ac7b3353407403a64615f0cc0287a 	+
+ 240   25->0    { 254: 255}     │  │  │  │  │  ├── [109848493       13194]zocromas_duf-duf_path2db.Po        ## aede42d3c120c0ee5a25e9fe13d812122fc1af7e 	+
+ 241   25->0    { 255: 256}     │  │  │  │  │  ├── [109848494       13104]zocromas_duf-duf_sel_cb_node.Po    ## 19f3a2590a1f65e8460e64de112be8ccca4c64c8 	+
+ 242   25->0    { 256: 257}     │  │  │  │  │  ├── [109848495       13287]zocromas_duf-duf_sel_cb_leaf.Po    ## 96c16b26e0b9a31b01f28fb72fcc8c47cbac62d9 	+
+ 243   25->0    { 257: 258}     │  │  │  │  │  ├── [109848496       10858]zocromas_duf-duf_option_restore.Po ## c815281b42406ca3695e2c046553d1503c23ea21 	+
+ 244   25->0    { 258: 259}     │  │  │  │  │  ├── [109848497       11789]zocromas_duf-duf_eval_at_config.Po ## 9e44777ea3ca5fe3b2c92e9924ca59ca623db04b 	+
+ 245   25->0    { 259: 260}     │  │  │  │  │  ├── [109848498       12081]zocromas_duf-duf_option_old.Po     ## 442d6548ca8145f76921616bb2286596c43e8485 	+
+ 246   25->0    { 260: 261}     │  │  │  │  │  ├── [109848499       10593]zocromas_duf-std_mod_sets.Po       ## e4a346c17049b752d31d16fdd74c8ff9932c1a38 	+
+ 247   25->0    { 261: 262}     │  │  │  │  │  ├── [109848500       12203]zocromas_duf-duf_option_sccb.Po    ## 48e2ef5b2d532158c82f1605718a25eafcbf964f 	+
+ 248   25->0    { 262: 263}     │  │  │  │  │  ├── [109848501        2671]zocromas_duf-sql_beginning_vacuum.Po## 606ba0e1c53b096dbec76f85037a6f5a659dbd5c 	+
+ 249   25->0    { 263: 264}     │  │  │  │  │  ├── [109848502       11837]zocromas_duf-duf_pathinfo_credel.Po## b3065927b4bd34826bad6bec141f205c24234b9f 	+
+ 250   25->0    { 264: 265}     │  │  │  │  │  ├── [109848503       11446]zocromas_duf-duf_fileinfo.Po       ## 03fc50f94a6cc3bdef071b8aafca3f6ed703f39d 	+
+ 251   25->0    { 265: 266}     │  │  │  │  │  ├── [109848504       12478]zocromas_duf-duf_options.Po        ## 85c25bd4a133f2f267b308c08fc97e2c16d87b80 	+
+ 252   25->0    { 266: 267}     │  │  │  │  │  ├── [109848505       11241]zocromas_duf-duf_printb.Po         ## 168367e90f14db8cd05f82db44cb9698a649b642 	+
+ 253   25->0    { 267: 268}     │  │  │  │  │  ├── [109848506       13358]zocromas_duf-mod_collect_mime_uni.Po## ef4ef18a5fb5e8d22130dc478a13e1bd646f9806 	+
+ 254   25->0    { 268: 269}     │  │  │  │  │  ├── [109848507       12072]zocromas_duf-duf_dirent_scan2.Po   ## 6a8c0fd0d85f70297b2d387085064cc95593a1b8 	+
+ 255   25->0    { 269: 270}     │  │  │  │  │  ├── [109848508       13635]zocromas_duf-mod_sd5_uni.Po        ## 76bb9afb162899e6d76995ef59788559e3710b1b 	+
+ 256   25->0    { 270: 271}     │  │  │  │  │  ├── [109848509       10621]zocromas_duf-duf_ufilter.Po        ## 456f1a7916cadb4ec6acd7fafceb1d4e4501a59d 	+
+ 257   25->0    { 271: 272}     │  │  │  │  │  ├── [109848510       11546]zocromas_duf-duf_begfin.Po         ## 92baf8fcc2f7d79cab78fdf849b8ce6d0994b593 	+
+ 258   25->0    { 272: 273}     │  │  │  │  │  ├── [109848511       11607]zocromas_duf-mod_filedata_uni.Po   ## 7631b391083c4c2d7c7acdbc24c5b8a2b45441b9 	+
+ 259   25->0    { 273: 274}     │  │  │  │  │  ├── [109848512        6661]zocromas_duf-data_optable_interactive.Po## 75a6dfd092c6efe26b2a1cf45cf2ba37ffd418ae 	+
+ 260   25->0    { 274: 275}     │  │  │  │  │  ├── [109848513       13998]zocromas_duf-duf_action.Po         ## 325e0e4f987af892f3dfa56c37717784c3d1ba59 	+
+ 261   25->0    { 275: 276}     │  │  │  │  │  ├── [109848514       11457]zocromas_duf-duf_dh.Po             ## 24d79dbfa0713d32cbed7b58cac28b287d2dddec 	+
+ 262   25->0    { 276: 277}     │  │  │  │  │  ├── [109848515       14048]zocromas_duf-mod_crc32_uni.Po      ## 2dbca625f9f859b37bd937baff133385398da58e 	+
+ 263   25->0    { 277: 278}     │  │  │  │  │  ├── [109848516       11035]zocromas_duf-duf_levinfo_ref.Po    ## d7f96a316920349af21dc5d09a55b2f2a52c7137 	+
+ 264   25->0    { 278: 279}     │  │  │  │  │  ├── [109848517       10922]zocromas_duf-duf_pdi_sccb_eval.Po  ## d2aa98528cee84e282ab7a43c0b88e67dbffd91d 	+
+ 265   25->0    { 279: 280}     │  │  │  │  │  ├── [109848518       12298]zocromas_duf-duf_filedata.Po       ## 5b9dacf9dbcbaeb5ff250b094693ac6cb3b258e9 	+
+ 266   25->0    { 280: 281}     │  │  │  │  │  ├── [109848519       11732]zocromas_duf-duf.Po                ## d09869c2edfa3951f89c90f64725d5dff09259d3 	+
+ 267   25->0    { 281: 282}     │  │  │  │  │  ├── [109848520       10021]zocromas_duf-duf_pdi_ref.Po        ## 113c1b16d1ac193d836bedbc7efaf1b7151b1e29 	+
+ 268   25->0    { 282: 283}     │  │  │  │  │  ├── [109848521       12012]zocromas_duf-duf_option.Po         ## 5a646157a14d5404a9a04262a008396b0830d105 	+
+ 269   25->0    { 283: 284}     │  │  │  │  │  ├── [109848522       12850]zocromas_duf-mod_tagit.Po          ## 4ce8b0613615344790f4cf4f6ef90c58e1a727ea 	+
+ 270   25->0    { 284: 285}     │  │  │  │  │  ├── [109848523       10816]zocromas_duf-duf_action_table.Po   ## 296be6b86e55f1357e42f0df5c00cce763291db4 	+
+ 271   25->0    { 285: 286}     │  │  │  │  │  ├── [109848524       13635]zocromas_duf-mod_md5_uni.Po        ## ff0197cf55c8615da4a57d4f898dffd76bd2200a 	+
+ 272   25->0    { 286: 287}     │  │  │  │  │  ├── [109848525       11222]zocromas_duf-duf_option_cmd.Po     ## 8ccd7ff6cf71af37598e5fa05c6a561c7ebb3ccf 	+
+ 273   25->0    { 287: 288}     │  │  │  │  │  ├── [109848526        6647]zocromas_duf-data_optable_sccb.Po  ## f0dff9bb28a58bda0bb7b2fa8cb0cdab0a73a99d 	+
+ 274   25->0    { 288: 289}     │  │  │  │  │  ├── [109848527       12822]zocromas_duf-duf_interactive.Po    ## 497677a590925e836d189894d2cef92257ab5338 	+
+ 275   25->0    { 289: 290}     │  │  │  │  │  ├── [109848528        6050]zocromas_duf-data_optable_flag.Po  ## 4d1ff4f5230bff2072df34b22e6003b43ebc3b87 	+
+ 276   25->0    { 290: 291}     │  │  │  │  │  ├── [109848529       11588]zocromas_duf-duf_pdi_reinit.Po     ## 763478ca24239cbb590a1772493ce81a79f50b40 	+
+ 277   25->0    { 291: 292}     │  │  │  │  │  ├── [109848530       10806]zocromas_duf-duf_pdi_credel.Po     ## 5836aa5332ddadaea493500257a328a440731f4a 	+
+ 278   25->0    { 292: 293}     │  │  │  │  │  ├── [109848531       12436]zocromas_duf-mod_dir_print_uni.Po  ## 96e317f7f864c103400fd763ad69b9b0bc47251e 	+
+ 279   25->0    { 293: 294}     │  │  │  │  │  ├── [109848532        2821]zocromas_duf-duf_utils_print.Po    ## 277257813aae4b8d8caf27fb163b947b774b4baf 	+
+ 280   25->0    { 294: 295}     │  │  │  │  │  ├── [109848533        6645]zocromas_duf-data_optable_str.Po   ## af1da48a9d288617e152b29756cd210f0675c545 	+
+ 281   25->0    { 295: 296}     │  │  │  │  │  ├── [109848534        9828]zocromas_duf-duf_pdi_context.Po    ## d2d130ee782f683e284dcb2cdc6f55775472cb0f 	+
+ 282   25->0    { 296: 297}     │  │  │  │  │  ├── [109848535       10839]zocromas_duf-duf_dirent.Po         ## 0d95d35da371c59058718bd295520bf8d2fc4820 	+
+ 283   25->0    { 297: 298}     │  │  │  │  │  ├── [109848536       11795]zocromas_duf-mod_template_uni.Po   ## 8b5bd9705960bb25208c366b47cea741cf01a2fa 	+
+ 284   25->0    { 298: 299}     │  │  │  │  │  ├── [109848537       10378]zocromas_duf-duf_utils_path.Po     ## 2a9486670304561797c041fe966ab7e532b0d158 	+
+ 285   25->0    { 299: 300}     │  │  │  │  │  ├── [109848538        2671]zocromas_duf-sql_beginning_common.Po## 71e21f660f6a2b768cd9ba8b6a0aa7a7db76c9d4 	+
+ 286   25->0    { 300: 301}     │  │  │  │  │  ├── [109848539        6643]zocromas_duf-data_optable_io.Po    ## 3bc19fc842c05109f96e520304e860d864379c11 	+
+ 287   25->0    { 301: 302}     │  │  │  │  │  ├── [109848540        2976]zocromas_duf-duf_utils.Po          ## 5c1bfae319f8cd4a968b422b7b72a2ef911b6539 	+
+ 288   25->0    { 302: 303}     │  │  │  │  │  ├── [109848541       10798]zocromas_duf-duf_sql_field.Po      ## c47cc2b42663303d9771c0b709890f9c4f7b8a8b 	+
+ 289   25->0    { 303: 304}     │  │  │  │  │  ├── [109848542       15236]zocromas_duf-mod_exif_uni.Po       ## 423d2faaa0f04c3e847ce23deb823a20054d1d2c 	+
+ 290   25->0    { 304: 305}     │  │  │  │  │  ├── [109848543        6647]zocromas_duf-data_optable_help.Po  ## dee50d5bffdf3ece1b2e37827a9a263c510d66e5 	+
+ 291   25->0    { 305: 306}     │  │  │  │  │  ├── [109848544        6450]zocromas_duf-data_optable_sflag.Po ## ca954e1945411447ecf452f395dabdec52f8b0b7 	+
+ 292   25->0    { 306: 307}     │  │  │  │  │  ├── [109848545       11078]zocromas_duf-mod_integrity_uni.Po  ## 2bcc3e67790773ca744f6a9a50ad96f0f40178b0 	+
+ 293   25->0    { 307: 308}     │  │  │  │  │  ├── [109848546       12290]zocromas_duf-duf_option_interactive.Po## d0f72a3a370c63cad7f0b886e9aa7e6a50b4a925 	+
+ 294   25->0    { 308: 309}     │  │  │  │  │  ├── [109848547       11825]zocromas_duf-duf_pathinfo_ref.Po   ## 7f42b46651186e424f7a3141ff8ae1ffa0203173 	+
+ 295   25->0    { 309: 310}     │  │  │  │  │  ├── [109848548       11558]zocromas_duf-evsql_begfin.Po       ## 72aea7b4d19068a1b15a9bcded129a55b022a19f 	+
+ 296   25->0    { 310: 311}     │  │  │  │  │  ├── [109848549        1232]zocromas_duf-duf_match.Po          ## d4f4f30d7072ff89e466b128f7298b62e1aa37e4 	+
+ 297   25->0    { 311: 312}     │  │  │  │  │  ├── [109848550        6450]zocromas_duf-data_optable_trace.Po ## 2a8b22c9075bb6121f1bb799e65ce18037cb69e8 	+
+ 298   25->0    { 312: 313}     │  │  │  │  │  └── [109848551       13441]zocromas_duf-mod_dumplet.Po        ## de44f692c7182ef9f2d6add202843f3ead003c2d 	+
+ 299   22->0    { 313: 314}     │  │  │  │  ├── [109848402       40792]zocromas_duf-data_optable_flag.o   ## f9c0c07040f3a89460be40ac983f8694048f5a62 	+
+ 300   22->0    { 314: 315}     │  │  │  │  ├── [109848403       49328]zocromas_duf-duf_print.o           ## ec5ef4ae69aebbc8bfdc5ffbfc4b1628228916c6 	+
+ 301   22->0    { 315: 316}     │  │  │  │  ├── [109848404        5584]zocromas_duf-duf_match.o           ## c38d96a6f44b1343b4fb2781430bd0bb66a04da4 	+
+ 302   22->0    { 316: 317}     │  │  │  │  ├── [109848405       70448]zocromas_duf-duf_levinfo_updown.o  ## 62d8106ab8678045feda50df8e8eb1655bcae47f 	+
+ 303   22->0    { 317: 318}     │  │  │  │  ├── [109848406       60448]zocromas_duf-duf_option_cmd.o      ## d79e4c7e9a83ecc93c5077e5dff6d40ac05e7e11 	+
+ 304   22->0    { 318: 319}     │  │  │  │  ├── [109848407       12312]zocromas_duf-duf_ufilter.o         ## 9f8ded75ac91b2c4dd20a1d5d8fe43f9da16c8b5 	+
+ 305   22->0    { 319: 320}     │  │  │  │  ├── [109848408       52968]zocromas_duf-mod_template_uni.o    ## 9bbd5bb942bf5cf7b644cf688b6fce96abd37c61 	+
+ 306   22->0    { 320: 321}     │  │  │  │  ├── [109848409        6088]mtest-duftest.o                    ## f5b531b00e2fc667ef8c2756c666e7d0461c4dc7 	+
+ 307   22->0    { 321: 322}     │  │  │  │  ├── [109848410       49984]zocromas_duf-duf_pdi_sccb_eval.o   ## d3257ef90a19f01dc64db18aed9217f786738bcc 	+
+ 308   22->0    { 322: 323}     │  │  │  │  └── [109848411       10856]zocromas_duf-sql_update_selected.o ## c1cf1c82fe83d63a3604b7d916b06451497d89ec 	+
+ 309   21->0    { 323: 324}     │  │  │  ├── [109848287        8970]config.h                           ## 5ca630f59cc9bda768829deaaa8a32ae1b24eaf3 	+
+ 310   21->0    { 324: 325}     │  │  │  └── [109848288       90036]config.log                         ## dd486ea0483f20225337a5d51862d95bb5e1bfbe 	+
+ 311   20->0    { 325: 326}     │  │  ├── [109848277       23566]depcomp                            ## 44f711c72acb3fb13ece5b665aaf9d6449ad2574 	+
+ 312   20->0    { 326: 327}     │  │  ├── [109848278        5826]ar-lib                             ## bd59743e475ef3fa5ac10601b3477ee74cd5e794 	+
+ 313   20->0    { 327: 328}     │  │  ├── [109848279        6872]missing                            ## fced81554799feb0f10fb56e3a06acb92c7ce7b0 	+
+ 314   20->0    { 328: 329}     │  │  ├── [109848280       14675]install-sh                         ## b99fec102eb24bffd53ab61fc30d59e810f116a2 	+
+ 315   20->0    { 329: 330}     │  │  ├── [109848281        7333]compile                            ## 03a05e37267c2f1c9fea4f2a6a15f8a7beb91c0d 	+
+ 316   20->0    { 330: 331}     │  │  ├── [109848282       36325]config.sub                         ## c8f6d723ad044662b7993947a46d74a6ca8f5007 	+
+ 317   20->26   { 331: 332}     │  │  ├── [109953134  DIR =4]   m4
+ 318   26->0    { 332: 333}     │  │  │  ├── [109848552       14514]ltoptions.m4                       ## 9cd35d79da7776af14f21b259c64f130fa1a3536 	+
+ 319   26->0    { 333: 334}     │  │  │  ├── [109848553        4384]ltsugar.m4                         ## 2028bffadfd9b989bcc63da90596101fe4ec20b9 	+
+ 320   26->0    { 334: 335}     │  │  │  ├── [109848554         699]ltversion.m4                       ## 3aae847c163fa6cc7c8241a3a49f98705538d55f 	+
+ 321   26->0    { 335: 336}     │  │  │  └── [109848555        6140]lt~obsolete.m4                     ## e21f085615f98d3751690c1615923e89160d5783 	+
+ 322   20->0    { 336: 337}     │  │  └── [109848283       43760]config.guess                       ## 6b3487fd72dd688c92a37e4bab10b08778559697 	+
+ 323   18->0    { 337: 338}     │  ├── [109848253        7223]config.h.in                        ## 62a9435cb6d57d48450b4a7098124c5cedd83cb0 	++
+ 324   18->27   { 338: 339}     │  ├── [109953135  DIR =2]   md5sha
+ 325   27->0    { 339: 340}     │  │  ├── [109848556       40737]t2.html                            ## d2da4f8bfeb1d06ca1a821b99bd614fa45116790 	++
+ 326   27->0    { 340: 341}     │  │  └── [109848557       40737]t1.html                            ## 9a2b6e9de9c2343a26084ab64e6d902aab6e2b1d 	++
+ 327   18->0    { 341: 342}     │  ├── [109848254          14].localrc                           
+ 328   18->0    { 342: 343}     │  ├── [109848255        1256]test-history.txt                   ## f64dd8212c6300c08be103526337aa26fc59ee12 	++
+ 329   18->0    { 343: 344}     │  ├── [109848256          23]out1.cmds                          ## a8bed5788534352cca7e65fe92c2b40c59afd9b4 	++
+ 330   18->28   { 344: 345}     │  ├── [109953136  DIR =116] editing
+ 331   28->29   { 345: 346}     │  │  ├── [109953137  DIR =90]  .gvimvrb
+ 332   29->0    { 346: 347}     │  │  │  ├── [109848563       86017]SHN_GVIMER_PLUS-C4ED654877370BFA4E54474B94A3F436.redir## 03b65323dffcdbc7600db8d07f94140fe6446f9e 	++++
+ 333   29->0    { 347: 348}     │  │  │  ├── [109848564        8192]SHN_GVIMER_PLUS-CC7FEE589D4DF55412579FB89AEFE340.vrb## faae83f9b51f408d91916a2fecaf874f4784b69f 	++++
+ 334   29->0    { 348: 349}     │  │  │  ├── [109848565       57344]SHN_GVIMER_PLUS-669C74AB39EF1AA3C8E9D66ABCE7D992.vrb## aeaa10e0b37ce6ba5350bc880c3c536b081c7b9d 	++++
+ 335   29->0    { 349: 350}     │  │  │  ├── [109848566        9013]SHN_GVIMER_PLUS-31017DD9276BF0323982DA63E74F4B02.viminfo## 81b2e758181d1efa8197da5a62b50229a0fbf511 	++
+ 336   29->0    { 350: 351}     │  │  │  ├── [109848567       22009]SHN_GVIMER_PLUS-2B221E5EBAE4D694A2484777EB638628.viminfo## 03a490c9549fabb0a24d3c433b5a43bc9c449650 	++
+ 337   29->0    { 351: 352}     │  │  │  ├── [109848568        3905]SHN_GVIMER_PLUS-B07B83B8C14418C03A24DEFB00077060.vrb## fcde22bed6c6e7fadfe18212d5d2b39551c465bf 	++++
+ 338   29->0    { 352: 353}     │  │  │  ├── [109848569       77824]SHN_GVIMER_PLUS-C4E489F4898B013DD1D1E3F9341E1E41.vrb## 88e4dd2bcc11161f921d0d03307844a3e60be1df 	++++
+ 339   29->0    { 353: 354}     │  │  │  ├── [109848570        1593]SHN_GVIMER_PLUS-36DD4A55CED6136E10B7B29107150126.redir## 701f05e328b0e8fd723ac98873a780ea6cadfade 	++++
+ 340   29->0    { 354: 355}     │  │  │  ├── [109848571       63000]SHN_GVIMER_PLUS-CFCDFC7E612CA2A76A368C21C552D71B.redir## daa0774f7f346ce560deff78605a96eb871506e3 	++++
+ 341   29->0    { 355: 356}     │  │  │  ├── [109848572       23396]SHN_GVIMER_PLUS-8F799598D3D5F2834229AFE33267343E.viminfo## df9baaeff5fa49dcd8d72d30a4939807530de3a2 	++
+ 342   29->0    { 356: 357}     │  │  │  ├── [109848573        1593]SHN_GVIMER_PLUS-36DD4A55CED6136E10B7B29107150126.vrb## 701f05e328b0e8fd723ac98873a780ea6cadfade 	++++
+ 343   29->0    { 357: 358}     │  │  │  ├── [109848574       47465]SHN_GVIMER_PLUS-4AF613C90777DB3932FE71074F65263E.redir## dd2965c9432faee8eba74f5167ccd9786ce41d80 	++++
+ 344   29->0    { 358: 359}     │  │  │  ├── [109848575        3874]SHN_GVIMER_PLUS-32629E78E12FAE4ABB2EE0B25EBB1B36.redir## b5a06e3e18663ed7a231a2e28980d6c10d7f5c37 	++++
+ 345   29->0    { 359: 360}     │  │  │  ├── [109848576       31255]SHN_GVIMER_PLUS-462CCD42FD2E2F7EEC39BCABD1B9926D.viminfo## 76798df5f5ed279d07998a1d5e65380e3ab62c2d 	++
+ 346   29->0    { 360: 361}     │  │  │  ├── [109848577       86017]SHN_GVIMER_PLUS-C4ED654877370BFA4E54474B94A3F436.vrb## 03b65323dffcdbc7600db8d07f94140fe6446f9e 	++++
+ 347   29->0    { 361: 362}     │  │  │  ├── [109848578         512]SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D765011.vrb## faa95544b8e166beb3f337513cffbf8582dd0580 	++++
+ 348   29->0    { 362: 363}     │  │  │  ├── [109848579        8192]SHN_GVIMER_PLUS-DB1686AB89F0A1047C68B124431A0E81.redir## 2fcd8f498cc1b4d57496d0267ed146ef0c8f20c1 	++++
+ 349   29->0    { 363: 364}     │  │  │  ├── [109848580           1]SHN_GVIMER_PLUS-C426728CC2D5F59FAFBF4C235EC811681.vrb## adc83b19e793491b1c6ea0fd8b46cd9f32e592fc 	++++++++++++
+ 350   29->0    { 364: 365}     │  │  │  ├── [109848581       11346]SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D765011.viminfo## 6f3143c52b1c976563375436e8b7674e169187a2 	++
+ 351   29->0    { 365: 366}     │  │  │  ├── [109848582       47465]SHN_GVIMER_PLUS-4AF613C90777DB3932FE71074F65263E.vrb## dd2965c9432faee8eba74f5167ccd9786ce41d80 	++++
+ 352   29->0    { 366: 367}     │  │  │  ├── [109848583        3905]SHN_GVIMER_PLUS-B07B83B8C14418C03A24DEFB00077060.redir## fcde22bed6c6e7fadfe18212d5d2b39551c465bf 	++++
+ 353   29->0    { 367: 368}     │  │  │  ├── [109848584       10962]SHN_GVIMER_PLUS-1DB7DFBDD88A3FDFDFA796A8E7FFC76D.viminfo## bd35ba5796ceaf9cddca90c19c8f074ec8f2fe09 	++
+ 354   29->0    { 368: 369}     │  │  │  ├── [109848585       16957]SHN_GVIMER_PLUS-36DD4A55CED6136E10B7B29107150126.viminfo## d6a92bdf19e9905bdc7e74fc4bc1d585b5a5aa35 	++
+ 355   29->0    { 369: 370}     │  │  │  ├── [109848586         512]SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D765011.redir## faa95544b8e166beb3f337513cffbf8582dd0580 	++++
+ 356   29->0    { 370: 371}     │  │  │  ├── [109848587        3623]SHN_GVIMER_PLUS-2B221E5EBAE4D694A2484777EB6386281.vrb## cefd5d4bb40d5a1f69cd034f2c9c16a2f64b76a7 	++++
+ 357   29->0    { 371: 372}     │  │  │  ├── [109848588       28672]SHN_GVIMER_PLUS-E811691783F0CCC4887C34A774FB04A1.vrb## be36416c64211d25e8aa0490ecc171c38f10af4c 	++++
+ 358   29->0    { 372: 373}     │  │  │  ├── [109848589        4096]SHN_GVIMER_PLUS-28058D5455633722AE10A7ECEF833218.redir## 708fc10c106dd1197f7f64336f38676cd784e51b 	++++
+ 359   29->0    { 373: 374}     │  │  │  ├── [109848590       10351]SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D76501.vrb## f6c9d114a2613b1b9f3bde93112f510f203326a5 	++++
+ 360   29->0    { 374: 375}     │  │  │  ├── [109848591        6900]SHN_GVIMER_PLUS-190AD685A5245DC84ECA2B7FC9595245.vrb## f3c76e5c69d0a87f15ca5890dc0fad401de75f0f 	++++
+ 361   29->0    { 375: 376}     │  │  │  ├── [109848592       19149]SHN_GVIMER_PLUS-D4D90BAC0D7CAE23A1BADA0633626C35.viminfo## b1dea2b0b00030ee7f52339674b32166dced768e 	++
+ 362   29->0    { 376: 377}     │  │  │  ├── [109848593       14402]SHN_GVIMER_PLUS-C426728CC2D5F59FAFBF4C235EC811681.viminfo## 6f587c92be65749689ed85935b7d4384e5d60077 	++
+ 363   29->0    { 377: 378}     │  │  │  ├── [109848594        8192]SHN_GVIMER_PLUS-CC7FEE589D4DF55412579FB89AEFE340.redir## faae83f9b51f408d91916a2fecaf874f4784b69f 	++++
+ 364   29->0    { 378: 379}     │  │  │  ├── [109848595       16384]SHN_GVIMER_PLUS-E3A8CA3BF3D809E9059F8F3229101214.redir## 30f74f5f39af94b5584cfc5c23fcca0081ef40a0 	++++
+ 365   29->0    { 379: 380}     │  │  │  ├── [109848596       63000]SHN_GVIMER_PLUS-CFCDFC7E612CA2A76A368C21C552D71B.vrb## daa0774f7f346ce560deff78605a96eb871506e3 	++++
+ 366   29->0    { 380: 381}     │  │  │  ├── [109848597        7289]SHN_GVIMER_PLUS-32629E78E12FAE4ABB2EE0B25EBB1B36.viminfo## 6882f9786b0e33cb05e6a5efb7d2961631aa60b3 	++
+ 367   29->0    { 381: 382}     │  │  │  ├── [109848598       20108]SHN_GVIMER_PLUS-3D5C9FBD485FC6E55A63D6A50924A526.vrb## 276a5cb0b09e94586c07794e1bf59fb71c69ffee 	++++
+ 368   29->0    { 382: 383}     │  │  │  ├── [109848599       32644]SHN_GVIMER_PLUS-0DC33CB82D499314F2660FEB70A265DA.viminfo## 2080bfe8a80131fd4d64a9cf3405814a510c20a5 	++
+ 369   29->0    { 383: 384}     │  │  │  ├── [109848600       12866]SHN_GVIMER_PLUS-5F848ECF424EEEE0DED8656A7E9B2864.viminfo## c9b8396e8fb39642fe7a9bc0dee169f8d47dc80f 	++
+ 370   29->0    { 384: 385}     │  │  │  ├── [109848601       16632]SHN_GVIMER_PLUS-71381CAD76BC8CE276A7F52643BF5566.viminfo## aea9a3e25ea491968e16e427d23831c7e099a1b5 	++
+ 371   29->0    { 385: 386}     │  │  │  ├── [109848602       13595]SHN_GVIMER_PLUS-4AF613C90777DB3932FE71074F65263E.viminfo## 281513f4a3314676debf8d1d2e31cd7a5329884f 	++
+ 372   29->0    { 386: 387}     │  │  │  ├── [109848603       10351]SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D76501.redir## f6c9d114a2613b1b9f3bde93112f510f203326a5 	++++
+ 373   29->0    { 387: 388}     │  │  │  ├── [109848604       67809]SHN_GVIMER_PLUS-1DB7DFBDD88A3FDFDFA796A8E7FFC76D.vrb## 813b4ec1b28a3f4aed766c80f51da80e9ccebe55 	++++
+ 374   29->0    { 388: 389}     │  │  │  ├── [109848605           1]SHN_GVIMER_PLUS-F62CC14062E5E64F6D347105EEC1E1A61.redir## adc83b19e793491b1c6ea0fd8b46cd9f32e592fc 	++++++++++++
+ 375   29->0    { 389: 390}     │  │  │  ├── [109848606        4096]SHN_GVIMER_PLUS-28058D5455633722AE10A7ECEF833218.vrb## 708fc10c106dd1197f7f64336f38676cd784e51b 	++++
+ 376   29->0    { 390: 391}     │  │  │  ├── [109848607       19149]SHN_GVIMER_PLUS-799DE9196FAF493E9EEC7BD8C3A09EC8.viminfo## 2e2bb5667958cef36250d96395767b752089712f 	++
+ 377   29->0    { 391: 392}     │  │  │  ├── [109848608       18068]SHN_GVIMER_PLUS-1B274763FC2C601C79A73F9FA1B40221.viminfo## 89cc10957edb9c7d386705a140b25fbb427fe852 	++
+ 378   29->0    { 392: 393}     │  │  │  ├── [109848609       12988]SHN_GVIMER_PLUS-71381CAD76BC8CE276A7F52643BF55661.vrb## 936c1107caa7e05c364f97f1269326bcdf43f16f 	++++
+ 379   29->0    { 393: 394}     │  │  │  ├── [109848610       19002]SHN_GVIMER_PLUS-97BFF02A6580E5051409DF7CD4A0A282.viminfo## 71d342655c8ba0c8a8851e38c2ba26a820d3bbe9 	++
+ 380   29->0    { 394: 395}     │  │  │  ├── [109848611       28524]SHN_GVIMER_PLUS-C426728CC2D5F59FAFBF4C235EC81168.viminfo## 71facd536d7f69316996bed834e4e1e326c11570 	++
+ 381   29->0    { 395: 396}     │  │  │  ├── [109848612       36864]SHN_GVIMER_PLUS-81703724446B08A6ED1348D28A7D50DF.vrb## 17484dced061ca5535fc9431f3b31ab54c90feeb 	++++
+ 382   29->0    { 396: 397}     │  │  │  ├── [109848613        4113]SHN_GVIMER_PLUS-1B274763FC2C601C79A73F9FA1B40221.redir## a021bedda3f36c4683c3d6c43486374d637066a0 	++++
+ 383   29->0    { 397: 398}     │  │  │  ├── [109848614       28672]SHN_GVIMER_PLUS-E811691783F0CCC4887C34A774FB04A1.hardlink.redir## be36416c64211d25e8aa0490ecc171c38f10af4c 	++++
+ 384   29->0    { 398: 399}     │  │  │  ├── [109848615       13182]SHN_GVIMER_PLUS-2B221E5EBAE4D694A2484777EB6386281.viminfo## 402940abe39d8e44d77349b074f571894a6fd5f1 	++
+ 385   29->0    { 399: 400}     │  │  │  ├── [109848616       77824]SHN_GVIMER_PLUS-C4E489F4898B013DD1D1E3F9341E1E41.redir## 88e4dd2bcc11161f921d0d03307844a3e60be1df 	++++
+ 386   29->0    { 400: 401}     │  │  │  ├── [109848617        8363]SHN_GVIMER_PLUS-09867A351575E2C79FAAE2ECFDBC683F.viminfo## c6b6e68d804d91afb357bb5fd454d145bbb077c9 	++
+ 387   29->0    { 401: 402}     │  │  │  ├── [109848618        8787]SHN_GVIMER_PLUS-71381CAD76BC8CE276A7F52643BF55661.viminfo## 6bf28b6ce566811b36ed34970f488c0e84bb9add 	++
+ 388   29->0    { 402: 403}     │  │  │  ├── [109848619       57344]SHN_GVIMER_PLUS-FB6F952B3F30FA65680D69BF612091F5.redir## e6ef8c356859897ec7ab263779943481f1c10b52 	++++
+ 389   29->0    { 403: 404}     │  │  │  ├── [109848620       17118]SHN_GVIMER_PLUS-C9C3A50715E10ECC5CECD0C9474616C3.viminfo## c87b69d70417324bbbbab3c927a4b78adb8706d2 	++
+ 390   29->0    { 404: 405}     │  │  │  ├── [109848621        9070]SHN_GVIMER_PLUS-B07B83B8C14418C03A24DEFB00077060.viminfo## c83a157a63cc01c8a640a54b090d9cf52e0a3e61 	++
+ 391   29->0    { 405: 406}     │  │  │  ├── [109848622        4113]SHN_GVIMER_PLUS-1B274763FC2C601C79A73F9FA1B40221.vrb## a021bedda3f36c4683c3d6c43486374d637066a0 	++++
+ 392   29->0    { 406: 407}     │  │  │  ├── [109848623       14933]SHN_GVIMER_PLUS-C4ED654877370BFA4E54474B94A3F436.viminfo## f8b6cd647dd5aa2b5e309fbbd036437afdd0c0ea 	++
+ 393   29->0    { 407: 398}     │  │  │  ├── [109848614       28672]SHN_GVIMER_PLUS-E811691783F0CCC4887C34A774FB04A1.redir## be36416c64211d25e8aa0490ecc171c38f10af4c 	++++
+ 394   29->0    { 408: 408}     │  │  │  ├── [109848624       52475]SHN_GVIMER_PLUS-5F848ECF424EEEE0DED8656A7E9B2864.vrb## 4716c0386e6ffaf519d689ea5671ed8fe57a802f 	++++
+ 395   29->0    { 409: 409}     │  │  │  ├── [109848625       10894]SHN_GVIMER_PLUS-F62CC14062E5E64F6D347105EEC1E1A61.viminfo## b2c97931b3c9b0dc051880b96f501b026912505a 	++
+ 396   29->0    { 410: 410}     │  │  │  ├── [109848626       21282]SHN_GVIMER_PLUS-D4FF772863A24E8C1DD3F238EABDD28A.viminfo## 2ab8aefe992f749123c1df8c0c5ad40093f3e9d3 	++
+ 397   29->0    { 411: 411}     │  │  │  ├── [109848627       14557]SHN_GVIMER_PLUS-C8C81B539180F73ED05BD3AA7C211B80.viminfo## 56672cad9d0287aec7bce92cc7a528db9a0ae756 	++
+ 398   29->0    { 412: 412}     │  │  │  ├── [109848628       20108]SHN_GVIMER_PLUS-3D5C9FBD485FC6E55A63D6A50924A526.redir## 276a5cb0b09e94586c07794e1bf59fb71c69ffee 	++++
+ 399   29->0    { 413: 413}     │  │  │  ├── [109848629       57344]SHN_GVIMER_PLUS-669C74AB39EF1AA3C8E9D66ABCE7D992.redir## aeaa10e0b37ce6ba5350bc880c3c536b081c7b9d 	++++
+ 400   29->0    { 414: 414}     │  │  │  ├── [109848630        8192]SHN_GVIMER_PLUS-DB1686AB89F0A1047C68B124431A0E81.vrb## 2fcd8f498cc1b4d57496d0267ed146ef0c8f20c1 	++++
+ 401   29->0    { 415: 415}     │  │  │  ├── [109848631       19599]SHN_GVIMER_PLUS-7AB5DCEAAFD134A6D4BFDEA6A5018163.viminfo## d283afb50a0ab264cac7c4c972cde3d4b06c1044 	++
+ 402   29->0    { 416: 416}     │  │  │  ├── [109848632        6276]SHN_GVIMER_PLUS-31017DD9276BF0323982DA63E74F4B02.vrb## 7ce57a0ac634dc33067a30f0072e6517c6aa81a8 	++++
+ 403   29->0    { 417: 417}     │  │  │  ├── [109848633       52475]SHN_GVIMER_PLUS-5F848ECF424EEEE0DED8656A7E9B2864.redir## 4716c0386e6ffaf519d689ea5671ed8fe57a802f 	++++
+ 404   29->0    { 418: 418}     │  │  │  ├── [109848634       11491]SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D76501.viminfo## f1f1bf7a439bbf3cb85471717612457f875c1982 	++
+ 405   29->0    { 419: 419}     │  │  │  ├── [109848635       57344]SHN_GVIMER_PLUS-FB6F952B3F30FA65680D69BF612091F5.vrb## e6ef8c356859897ec7ab263779943481f1c10b52 	++++
+ 406   29->0    { 420: 420}     │  │  │  ├── [109848636       12988]SHN_GVIMER_PLUS-71381CAD76BC8CE276A7F52643BF55661.redir## 936c1107caa7e05c364f97f1269326bcdf43f16f 	++++
+ 407   29->0    { 421: 421}     │  │  │  ├── [109848637       25660]SHN_GVIMER_PLUS-F62CC14062E5E64F6D347105EEC1E1A6.viminfo## 8372a92168768fdc165dbfe231a47a8ece88d617 	++
+ 408   29->0    { 422: 422}     │  │  │  ├── [109848638        6900]SHN_GVIMER_PLUS-190AD685A5245DC84ECA2B7FC9595245.redir## f3c76e5c69d0a87f15ca5890dc0fad401de75f0f 	++++
+ 409   29->0    { 423: 423}     │  │  │  ├── [109848639        9757]SHN_GVIMER_PLUS-C93A0BC0398237EE94B8884C42A3FD47.viminfo## f7706585bc04f10e6381fe3d293c2e932fff3bf1 	++
+ 410   29->0    { 424: 424}     │  │  │  ├── [109848640           1]SHN_GVIMER_PLUS-C426728CC2D5F59FAFBF4C235EC811681.redir## adc83b19e793491b1c6ea0fd8b46cd9f32e592fc 	++++++++++++
+ 411   29->0    { 425: 425}     │  │  │  ├── [109848641        3623]SHN_GVIMER_PLUS-2B221E5EBAE4D694A2484777EB6386281.redir## cefd5d4bb40d5a1f69cd034f2c9c16a2f64b76a7 	++++
+ 412   29->0    { 426: 426}     │  │  │  ├── [109848642        6445]SHN_GVIMER_PLUS-3D5C9FBD485FC6E55A63D6A50924A526.viminfo## 4496bdcbd805c4bc99126867b43763998e6fb356 	++
+ 413   29->0    { 427: 427}     │  │  │  ├── [109848643       11404]SHN_GVIMER_PLUS-CFCDFC7E612CA2A76A368C21C552D71B.viminfo## e6f91c358e491a594991b28e28764f87c6663ebf 	++
+ 414   29->0    { 428: 428}     │  │  │  ├── [109848644       16384]SHN_GVIMER_PLUS-E3A8CA3BF3D809E9059F8F3229101214.vrb## 30f74f5f39af94b5584cfc5c23fcca0081ef40a0 	++++
+ 415   29->0    { 429: 429}     │  │  │  ├── [109848645       11809]SHN_GVIMER_PLUS-190AD685A5245DC84ECA2B7FC9595245.viminfo## fe78585b92341dfb18c2e85201c99af6108ece17 	++
+ 416   29->0    { 430: 430}     │  │  │  ├── [109848646       36864]SHN_GVIMER_PLUS-81703724446B08A6ED1348D28A7D50DF.redir## 17484dced061ca5535fc9431f3b31ab54c90feeb 	++++
+ 417   29->0    { 431: 431}     │  │  │  ├── [109848647        8384]SHN_GVIMER_PLUS-6B5863D025DDC6C253052495142CFBF3.viminfo## fbe901834e069932130da5d636b7090edf1765f2 	++
+ 418   29->0    { 432: 432}     │  │  │  ├── [109848648        3874]SHN_GVIMER_PLUS-32629E78E12FAE4ABB2EE0B25EBB1B36.vrb## b5a06e3e18663ed7a231a2e28980d6c10d7f5c37 	++++
+ 419   29->0    { 433: 433}     │  │  │  ├── [109848649        6276]SHN_GVIMER_PLUS-31017DD9276BF0323982DA63E74F4B02.redir## 7ce57a0ac634dc33067a30f0072e6517c6aa81a8 	++++
+ 420   29->0    { 434: 434}     │  │  │  ├── [109848650       67809]SHN_GVIMER_PLUS-1DB7DFBDD88A3FDFDFA796A8E7FFC76D.redir## 813b4ec1b28a3f4aed766c80f51da80e9ccebe55 	++++
+ 421   29->0    { 435: 435}     │  │  │  └── [109848651           1]SHN_GVIMER_PLUS-F62CC14062E5E64F6D347105EEC1E1A61.vrb## adc83b19e793491b1c6ea0fd8b46cd9f32e592fc 	++++++++++++
+ 422   28->0    { 436: 436}     │  │  ├── [109848558          31]vimrc-mastar.vim                   
+ 423   28->30   { 437: 437}     │  │  ├── [109953138  DIR =21]  mased
+ 424   30->0    { 438: 438}     │  │  │  ├── [109848652          36]ac.mased.vim                       
+ 425   30->0    { 439: 439}     │  │  │  ├── [109848653         573]cdef.mased.vim                     ## 90a0bafbe1bb42f5c90b8fbb3ffea47d5f4835a1 	++
+ 426   30->0    { 440: 440}     │  │  │  ├── [109848654         861]srcmod.mased.vim                   ## fdddb0fc6473d8b18286584cd0aa678cbd7580ea 	++
+ 427   30->0    { 441: 441}     │  │  │  ├── [109848655         376]srcpdi.mased.vim                   ## 27016ab1f04d354f2ae4b2ec3a68df2ebe6f8a0f 	++
+ 428   30->0    { 442: 442}     │  │  │  ├── [109848656         312]srcsql.mased.vim                   ## 0890089be9850bec72f487910cb53fbc18d192f7 	++
+ 429   30->0    { 443: 443}     │  │  │  ├── [109848657          39]vimrc.mased.vim                    
+ 430   30->0    { 444: 444}     │  │  │  ├── [109848658          92]srcevsql.mased.vim                 ## b4714b4e0e57bdcb7cd839db98f7a9cfcef72892 	++
+ 431   30->0    { 445: 445}     │  │  │  ├── [109848659         370]srctoexpire.mased.vim              ## a129bd67dfe9943545083316f8c6a413c7fe7bc1 	++
+ 432   30->0    { 446: 446}     │  │  │  ├── [109848660         633]src.mased.vim                      ## f50cdceed1bbf6b88129fa0a78e260c841cc1d05 	++
+ 433   30->0    { 447: 447}     │  │  │  ├── [109848661         672]srclevinfo.mased.vim               ## 8ce8d8d3e6a4153e432986a9ae5201b6ef0de753 	++
+ 434   30->0    { 448: 448}     │  │  │  ├── [109848662         463]srcsccb.mased.vim                  ## 39e467b11c00edac90e699768481b46b242b0ff8 	++
+ 435   30->0    { 449: 449}     │  │  │  ├── [109848663         341]srciface.mased.vim                 ## 61aa3ef42a4244a3586253855fcea9095ba35c25 	++
+ 436   30->0    { 450: 450}     │  │  │  ├── [109848664          94]srcupath.mased.vim                 ## ed9c416ca2f9236f02b8cc01627fbb82320088de 	++
+ 437   30->0    { 451: 451}     │  │  │  ├── [109848665        1222]srcconfig.mased.vim                ## fe0e535aaa5f67815a38d27378b5ac77dd073b27 	++
+ 438   30->0    { 452: 452}     │  │  │  ├── [109848666          37]shn.mased.vim                      
+ 439   30->0    { 453: 453}     │  │  │  ├── [109848667         149]srcufilter.mased.vim               ## b7d7fc979fee35ee544d82f6808c6330b206bead 	++
+ 440   30->0    { 454: 454}     │  │  │  ├── [109848668          36]sh.mased.vim                       
+ 441   30->0    { 455: 455}     │  │  │  ├── [109848669         873]srctypes.mased.vim                 ## cb6374a01124f19d273d44dad6a7fa01a6da03da 	++
+ 442   30->0    { 456: 456}     │  │  │  ├── [109848670         438]m.mased.vim                        ## 97937997d63f1243beeff20904448c2e76686146 	++
+ 443   30->0    { 457: 457}     │  │  │  ├── [109848671         644]srclow.mased.vim                   ## b8bc9c337d58b6972a11f30f0ef2abfe5874bdd0 	++
+ 444   30->0    { 458: 458}     │  │  │  └── [109848672         393]srcbegfin.mased.vim                ## 642f31801103f56df3754f2f9e8274c7b34ab250 	++
+ 445   28->0    { 459: 459}     │  │  ├── [109848559          29]gvim-funcs.vim                     
+ 446   28->0    { 460: 460}     │  │  ├── [109848560        6981]opened.20150531.txt                ## 5d3de948cf594ab3686cd9c58ab85ad74e92bade 	++
+ 447   28->0    { 461: 461}     │  │  ├── [109848561          32]gvim-vimenter.vim                  
+ 448   28->0    { 462: 462}     │  │  └── [109848562          32]gvimrc-mastar.vim                  
+ 449   18->0    { 463: 463}     │  ├── [109848257          11]m4zoc                              
+ 450   18->31   { 464: 464}     │  ├── [109953139  DIR =2]   boxes
+ 451   31->0    { 465: 465}     │  │  ├── [109848673          43]dropbox.com.duf                    
+ 452   31->0    { 466: 466}     │  │  └── [109848674          37]box.com.duf                        
+ 453   18->0    { 467: 467}     │  ├── [109848258          24]zocvdate.txt                       
+ 454   18->0    { 468: 468}     │  ├── [109848259           9]shn                                
+ 455   18->32   { 469: 469}     │  ├── [109953140  DIR =21]  human
+ 456   32->0    { 470: 470}     │  │  ├── [109848675           6]__.gitignore                       ## 37ccb20ee0e1ac92de14ebae49a693d05a8342af 	++
+ 457   32->34   { 472: 472}     │  │  ├── [109953142  DIR =9]   doc
+ 458   34->0    { 473: 473}     │  │  │  ├── [109848676        4185]x1.txt                             ## 9da14a23ce5e0122b08e4de6e402a77fd11010d0 	++
+ 459   34->0    { 474: 474}     │  │  │  ├── [109848677        5819]duf1.dia                           ## d12c973d4b7ee4bdff62d3c4bb4baf6c7364ce20 	++++
+ 460   34->0    { 475: 475}     │  │  │  ├── [109848678        4273]x3.txt                             ## 5f5e6742d629c8cb55dc11d99589e6c1f0b6744d 	++
+ 461   34->0    { 476: 476}     │  │  │  ├── [109848679        5848]duf1.dia~                          ## 40cb1ee2d3f0276699ab7a265bf06ee611b2febc 	++
+ 462   34->0    { 477: 477}     │  │  │  ├── [109848680        4986]x3a.txt                            ## deeb282720631c0333c70992eb699c3f9707c58a 	++++
+ 463   34->0    { 478: 478}     │  │  │  ├── [109848681        1916]x2.txt                             ## 91f7582ac61a48c31c5a4848d7ca240b8b4365b5 	++
+ 464   34->0    { 479: 479}     │  │  │  ├── [109848682        6346]duf.dia                            ## 6e83628c00b610a3f84e71dbfb2fdc5a2b975a67 	++
+ 465   34->0    { 480: 480}     │  │  │  ├── [109848683        5819]duf.dia~                           ## d12c973d4b7ee4bdff62d3c4bb4baf6c7364ce20 	++++
+ 466   34->0    { 481: 481}     │  │  │  └── [109848684        4986]x3a1.txt                           ## deeb282720631c0333c70992eb699c3f9707c58a 	++++
+ 467   32->36   { 483: 483}     │  │  └── [109953144  DIR =11]  examples
+ 468   36->0    { 484: 484}     │  │      ├── [109848685       26036]exif-data.c                        ## 941ba2a571d845223a3bc805162cd8997f12dc56 	++
+ 469   36->0    { 485: 485}     │  │      ├── [109848686        1177]2.c                                ## 28188ba51293cde779ab82f1aa20cdc6f6abaaa5 	++++
+ 470   36->0    { 486: 486}     │  │      ├── [109848687        2384]sqlite-func.c                      ## adaa52412d3937254b4b930d894876dacf98857c 	++
+ 471   36->0    { 487: 487}     │  │      ├── [109848688        1770]exifthumb.c                        ## ae92d3fe51606a7340646433d79af48bfb8c1b93 	++
+ 472   36->0    { 488: 488}     │  │      ├── [109848689        1419]configure.ac.20131026.110837       ## c3ce44aaecca4b17392010659ac8ef70fa51d05d 	++
+ 473   36->0    { 489: 489}     │  │      ├── [109848690        1177]1.c                                ## 28188ba51293cde779ab82f1aa20cdc6f6abaaa5 	++++
+ 474   36->0    { 490: 490}     │  │      ├── [109848691        2235]example3.c                         ## 2b2de665b6499362e9f313d4726f7ef7ae722f88 	++
+ 475   36->0    { 491: 491}     │  │      ├── [109848692        2981]3.c                                ## 509b300045c62babac21cac01b12862cfae10f50 	++
+ 476   36->0    { 492: 492}     │  │      ├── [109848693        3940]foreign-example.c                  ## 3df4aa6acc21671c38b256453b47aac4a133ce2d 	++
+ 477   36->0    { 493: 493}     │  │      ├── [109848694         853]0.c                                ## 42e05be5984874995acb7956b1e7e1ea7616562d 	++
+ 478   36->0    { 494: 494}     │  │      └── [109848695        1209]4.c                                ## 24da5371ad126dda9f5f0e2409262799250c4e3a 	++
+ 479   18->37   { 495: 495}     │  ├── [109953145  DIR =281] src
+ 480   37->0    { 496: 496}     │  │  ├── [109848696        8527]evsql_selector.c                   ## 5cd6c9f774f74716826454f04a9b95403d0029b4 	++
+ 481   37->0    { 497: 497}     │  │  ├── [109848697        3383]duf_status.c                       ## 70a0b8b9b7d62d713fbd236408408bc9e5c3f94a 	++
+ 482   37->0    { 498: 498}     │  │  ├── [109848698        5157]duf_filedata.c                     ## bacc5c324816158d7280dce303b7597f8d120b0e 	++
+ 483   37->0    { 499: 499}     │  │  ├── [109848699        2644]duf_match.c                        ## 96de76e51e62d65214622a1ec861c617cabd5c75 	++
+ 484   37->38   { 500: 500}     │  │  ├── [109953146  DIR =148] inc
+ 485   38->0    { 501: 501}     │  │  │  ├── [109848829         709]duf_pdi_reinit.h                   ## 306db072d991e71bc4767a6cdd254dd1c595c014 	++
+ 486   38->0    { 502: 502}     │  │  │  ├── [109848830       18328]Makefile.in                        ## a9ab669c8de894055172d9337be6c4c06b792b3e 	++
+ 487   38->0    { 503: 503}     │  │  │  ├── [109848831         372]duf_pdi_credel.h                   ## 9b2e163ac59218169330369d3e6db4a89d2f22ec 	++
+ 488   38->0    { 504: 504}     │  │  │  ├── [109848832         224]duf_ufilter_ref.h                  ## d66100ae9518130afd37e8786ee8521d2955312a 	++
+ 489   38->0    { 505: 505}     │  │  │  ├── [109848833        1987]duf_ufilter_types.h                ## ee8a425fdb5733572eae9f534395f6b7a08fdcb4 	++
+ 490   38->0    { 506: 506}     │  │  │  ├── [109848834         259]duf_levinfo_context.h              ## 105b6fbd2d71cfc09a3ee4e226fd4821cebd5497 	++
+ 491   38->0    { 507: 507}     │  │  │  ├── [109848835         187]duf_ufilter_bind.h                 ## ffc80a74e6679f698be6928aca72889eecb00dd4 	++
+ 492   38->0    { 508: 508}     │  │  │  ├── [109848836        2953]duf_option_defs.h                  ## fcec9cea2e89eab2469dc5137d294f42db73cf98 	++
+ 493   38->0    { 509: 509}     │  │  │  ├── [109848837        6623]duf_levinfo_ref_def.h              ## 1db525fc81299912e098135d0a99ad7e776bd595 	++
+ 494   38->0    { 510: 510}     │  │  │  ├── [109848838         463]duf_base_types.h                   ## be2ee2a19f4918b152d5983aa5edf1644c2d1b88 	++
+ 495   38->0    { 511: 511}     │  │  │  ├── [109848839         899]duf_config_types.h                 ## bbd205c589c8f64ca6a8b9a9a0b4c3c419d08208 	++
+ 496   38->0    { 512: 512}     │  │  │  ├── [109848840         339]duf_sql_field.h                    ## 33d990c7ac02e58d14fbae9599ec4580554c04a4 	++
+ 497   38->0    { 513: 513}     │  │  │  ├── [109848841         324]duf_dbg.h                          ## 1c7658eb5dc37e318418e1e87b19426266d084c2 	++
+ 498   38->0    { 514: 514}     │  │  │  ├── [109848842         684]duf_fileinfo_types.h               ## c9dedff2dc0b0bbdea60165fc380b1a9f3912e27 	++
+ 499   38->0    { 515: 515}     │  │  │  ├── [109848843         272]duf_option_typed.h                 ## 89edba9970f74ef7702c78d0a9517c2108e94964 	++
+ 500   38->0    { 516: 516}     │  │  │  ├── [109848844        5177]duf_option_types.h                 ## dd0e8c41402b765f1dc2faea50459ab4738a7c86 	++
+ 501   38->0    { 517: 517}     │  │  │  ├── [109848845         217]duf_options_string.h               ## b9b845ccc02b68366b68022f951b9e8032b4dab3 	++
+ 502   38->0    { 518: 518}     │  │  │  ├── [109848846         362]duf_option_misc.h                  ## f69ae00840ea852245ddf65c0cea4cdfc52b1f12 	++
+ 503   38->0    { 519: 519}     │  │  │  ├── [109848847        2060]sql_selected_defs.h                ## 91685626bf25c4fc81f6f7043bd2a9aa4a572b08 	++
+ 504   38->0    { 520: 520}     │  │  │  ├── [109848848         206]duf_options_env.h                  ## d2587159f02b71fc73ad322a00b6cdcb922b7a9a 	++
+ 505   38->0    { 521: 521}     │  │  │  ├── [109848849        1005]duf_sccb_eval_std.h                ## b99c9ac85712a081a05a845c3cf8a4dbdf55ce8e 	++
+ 506   38->0    { 522: 522}     │  │  │  ├── [109848850         596]duf_sql_field2.h                   ## 8d6ea4d5b4497908cec1cc2050c76eb95d58a52c 	++
+ 507   38->0    { 523: 523}     │  │  │  ├── [109848851          97]std_fieldsets.h                    ## 6cc0387dc6c8c7368ecc5bd9319844973a577fc0 	++
+ 508   38->0    { 524: 524}     │  │  │  ├── [109848852        4718]sql_beginning_selected.h           ## 492871b35b11bf40c53769f2b2e0f4565223bc8c 	++
+ 509   38->0    { 525: 525}     │  │  │  ├── [109848853         364]duf_sccb_begfin.h                  ## a3ac41d74909c31eda5f1b66da78fa9fda85a9f4 	++
+ 510   38->0    { 526: 526}     │  │  │  ├── [109848854        2399]duf_trace_defs_if.h                ## 5dbe49a083e493efd504a41b37934678710e72f6 	++
+ 511   38->0    { 527: 527}     │  │  │  ├── [109848855          97]std_selectors.h                    ## 6c1bcceecb9f870243a581872834c4be145c1a56 	++
+ 512   38->0    { 528: 528}     │  │  │  ├── [109848856         176]duf_li_credel.h                    ## f39ea8fbe09b339e30750261530ca41c8efbfcf7 	++
+ 513   38->0    { 529: 529}     │  │  │  ├── [109848857         134]duf_maindb_info.h                  ## 9a091b3831c5c73fc5655d9e020eac734c4fed41 	++
+ 514   38->0    { 530: 530}     │  │  │  ├── [109848858         189]duf_eval_at_config.h               ## dd7161e83a51f28ec090553f86a4ef7cfcc5a204 	++
+ 515   38->0    { 531: 531}     │  │  │  ├── [109848859         547]duf_option.h                       ## a85791b5830f575002bb78bbe4c48cf2b03399b3 	++
+ 516   38->0    { 532: 532}     │  │  │  ├── [109848860         159]duf_config4trace_ref.h             ## 5c2e1d777b2eebcace9e667529d6c7b0749922da 	++
+ 517   38->0    { 533: 533}     │  │  │  ├── [109848861         664]duf_levinfo.h                      ## d703153a845495c7b835c7f28e745e2b281619fe 	++
+ 518   38->0    { 534: 534}     │  │  │  ├── [109848862        4386]sql_tables_defs.h                  ## 522abe7a86c3f98f66590949947263e1b2dd0024 	++
+ 519   38->0    { 535: 535}     │  │  │  ├── [109848863         324]duf_item_scan2.h                   ## 30e4984cac1ae46d4fc3dc68e1cae864a2a3f8de 	++
+ 520   38->0    { 536: 536}     │  │  │  ├── [109848864         443]duf_sql.h                          ## 65c5ea7ea6b789ceb2652693f321819fb2dfea5a 	++
+ 521   38->0    { 537: 537}     │  │  │  ├── [109848865         940]duf_sql1.h                         ## ac525d44c01666c8d8b67fc08c907f2c4c6915d0 	++
+ 522   38->0    { 538: 538}     │  │  │  ├── [109848866        1453]duf_mod_defs.h                     ## 45168a5c6607e275c31685235c6820152b2f3c4a 	++
+ 523   38->0    { 539: 539}     │  │  │  ├── [109848867         292]duf_trace_defs_sys.h               ## a74cd5ccf61d9de92fb0f9c68d45a9e68ae89850 	++
+ 524   38->0    { 540: 540}     │  │  │  ├── [109848868        2475]duf_print_defs.h                   ## 9a0219ea220d82ed5c519d8bad3ec16b7d2a17af 	++
+ 525   38->0    { 541: 541}     │  │  │  ├── [109848869        1056]duf_action_table.h                 ## 12659d00f496d6066765160ce9049eff5882acea 	++
+ 526   38->0    { 542: 542}     │  │  │  ├── [109848870        8609]duf_sql_const.h                    ## 8f124bd3509711b4a347dcb380a105c451a3ba3b 	++
+ 527   38->0    { 543: 543}     │  │  │  ├── [109848871        1991]duf_format_types.h                 ## 08ea30578346958416b2cd03e848dcf1506d95d1 	++
+ 528   38->0    { 544: 544}     │  │  │  ├── [109848872        1478]duf_option_names.h                 ## 70b830bc60f6feb9012f708b3b9b5e49aaf1ee70 	++
+ 529   38->0    { 545: 545}     │  │  │  ├── [109848873         706]duf_pdi.h                          ## aa28a61c88417d7287a422683d2653ac38cf5672 	++
+ 530   38->0    { 546: 546}     │  │  │  ├── [109848874         433]duf_levinfo_updown.h               ## 77638f695f6c8815b8da4c41ab872d488de4ea2c 	++
+ 531   38->0    { 547: 547}     │  │  │  ├── [109848875         113]duf_dirent.h                       ## cbca96478b3b4031f7be2c10742c57bd4672e848 	++
+ 532   38->0    { 548: 548}     │  │  │  ├── [109848876        4596]duf_hook_types.h                   ## 05f5539d930b2ce52575ba067c0271fb93fbc2f5 	++
+ 533   38->0    { 549: 549}     │  │  │  ├── [109848877         177]duf_option_tmpdb.h                 ## 8e668684cad3111bf1b7c7a47d5020beb745d7c9 	++
+ 534   38->0    { 550: 550}     │  │  │  ├── [109848878         655]duf_fun_types.h                    ## c44574b2a04c4622d5f0294eff7cd3f4c69b1c7f 	++
+ 535   38->0    { 551: 551}     │  │  │  ├── [109848879         424]sql_beginning_types.h              ## fec28eaa80e5e33004f594b76eb0660022a7593a 	++
+ 536   38->0    { 552: 552}     │  │  │  ├── [109848880         337]duf_pathinfo_credel.h              ## 4edf1619452e863d67d49e36819987b71909922e 	++
+ 537   38->0    { 553: 553}     │  │  │  ├── [109848881         360]duf_filedata.h                     ## 98f43bc0ee4d6555ab56fb3ad92eb46233123929 	++
+ 538   38->0    { 554: 554}     │  │  │  ├── [109848882         899]duf_record_types.h                 ## 20edb691b78d410afdb087adb8fefb8ae07179b9 	++
+ 539   38->0    { 555: 555}     │  │  │  ├── [109848883         326]duf_maindb.h                       ## d6d7362692dbb5cf76019a66f07bbb4e0b8ca04e 	++
+ 540   38->0    { 556: 556}     │  │  │  ├── [109848884        1873]duf_start_end.h                    ## 385a21e1c5e4e3902060263a17c906f78bd37fcd 	++
+ 541   38->0    { 557: 557}     │  │  │  ├── [109848885        6997]duf_error_defs.h                   ## d6b89f215c479754379279a628494a414a551f05 	++
+ 542   38->0    { 558: 558}     │  │  │  ├── [109848886        1952]duf_flags_types.h                  ## 2f16f72d15ead403598ee8f616a128b977839d71 	++
+ 543   38->0    { 559: 559}     │  │  │  ├── [109848887         156]sql_beginning_common.h             ## 8e47bbffdb1dc5512a9d48c0f8084b2b3db2ab2e 	++
+ 544   38->0    { 560: 560}     │  │  │  ├── [109848888        4729]duf_optable_def.h                  ## 37520658546f43978d474cecafa49460750e8c8d 	++
+ 545   38->0    { 561: 561}     │  │  │  ├── [109848889         202]duf_options_cli.h                  ## a57a4733953b6cd12dbd61339f9497f7a25bd789 	++
+ 546   38->0    { 562: 562}     │  │  │  ├── [109848890         344]duf_prepare_actions.h              ## 033be825ca1554da60ca3a84ce913b81c34dd8db 	++
+ 547   38->0    { 563: 563}     │  │  │  ├── [109848891         486]duf_sccb_handle.h                  ## 94f4b766050ee29fe1d9d7014781da8fd2e00909 	++
+ 548   38->0    { 564: 564}     │  │  │  ├── [109848892        2704]duf_cli_types.h                    ## 66114a45782f80e91316e02de861bdfa56e711da 	++
+ 549   38->0    { 565: 565}     │  │  │  ├── [109848893         733]duf_option_descr.h                 ## 8ffde1a2396a423ac93732804cb2ed0ff87f0b2e 	++
+ 550   38->0    { 566: 566}     │  │  │  ├── [109848894         357]duf_status.h                       ## b6f03ee96851669a49c4e7466f3103ebcf13c79b 	++
+ 551   38->0    { 567: 567}     │  │  │  ├── [109848895         201]duf_item_types.h                   ## 41e300c929a3479c2cf459c5c4870e92b666071d 	++
+ 552   38->0    { 568: 568}     │  │  │  ├── [109848896        1740]duf_error_types.h                  ## ea192a64feafda73cb5bb9b46927ab2048be1569 	++
+ 553   38->0    { 569: 569}     │  │  │  ├── [109848897         367]std_mod_sets.h                     ## 728d311d37c387c374bd7884be1858811c9f8509 	++
+ 554   38->0    { 570: 570}     │  │  │  ├── [109848898         373]duf_match.h                        ## 55a40bccbd91ed2acf1220a9a61563890e4d5f8e 	++
+ 555   38->0    { 571: 571}     │  │  │  ├── [109848899        7017]duf_levinfo_ref.h                  ## b8e2a68a42b6d4f074fde1c1cf7ba2abf1b7ae21 	++
+ 556   38->0    { 572: 572}     │  │  │  ├── [109848900        1060]duf_levinfo_openclose.h            ## 7453eb5e90e1d0aff0941b75869986c84a96b617 	++
+ 557   38->0    { 573: 573}     │  │  │  ├── [109848901         634]duf_utils_print.h                  ## f938158d1e4808a8197e7d85810eaf7f1bfb07d1 	++
+ 558   38->0    { 574: 574}     │  │  │  ├── [109848902         680]duf_sccb_eval.h                    ## 51e5e38a025fffd599e5ebaf083a0a1a983578ab 	++
+ 559   38->0    { 575: 575}     │  │  │  ├── [109848903         226]duf_pdi_types.h                    ## 2721d6c60279a39dbcb93ec2c3c40f64fda12917 	++
+ 560   38->0    { 576: 576}     │  │  │  ├── [109848904        2420]duf_sql_defs.h                     ## 90c61df1f60fa0ff2fcdae30ac9454ab178b1073 	++
+ 561   38->0    { 577: 577}     │  │  │  ├── [109848905         199]duf_dirent_scan2.h                 ## 64eecd0ffcb0186f94685c61d2f2e5706be2f7f4 	++
+ 562   38->0    { 578: 578}     │  │  │  ├── [109848906         539]duf_sccb.h                         ## 626115b2c91c5929ac19a5cb051b3e37352ddd53 	++
+ 563   38->0    { 579: 579}     │  │  │  ├── [109848907         725]duf_options_file.h                 ## f829c4ac15bb050dffe76cf979a6d6687c8fa467 	++
+ 564   38->0    { 580: 580}     │  │  │  ├── [109848908         295]duf_ufilter.h                      ## 53580b423e632321825defc6ad49a8be118cfccf 	++
+ 565   38->0    { 581: 581}     │  │  │  ├── [109848909         101]duf_sys_wrap.h                     ## bf39bcd6300239513f96f5ef8b4cd6d83f8c1b8a 	++
+ 566   38->0    { 582: 582}     │  │  │  ├── [109848910         136]duf_status_ref.h                   ## db5a1f5231213568e044a8bf9dba0d7bf7120823 	++
+ 567   38->0    { 583: 583}     │  │  │  ├── [109848911        7835]duf_pathinfo_ref.h                 ## faafdfa7baf01e553ce091140747d6e96ce9746b 	++
+ 568   38->0    { 584: 584}     │  │  │  ├── [109848912         660]duf_scan_types.h                   ## 0b67625e5f16a0860d167fd3bb355bc6730bcf96 	++
+ 569   38->0    { 585: 585}     │  │  │  ├── [109848913        3975]duf_option_typed_defs.h            ## 76ae4e6c056f7458869e7af6c91722a23dcc6a85 	++
+ 570   38->0    { 586: 586}     │  │  │  ├── [109848914         164]duf_sel_cb_leaf.h                  ## a19a825d57eb597af20bb861fd8cabec96367fb6 	++
+ 571   38->0    { 587: 587}     │  │  │  ├── [109848915         245]duf_levinfo_credel.h               ## a8b9770d082558a9724791c4f29f33b955819046 	++
+ 572   38->0    { 588: 588}     │  │  │  ├── [109848916         796]duf_trace_defs.h                   ## 1e5df3c347b49c325c8c2924ae8b1d94f26ac192 	++
+ 573   38->0    { 589: 589}     │  │  │  ├── [109848917         375]duf_config.h                       ## 0830846ed97559dd4ef2b6c5807abc6e36ac24a9 	++
+ 574   38->0    { 590: 590}     │  │  │  ├── [109848918         878]duf_trace_defs_what.h              ## b8d3e8c0d4a0ac4cfb470dece8ffb1f498ee8dca 	++
+ 575   38->0    { 591: 591}     │  │  │  ├── [109848919         290]duf_option_old.h                   ## baf148d338f36768a44682b7c5b9ed30ab980420 	++
+ 576   38->0    { 592: 592}     │  │  │  ├── [109848920         780]duf_sccbh_eval.h                   ## e3c0c91976ea1d59bf3780da6cc6663d36249289 	++
+ 577   38->0    { 593: 593}     │  │  │  ├── [109848921         803]duf_status_types.h                 ## edc5c447ca4eda386d8c7878dad24252110638c6 	++
+ 578   38->0    { 594: 594}     │  │  │  ├── [109848922         187]duf_options_interactive.h          ## 69c3b123a9da2264e086b36fa54a617f7960fa65 	++
+ 579   38->0    { 595: 595}     │  │  │  ├── [109848923        1505]duf_pdi_ref.h                      ## 601933cad8ce947bec86c88d7774940e0fac6ddb 	++
+ 580   38->0    { 596: 596}     │  │  │  ├── [109848924         156]sql_beginning_vacuum.h             ## fc879b2736141217e59e5a5117112daa233bfce0 	++
+ 581   38->0    { 597: 597}     │  │  │  ├── [109848925         448]duf_levinfo_stat.h                 ## ce749874b003d1fec90a9f900ffe86592421e042 	++
+ 582   38->0    { 598: 598}     │  │  │  ├── [109848926         174]duf_pstmt_levinfo.h                ## 7ded3a9d7d9bd5925a22dbbb9084abc06441ad6a 	++
+ 583   38->0    { 599: 599}     │  │  │  ├── [109848927         492]duf_option_cmd.h                   ## ae4e16d364bdf84f7f0f962660110236bfb287a6 	++
+ 584   38->0    { 600: 600}     │  │  │  ├── [109848928         868]duf_config_ref.h                   ## d98bc8051817a53000804670d55bc5c3d8501d01 	++
+ 585   38->0    { 601: 601}     │  │  │  ├── [109848929         301]duf_pdi_context.h                  ## 33aa0c7f1c0576058e7a17b3563cae15c45fbbaf 	++
+ 586   38->0    { 602: 602}     │  │  │  ├── [109848930         479]duf_sccb_def.h                     ## 195c5995daa5807470413522622dde8fd7d0b040 	++
+ 587   38->0    { 603: 603}     │  │  │  ├── [109848931        9130]duf_sqlite.h                       ## 73ab2c80efd3db9118036ab8422c78d1681b5b77 	++
+ 588   38->0    { 604: 604}     │  │  │  ├── [109848932         247]duf_leaf_scan2.h                   ## b0c130e8469de6fbd313bf46e18a8499a65f3f10 	++
+ 589   38->0    { 605: 605}     │  │  │  ├── [109848933         550]duf_pdi_attach.h                   ## 5679c4adb11768f9c3b0f9d6e970a19ce03df85e 	++
+ 590   38->0    { 606: 606}     │  │  │  ├── [109848934         415]duf_printb.h                       ## 3d5bb919130cce52d2c7ea8341b1d5d0738c3b8a 	++
+ 591   38->0    { 607: 607}     │  │  │  ├── [109848935         192]duf_path2dirid.h                   ## 9db7ce783704a57aa293b3e7b9670a5c56f561ee 	++
+ 592   38->0    { 608: 608}     │  │  │  ├── [109848936        6236]duf_pathinfo_ref_def.h             ## 55b3e6067e7c349086aab81f6eb60825155e198e 	++
+ 593   38->0    { 609: 609}     │  │  │  ├── [109848937         229]duf_sql_types.h                    ## 2b474c4efed0db44ca8f66870144d6238eb37bf8 	++
+ 594   38->0    { 610: 610}     │  │  │  ├── [109848938         417]duf_pdi_stmt.h                     ## 225dbbe35aa74e27734e65a4ba0258cd4b03f129 	++
+ 595   38->0    { 611: 611}     │  │  │  ├── [109848939         436]mod_exif.h                         ## bc22296114fd348d2f4dbd24e58d0a5ac8ab661b 	++
+ 596   38->0    { 612: 612}     │  │  │  ├── [109848940         389]duf_path2db.h                      ## aef08082175f045cff7090eca9f3b63e188ca86f 	++
+ 597   38->0    { 613: 613}     │  │  │  ├── [109848941        2166]duf.h                              ## 0f13d526a052c6afed995c99b34a28d713e837f3 	++
+ 598   38->0    { 614: 614}     │  │  │  ├── [109848942         621]duf_dir_scan2_stages.h             ## fb1dd24909932ca60c2993e79cb89c6a02c8f7f7 	++
+ 599   38->0    { 615: 615}     │  │  │  ├── [109848943         823]duf_option_find.h                  ## 423779d0aaa7324a3c595226b5265eebd9c833ea 	++
+ 600   38->0    { 616: 616}     │  │  │  ├── [109848944         186]duf_tags.h                         ## dc3ecf3908e8478587210cc62b2afdfc8292be52 	++
+ 601   38->0    { 617: 617}     │  │  │  ├── [109848945        1848]duf_defs.h                         ## 79c741e865815cfdab92ecd1be0ac91552de4f37 	++
+ 602   38->0    { 618: 618}     │  │  │  ├── [109848946         308]evsql_selector.h                   ## 24611bf5a0bfb9f9a2bfabcaa639a45a16cf6a49 	++
+ 603   38->0    { 619: 619}     │  │  │  ├── [109848947         164]duf_sel_cb_node.h                  ## db0b42d087c60fdf48be14db097eb7d70458e387 	++
+ 604   38->0    { 620: 620}     │  │  │  ├── [109848948         616]duf_dh.h                           ## d34a67fe07ea343266fa42a2f07fb957c96297f5 	++
+ 605   38->0    { 621: 621}     │  │  │  ├── [109848949        2394]duf_levinfo_types.h                ## fb619e1e8a64448bb4117d3dcce5659a1da40fde 	++
+ 606   38->0    { 622: 622}     │  │  │  ├── [109848950        1278]duf_pdi_sccb_eval.h                ## fc5e4a30d2a4e732790f65b6aaeb8e9624160d9a 	++
+ 607   38->0    { 623: 623}     │  │  │  ├── [109848951         340]duf_context.h                      ## b8d8167c90310e57e20129b260ba3a160443c8e1 	++
+ 608   38->0    { 624: 624}     │  │  │  ├── [109848952         591]duf_print.h                        ## 48d8a2447fe7a6fe8b7d18d493ba7aefcbc9cc5b 	++
+ 609   38->0    { 625: 625}     │  │  │  ├── [109848953        2888]duf_debug_defs.h                   ## 10a6d3348753e496aa4ed42f5dfe98aa1fe13910 	++
+ 610   38->0    { 626: 626}     │  │  │  ├── [109848954         780]duf_utils.h                        ## 4cdef6ab7f9460f2bf25a0d2e7caffcc082d8c3f 	++
+ 611   38->0    { 627: 627}     │  │  │  ├── [109848955         388]duf_sccbh_shortcuts.h              ## 81d2d31a9ef8d7f3c961613a7917dbca07ccd69e 	++
+ 612   38->0    { 628: 628}     │  │  │  ├── [109848956         246]duf_options.h                      ## a2b0880fe4583b8a3e4053fb3bb669c6d793ccb5 	++
+ 613   38->0    { 629: 629}     │  │  │  ├── [109848957         159]duf_utils_path.h                   ## 681d0f989db8922fc2bc02678a2301993dfbc47a 	++
+ 614   38->0    { 630: 630}     │  │  │  ├── [109848958        1573]duf_trace_types.h                  ## f9ae51d23cde2b10b02f9b75dec1cc131d71d036 	++
+ 615   38->0    { 631: 631}     │  │  │  ├── [109848959        2727]duf_dodefs.h                       ## d92e3c54f6d051f9c4dd1f222cafa2f5b9542903 	++
+ 616   38->0    { 632: 632}     │  │  │  ├── [109848960        1036]duf_errors.h                       ## 8bb98c47725f201125127c225894cad8918025cd 	++
+ 617   38->0    { 633: 633}     │  │  │  ├── [109848961         205]sql_beginning_create.h             ## 1ca4f3e7cea5bb893c67b18541b9f527b7b76424 	++
+ 618   38->0    { 634: 634}     │  │  │  ├── [109848962         182]duf_fileinfo.h                     ## 898687d3034e38d4b4541bcddcc4aab03272b87d 	++
+ 619   38->0    { 635: 635}     │  │  │  ├── [109848963         550]duf_option_extended.h              ## 1ce451eb26161c8ce88e1d74578864903bd77bb9 	++
+ 620   38->0    { 636: 636}     │  │  │  ├── [109848964         258]duf_service.h                      ## ef2304c23c75716d9d12a66fff048e7c2d3a7a3c 	++
+ 621   38->0    { 637: 637}     │  │  │  ├── [109848965         190]sql_beginning_tables.h             ## 46f9b51787bb9c2e9e818f1f60d2f1b6800ea5bd 	++
+ 622   38->0    { 638: 638}     │  │  │  ├── [109848966        9236]duf_options_enum.h                 ## a1e5b2192e4fe4e310251357aa7120e228f79ae9 	++
+ 623   38->0    { 639: 639}     │  │  │  ├── [109848967        1002]duf_trace.h                        ## dab0fe5473dda8018131271d44ac2546daa6cfd0 	++
+ 624   38->0    { 640: 640}     │  │  │  ├── [109848968         231]duf_sccb_eval_dirs.h               ## 225df39aae2c171be24a5fa09c368f5858dfadc4 	++
+ 625   38->0    { 641: 641}     │  │  │  ├── [109848969         331]duf_maintenance.h                  ## a330bdfefc9833ca04f93f889ac018fe6df064f0 	++
+ 626   38->0    { 642: 642}     │  │  │  ├── [109848970         326]duf_option_sccb.h                  ## 1a650894bdf04c4be22cfeabc3faedef9931b9ad 	++
+ 627   38->0    { 643: 643}     │  │  │  ├── [109848971        2733]duf_trace_defs_base.h              ## a6709e1073bd28be8ea4ee812ca07589ab21ebc4 	++
+ 628   38->0    { 644: 644}     │  │  │  ├── [109848972        1371]evsql_begfin.h                     ## c8e65054b7812af2c3ee3f1f3c87518ddfb0c6fe 	++
+ 629   38->0    { 645: 645}     │  │  │  ├── [109848973        1251]duf_def.h                          ## a0006a4498e3dfc1f43a234542ead910d907d7ca 	++
+ 630   38->0    { 646: 646}     │  │  │  ├── [109848974        5645]duf_sql2.h                         ## 44fb6e32a38e5e4041057237ab65837ee9cbd83d 	++
+ 631   38->0    { 647: 647}     │  │  │  ├── [109848975         596]duf_option_help.h                  ## 1f31174749929bf679f4cc8f3e3c848d39b0d9a5 	++
+ 632   38->0    { 648: 648}     │  │  │  └── [109848976        2918]Makefile.am                        ## 0dd642d333dd61ba7bf5dd6844d48edae077b80c 	++
+ 633   37->0    { 649: 649}     │  │  ├── [109848700        3657]duf_ufilter_bind.c                 ## aeff9cff221c95563c4187085b6a81d93ba645cf 	++
+ 634   37->0    { 650: 650}     │  │  ├── [109848701        2630]duf_sccb.c                         ## bb5a12d2a0fe80aa95948a7110d304a4ab5b075b 	++
+ 635   37->0    { 651: 651}     │  │  ├── [109848702        1130]duf_utils_path.c                   ## b47e5591055ce6fbcacb84ee04c71f516b2414dc 	++
+ 636   37->0    { 652: 652}     │  │  ├── [109848703        9061]duf_maindb_info.c                  ## 32359dd9513d6c806ce93246891a80e97a066c88 	++
+ 637   37->0    { 653: 653}     │  │  ├── [109848704       14485]duf_option_old.c                   ## 9d5c7ca6f98d932ab91271d3dcdb9bdb1d48f4b8 	++
+ 638   37->0    { 654: 654}     │  │  ├── [109848705        4756]duf_pdi_ref.c                      ## cb59171886b574aac56aa8fe78bf7029fe1149e3 	++
+ 639   37->0    { 655: 655}     │  │  ├── [109848706        2716]data_optable_flag_obsolete.c       ## 5a136cebc4e62da636d7c9a7de79ec7cfa441e6c 	++
+ 640   37->0    { 656: 656}     │  │  ├── [109848707       14019]data_optable_trace.c               ## 552ffe8c7f2a39a0a163ef9cd4f5ba5fa4080e28 	++
+ 641   37->0    { 657: 657}     │  │  ├── [109848708         496]sql_beginning_common.c             ## fe1e21554c362e287e11cdbff0f58f6e8df76300 	++
+ 642   37->0    { 658: 658}     │  │  ├── [109848709        2501]duf_pdi_attach.c                   ## f7ede3649e6e7ee424619680c5505504a0e97fe5 	++
+ 643   37->0    { 659: 659}     │  │  ├── [109848710        6448]duf_sccb_handle.c                  ## 44c5e9998461a01fe7a90d0e474bc5753a348f84 	++
+ 644   37->0    { 660: 660}     │  │  ├── [109848711        4844]duf_option_cmd.c                   ## 62654276e9486a707d044d643a2160dd8e9f1639 	++
+ 645   37->0    { 661: 661}     │  │  ├── [109848712        1114]data_optable_uplus.c               ## e7afe9d0507083e181ace57baeaf216cdfa70ac7 	++
+ 646   37->0    { 662: 662}     │  │  ├── [109848713        1577]duf_service.c                      ## c28a83aaa4d756fbfd0389e2a9f67cf173fbbce0 	++
+ 647   37->0    { 663: 663}     │  │  ├── [109848714        2814]duf_action_table.c                 ## dafb0d6c13e429d848ee52f238fdcf8db1e55c92 	++
+ 648   37->0    { 664: 664}     │  │  ├── [109848715        2298]duf_sccb_begfin.c                  ## d4ba6baed04053ace64ada366179d5aa79fb0566 	++
+ 649   37->0    { 665: 665}     │  │  ├── [109848716        3480]duf_prepare_actions.c              ## 6da613ca3bd1c2604bfe2196a2d710783b7e43b5 	++
+ 650   37->0    { 666: 666}     │  │  ├── [109848717        2039]data_optable_sccb.c                ## 863c006d7d94630c40739c1e163d228d2dc8e301 	++
+ 651   37->0    { 667: 667}     │  │  ├── [109848718        5334]duf_levinfo_openclose.c            ## ba2f976a2c281b1a180941b528d728a5537db419 	++
+ 652   37->0    { 668: 668}     │  │  ├── [109848719         385]sql_beginning_vacuum.c             ## fc1bd54065f68fc042393099a2d9de306b6b1d08 	++
+ 653   37->0    { 669: 669}     │  │  ├── [109848720        2249]duf_leaf_scan2.c                   ## dfcb4d38d1993282fddaf4de3b740f69dc8e57e2 	++
+ 654   37->0    { 670: 670}     │  │  ├── [109848721        4466]duf_levinfo.c                      ## e25fa2fdfc54e21c569fdd14b69bfc57d6953654 	++
+ 655   37->0    { 671: 671}     │  │  ├── [109848722        5624]duf_options_cli.c                  ## 594e5aaca4bfdcc7a39250a0b8ec965d08638849 	++
+ 656   37->0    { 672: 672}     │  │  ├── [109848723        4172]mod_integrity_uni.c                ## 41d0139f4296aa457bf2e8492fddbbbf6e2465fc 	++
+ 657   37->0    { 673: 673}     │  │  ├── [109848724        3221]duf_option_descr.c                 ## f0b5bc1540fd8a33de695babb72a571450917457 	++
+ 658   37->0    { 674: 674}     │  │  ├── [109848725       19393]duf_printb.c                       ## dbb13b19ac8bacba8f12edf59a5035d1f7a34868 	++
+ 659   37->0    { 675: 675}     │  │  ├── [109848726        3099]duf_sccb_eval.c                    ## ae7f39847a75665cea3ba779157930046473ccd2 	++
+ 660   37->0    { 676: 676}     │  │  ├── [109848727        6079]duf_pathinfo_ref.c                 ## 37c19c99cf584540548beb3d7c8df2f64c3fcd21 	++
+ 661   37->0    { 677: 677}     │  │  ├── [109848728         743]duf_pdi_context.c                  ## 649db70e99ef5235fc8d3ab691a725592809fbc8 	++
+ 662   37->0    { 678: 678}     │  │  ├── [109848729        7713]duf_option_find.c                  ## 977b9cefb3df118a776d58cc934ac90bb2d1556c 	++
+ 663   37->0    { 679: 679}     │  │  ├── [109848730       18739]duf_print.c                        ## 7da8b0827cbf95d65c30a15c1b1525cab8717a21 	++
+ 664   37->0    { 680: 680}     │  │  ├── [109848731        5414]data_optable_format.c              ## bbab48d94ec8213980ab7c5a698d3d10d00582aa 	++
+ 665   37->0    { 681: 681}     │  │  ├── [109848732        8457]duf_sccbh_eval.c                   ## 814c603e0160a37b188ebfb04f91daadead8fac8 	++
+ 666   37->0    { 682: 682}     │  │  ├── [109848733        3581]duf_pdi_reinit.c                   ## 6ddd5175dd77f1c41ead1c5c749789b5cb6d445b 	++
+ 667   37->0    { 683: 683}     │  │  ├── [109848734        2040]duf_levinfo_credel.c               ## f96d2635fe9b51dc1e56529cd70a2805154656ed 	++
+ 668   37->0    { 684: 684}     │  │  ├── [109848735        8524]duf_pdi.c                          ## a5b4457a16da1a9cbceec790085762590ec524a3 	++
+ 669   37->0    { 685: 685}     │  │  ├── [109848736         757]duf_levinfo_context.c              ## 4e35beb9b5b91a83569eba56d5851de4ccdcd9a1 	++
+ 670   37->0    { 686: 686}     │  │  ├── [109848737        1974]data_optable_sflag.c               ## 862638b0f8dad340388848c5092f4cefa01724c3 	++
+ 671   37->0    { 687: 687}     │  │  ├── [109848738        1562]duf_li_credel.c                    ## 678e6c51176efc0f6c98ea2ba0aaf403e604ef7b 	++
+ 672   37->0    { 688: 688}     │  │  ├── [109848739        3354]data_optable_str.c                 ## 17baaf89d0585d23a0bfc9342ff982ffa2b68ecf 	++
+ 673   37->0    { 689: 689}     │  │  ├── [109848740        3029]duf_pdi_stmt.c                     ## 0f09ca6e67da4292b6cf15a0240c57109f4cb4e1 	++
+ 674   37->0    { 690: 690}     │  │  ├── [109848741        1939]duf_fileinfo.c                     ## 59e25223efdc9701a81841a8944e5a150d0860dd 	++
+ 675   37->0    { 691: 691}     │  │  ├── [109848742        1785]duf_pathinfo_credel.c              ## 9a908e7edca22c035978db57efb3937073fd023a 	++
+ 676   37->0    { 692: 692}     │  │  ├── [109848743       12906]duf_sql.c                          ## 00066a8fe65c96839d425bbbd9100ca8ed23f127 	++
+ 677   37->0    { 693: 693}     │  │  ├── [109848744        7973]mod_dumplet.c                      ## e157bc9db85eadbadc9215c4a6023b6ca6e6e618 	++
+ 678   37->0    { 694: 694}     │  │  ├── [109848745        2849]data_optable.c                     ## 4ebc68e6cdcedc44a591b3dc7cdc5b2e5aa115de 	++
+ 679   37->0    { 695: 695}     │  │  ├── [109848746       10538]duf_options_table.c                ## 40012b5f4c3c88b5c1ac91ddc043ea8dbd09a66b 	++
+ 680   37->0    { 696: 696}     │  │  ├── [109848747        8204]duf_option_names.c                 ## d747e83f4bc09f87da5d7339e3452ddce2c603ae 	++
+ 681   37->0    { 697: 697}     │  │  ├── [109848748        9070]mod_filedata_uni.c                 ## bd985bfaaf939a1a6c8d994c27166b4d025c382c 	++
+ 682   37->0    { 698: 698}     │  │  ├── [109848749       32368]mod_exif_uni.c                     ## fee5fe57a2a912b770aa033c9ef57f6f65385e59 	++
+ 683   37->0    { 699: 699}     │  │  ├── [109848750        9181]data_optable_flag.c                ## b0735a1990eeafef146823a55a306467772d812d 	++
+ 684   37->0    { 700: 700}     │  │  ├── [109848751        1155]duf_pstmt_levinfo.c                ## f5a570c1adcb39599faef29fb378d9daad4f4576 	++
+ 685   37->0    { 701: 701}     │  │  ├── [109848752        2605]duf_options_string.c               ## 0d5b09329f7d33eea9ceb8b7785012e8d89442b1 	++
+ 686   37->0    { 702: 702}     │  │  ├── [109848753        4894]evsql_begfin.c                     ## 44fc53f7662553483383d950e19f725f0cda36a6 	++
+ 687   37->0    { 703: 703}     │  │  ├── [109848754         901]duf_sys_wrap.c                     ## 733420553f3ffa94025ed9c63e013f2f93378f68 	++
+ 688   37->0    { 704: 704}     │  │  ├── [109848755        1681]data_optable_info.c                ## 8ccbf5fc0aa7ec11810e12523cd9822a6ecf7a11 	++
+ 689   37->0    { 705: 705}     │  │  ├── [109848756       13209]mod_md5_uni.c                      ## 489c45d8a74f88c88bcc32b314ae473c99301ba1 	++
+ 690   37->0    { 706: 706}     │  │  ├── [109848757       13868]duf_errors.c                       ## 2365212762036c13d85a09e1e29ec156aa957a48 	++
+ 691   37->0    { 707: 707}     │  │  ├── [109848758        4975]duf_filedata.c.new                 ## 624a5bc770ac0e74173f884d206f58da639f69bd 	++
+ 692   37->0    { 708: 708}     │  │  ├── [109848759       21497]duf_maindb.c                       ## 243af1514a69414093d25b4d1046067012501f61 	++
+ 693   37->0    { 709: 709}     │  │  ├── [109848760        2228]data_optable_interactive.c         ## 2c855bd2178f6fc5157fe88ac3efffc35b1e6fac 	++
+ 694   37->0    { 710: 710}     │  │  ├── [109848761        7551]std_mod_sets.c                     ## d9069065dbbcaa9ae0f58787934b6d12e2c025f4 	++
+ 695   37->0    { 711: 711}     │  │  ├── [109848762       54818]duf_option_help.c                  ## ae913afb928a011b9c7d57a67503222b7bf4e453 	++
+ 696   37->0    { 712: 712}     │  │  ├── [109848763        4488]duf_eval_at_config.c               ## 8649b4dbd1e03bf976e50e6f3d024109186fd00c 	++
+ 697   37->0    { 713: 713}     │  │  ├── [109848764        4577]duf_sel_cb_leaf.c                  ## 574bbd151b02e73a830fb0cd5de56158a9ad5ab3 	++
+ 698   37->0    { 714: 714}     │  │  ├── [109848765        7897]duf_dbg.c                          ## f5810b7743466d8c2c6fcf30e67180c4690995d2 	++
+ 699   37->0    { 715: 715}     │  │  ├── [109848766        1089]duf_ufilter_ref.c                  ## a632a30917d9fe24a20dbaa5a65b3507df415152 	++
+ 700   37->0    { 716: 716}     │  │  ├── [109848767        3727]duf_ufilter.c                      ## cb9ed354c8ed5f3a2a82c6f4ccd1152d4d459827 	++
+ 701   37->0    { 717: 717}     │  │  ├── [109848768        9320]mod_tagit.c                        ## e3c249567ee75750636fb575101ae2afd85d2522 	++
+ 702   37->0    { 718: 718}     │  │  ├── [109848769       19699]duf_option_typed.c                 ## f2983ac66eb68b0ceb22c8fff7d3bc57564c8482 	++
+ 703   37->0    { 719: 719}     │  │  ├── [109848770        1267]duf_sql_field.c                    ## 297b4c3d640439af96d9f4beff80c66c9d95944a 	++
+ 704   37->0    { 720: 720}     │  │  ├── [109848771       16589]data_optable_filter.c              ## ed5d1d2c164f087a088fba0e3e896958292a6819 	++
+ 705   37->0    { 721: 721}     │  │  ├── [109848772        1244]duftest.c                          ## 5a3129b8475e9704584aa2387781310e61466376 	++
+ 706   37->0    { 722: 722}     │  │  ├── [109848773        3773]duf_utils_print.c                  ## 94ddf70977cc5bdaaece1bcac05f3c23c54da567 	++
+ 707   37->0    { 723: 723}     │  │  ├── [109848774        3066]data_optable_io.c                  ## 50856ee7bfab05eb186e97d1f5c4843bf63ad6ff 	++
+ 708   37->0    { 724: 724}     │  │  ├── [109848775       14155]std_fieldsets.c                    ## 1f25158730315a0be19cc5cb41182983c12314ca 	++
+ 709   37->0    { 725: 725}     │  │  ├── [109848776        5285]data_optable_help.c                ## 447f006f8926902a18f9f112be38d6870e47ef27 	++
+ 710   37->0    { 726: 726}     │  │  ├── [109848777        6045]duf_utils.c                        ## af1bbf1c8d61223b5b59af9c677f514d052c9e5b 	++
+ 711   37->0    { 727: 727}     │  │  ├── [109848778        8512]duf_options.c                      ## f706a9a3c0d01969174489f4df2878c739e073ec 	++
+ 712   37->0    { 728: 728}     │  │  ├── [109848779        4649]data_optable_redo_and_obsolete.c   ## 1e2e053bc31b060b4444018570836ade80a4a698 	++
+ 713   37->0    { 729: 729}     │  │  ├── [109848780        1600]duf_dirent.c                       ## f98e79331e189214694130893a358f2a748b222e 	++
+ 714   37->0    { 730: 730}     │  │  ├── [109848781        5086]duf_option.c                       ## 00b52e656e57dc84f27a6296a9ba56ea9e8db0fe 	++
+ 715   37->0    { 731: 731}     │  │  ├── [109848782       10397]duf_config.c                       ## bb4dbe9c534157b55a49299d204002025d02fb8c 	++
+ 716   37->0    { 732: 732}     │  │  ├── [109848783        4141]duf_path2dirid.c                   ## 83753a2a278a4dd87c0eb55cc18e2c443e144a3c 	++
+ 717   37->0    { 733: 733}     │  │  ├── [109848784        3520]sql_beginning_tables.c             ## dc9b4deeb9aadc0b718df7f5ee2ef623d112a1af 	++
+ 718   37->0    { 734: 734}     │  │  ├── [109848785        9617]mod_directories_uni.c              ## f1d21935b99c7d0021008e818ac3f902e49f160b 	++
+ 719   37->0    { 735: 735}     │  │  ├── [109848786        2074]duf_option_extended.c              ## 65408f39ca20a15b395702f1321d53e4038ae781 	++
+ 720   37->0    { 736: 736}     │  │  ├── [109848787        5204]duf_sccb_eval_dirs.c               ## 408a2974e791faa0f0bfd7a27d287a12f26cd177 	++
+ 721   37->0    { 737: 737}     │  │  ├── [109848788        3864]duf_tags.c                         ## 2c677d46819ef409cb7fb0daae7e863658985141 	++
+ 722   37->0    { 738: 738}     │  │  ├── [109848789        3132]duf_option_sccb.c                  ## 0a5ef98fb578d06f01fe98a991a608cf25a3851e 	++
+ 723   37->0    { 739: 739}     │  │  ├── [109848790        2525]duf_levinfo_stat.c                 ## c3b5a393b2dde88389637e3ee7b608d603f5f6a2 	++
+ 724   37->0    { 740: 740}     │  │  ├── [109848791        6770]sql_update_selected.c              ## c0c764020955750d42937c1dbc64293b6e39342d 	++
+ 725   37->0    { 741: 741}     │  │  ├── [109848792        6630]duf_dir_scan.c.20140411            ## e9bbcda1daf1d87444fa3a27aa07ff1b4ab3c121 	++
+ 726   37->0    { 742: 742}     │  │  ├── [109848793        2040]duf_option_tmpdb.c                 ## 24e1a91015ec8bd16fdd6b5ed8de373354433383 	++
+ 727   37->0    { 743: 743}     │  │  ├── [109848794        4236]duf_options_interactive.c          ## 497095b8ad7103419f7dfb3d986138cbbd2efcd6 	++
+ 728   37->0    { 744: 744}     │  │  ├── [109848795        3184]duf_sel_cb_node.c                  ## 4ba0e083f8c9c75118af8b86e24dbdec5d123794 	++
+ 729   37->0    { 745: 745}     │  │  ├── [109848796        3748]data_optable_experimental.c        ## 5cc7a18eabba532acd42a7736ee98c4fb7dbce2c 	++
+ 730   37->0    { 746: 746}     │  │  ├── [109848797        3167]duf_sql_field2.c                   ## 074e06fe43ceb7cd01e89aa2a92b1942aa5fec3b 	++
+ 731   37->0    { 747: 747}     │  │  ├── [109848798       14777]duf_path2db.c                      ## 81f0508d78d6a76b8bcb2fe496d50a68b63adf08 	++
+ 732   37->0    { 748: 748}     │  │  ├── [109848799        1639]data_optable_debug.c               ## 4d05fc8872e716694b72334a95eb088369740720 	++
+ 733   37->0    { 749: 749}     │  │  ├── [109848800       24982]sql_beginning_create.c             ## a5d9bbe6674583be74bedfeaad34fe354c31e04a 	++
+ 734   37->0    { 750: 750}     │  │  ├── [109848801        6607]mod_template_uni.c                 ## 6384e9e77ad536644b2cb24bcc812c5466ac2da4 	++
+ 735   37->0    { 751: 751}     │  │  ├── [109848802        4299]duf_dirent_scan2.c                 ## 1592ad0b1fe762f9b0d951963564b64a77161899 	++
+ 736   37->0    { 752: 752}     │  │  ├── [109848803        4830]duf_item_scan2.c                   ## 92ac997460b5a1c0a74f0f4249fddb6f86f33a3b 	++
+ 737   37->0    { 753: 753}     │  │  ├── [109848804       10993]mod_sd5_uni.c                      ## 2169e13f258bc28cf5c9f550e678b1b4892e8fc5 	++
+ 738   37->0    { 754: 754}     │  │  ├── [109848805        2131]duf_option_misc.c                  ## 6c0ba994e636f6902b66d9c78b3cf7eb9269feec 	++
+ 739   37->0    { 755: 755}     │  │  ├── [109848806        7039]duf_levinfo_updown.c               ## 5ab9fc297384941baafaea117f18b32e0c19446e 	++
+ 740   37->0    { 756: 756}     │  │  ├── [109848807        9192]mod_dir_print_uni.c                ## d908b6ca6d202c226e57208b8f28123496612958 	++
+ 741   37->0    { 757: 757}     │  │  ├── [109848808        9937]mod_dummy_uni.c                    ## 14f5b43f70fd734e4c6707c92e89354d54abf587 	++
+ 742   37->0    { 758: 758}     │  │  ├── [109848809        9911]duf_options_file.c                 ## 822a5121032839c78eaab9fe5580f5181ccfb7af 	++
+ 743   37->0    { 759: 759}     │  │  ├── [109848810        6173]sql_beginning_selected.c           ## fb71165c7b0b639b1d502c03eb60127be486d2cd 	++
+ 744   37->0    { 760: 760}     │  │  ├── [109848811       21314]duf_sqlite.c                       ## f9eb2456a51ce45611430ba48df442c1d4d94b0a 	++
+ 745   37->0    { 761: 761}     │  │  ├── [109848812       10058]duf_dh.c                           ## 0db212d4f493a1d3596329117e67cf8f222a4486 	++
+ 746   37->0    { 762: 762}     │  │  ├── [109848813       17123]duf_levinfo_ref.c                  ## bf2db7c8bbc89ca500f07e16c572be834b4046ba 	++
+ 747   37->0    { 763: 763}     │  │  ├── [109848814        1952]duf_sccb_eval_std.c                ## 3c0f661264df0f25d83af09e8ab16b760c9dedcb 	++
+ 748   37->0    { 764: 764}     │  │  ├── [109848815       13563]mod_tree_print_uni.c               ## 2ec909cec1bc6df39bf2e004caea1de25b497262 	++
+ 749   37->0    { 765: 765}     │  │  ├── [109848816        4535]duf.c                              ## f9e9bdfc2adbc6f8d27f2e710998bdba2d882514 	++
+ 750   37->0    { 766: 766}     │  │  ├── [109848817        2282]duf_options_env.c                  ## 7914759ff8f61ed6e1798520ea9a65af923b6087 	++
+ 751   37->0    { 767: 767}     │  │  ├── [109848818        2677]duf_pdi_credel.c                   ## 8e688229b77440d4ac9f257db1948a28fcd09cac 	++
+ 752   37->0    { 768: 768}     │  │  ├── [109848819        3564]duf_dir_scan2_stages.c             ## f2ca4bbda7ce5ac57cc0efbaef994365bc0c125f 	++
+ 753   37->0    { 769: 769}     │  │  ├── [109848820        4318]duf_pdi_sccb_eval.c                ## 672e20ab2f4668b2d46588890d17a35137c72614 	++
+ 754   37->0    { 770: 770}     │  │  ├── [109848821        9854]mod_save_to.c                      ## dcc712a43dd1fd6300201ae9ca32053b2ce82ec3 	++
+ 755   37->0    { 771: 771}     │  │  ├── [109848822       11404]mod_collect_mime_uni.c             ## c251aaadc7d6773418ea2c1a50ea389238252c45 	++
+ 756   37->0    { 772: 772}     │  │  ├── [109848823        5599]mod_filenames_uni.c                ## 8ab3b266b7b0eeaf362ff1b843a3da39db0e1ab0 	++
+ 757   37->0    { 773: 773}     │  │  ├── [109848824        3694]Makefile.am                        ## 7aefbb62ccf93bad99e883776f5d35170c515da8 	++
+ 758   37->0    { 774: 774}     │  │  ├── [109848825         999]duf_context.c                      ## 47ec312a497c875690a1be83f9d6b672b6bbe7e7 	++
+ 759   37->0    { 775: 775}     │  │  ├── [109848826        2325]std_selectors.c                    ## 858d223244e4a758d2fc69e8f6dcec74d74a7184 	++
+ 760   37->0    { 776: 776}     │  │  ├── [109848827        5209]duf_trace.c                        ## a2e70de47f045c45cc7cd800f6199008238ed902 	++
+ 761   37->0    { 777: 777}     │  │  └── [109848828       10755]mod_crc32_uni.c                    ## ff36447900740ce298ec7dd2be75a087dd4268dd 	++
+ 762   18->0    { 778: 778}     │  ├── [109848260          23]out2.cmds                          ## 9d6f3a99e5cb3f1674d57706939a7b5330826de1 	++
+ 763   18->39   { 779: 779}     │  ├── [109953147  DIR =3]   debug
+ 764   39->0    { 780: 780}     │  │  ├── [109848977         332]debug_zocromas_duf.cmd.tmp         ## c9e8f486b6d5e7408a435ee4ef02214843b234e3 	++
+ 765   39->0    { 781: 781}     │  │  ├── [109848978           6]__.gitignore                       ## 855ddba356673682de1291207d9110be4699279d 	++
+ 766   39->0    { 782: 782}     │  │  └── [109848979         251]debug_zocromas_duf.cmd             ## 14c146294f5493e39c8491299ab71c4bfebe037e 	++
+ 767   18->40   { 783: 783}     │  ├── [109953148  DIR =2]   autom4te.cache
+ 768   40->0    { 784: 784}     │  │  ├── [109848980       27093]requests                           ## 9e07121ce1722594b204513012c98748b32228b2 	++
+ 769   40->0    { 785: 785}     │  │  └── [109848981       70044]traces.1                           ## 66202e237fcbf85d963908faa61658540910e80d 	++
+ 770   18->0    { 786: 786}     │  ├── [109848261         793]test02.cmds                        ## d18d73050644998d6b957e00ae5f43591ca74e3f 	++
+ 771   18->41   { 787: 787}     │  ├── [109953149  DIR =43]  test
+ 772   41->0    { 788: 788}     │  │  ├── [109848982        1774]test.sh                            ## e5fab2a86f8ef9464635bb4431324d3947d17b01 	++
+ 773   41->42   { 789: 789}     │  │  ├── [109953150  DIR =38]  duf
+ 774   42->0    { 790: 790}     │  │  │  ├── [109848986        1264]good.test.2                        ## 779b8ed67139f63ea75719e07ecd729b667dd3dc 	++
+ 775   42->0    { 791: 791}     │  │  │  ├── [109848987         694]test_set1.txt                      ## 32637b49f31e0bcba5d7ed1a3e2862ff3aea63b4 	++
+ 776   42->0    { 792: 792}     │  │  │  ├── [109848988          28]__.gitignore                       ## 6e975cb7e4d5a0551efbde2e0cab354e458f49ae 	++
+ 777   42->43   { 793: 793}     │  │  │  ├── [109953151  DIR =23]  20150602
+ 778   43->0    { 794: 794}     │  │  │  │  ├── [109849001         992]out20150602.131822.test.5          ## 40fa7c58ddb1443879df30b82b954985794ea309 	++
+ 779   43->0    { 795: 795}     │  │  │  │  ├── [109849002         123]out20150602.131822.test.ca1        ## b8cbc5933951405d4e6941d2d44b592b1ddec3f7 	++++++++++++++++++++
+ 780   43->0    { 796: 796}     │  │  │  │  ├── [109849003           1]out20150602.134103.test.sql1       ## adc83b19e793491b1c6ea0fd8b46cd9f32e592fc 	++++++++++++
+ 781   43->0    { 797: 797}     │  │  │  │  ├── [109849004         123]out20150602.134103.test.1          ## b8cbc5933951405d4e6941d2d44b592b1ddec3f7 	++++++++++++++++++++
+ 782   43->0    { 798: 798}     │  │  │  │  ├── [109849005         834]out20150602.131822.test.6          ## f8abfc33a724618cc3fe355f01438225b7263c03 	++
+ 783   43->0    { 799: 799}     │  │  │  │  ├── [109849006         123]out20150602.134103.test.6          ## b8cbc5933951405d4e6941d2d44b592b1ddec3f7 	++++++++++++++++++++
+ 784   43->0    { 800: 800}     │  │  │  │  ├── [109849007           4]out20150602.131822.test.creadd     ## 92beb40d1a86a6509c300d948703802d656b31c9 	++++++
+ 785   43->0    { 801: 801}     │  │  │  │  ├── [109849008         123]out20150602.134103.test.5          ## b8cbc5933951405d4e6941d2d44b592b1ddec3f7 	++++++++++++++++++++
+ 786   43->0    { 802: 802}     │  │  │  │  ├── [109849009           4]out20150602.134103.test.creadd     ## 92beb40d1a86a6509c300d948703802d656b31c9 	++++++
+ 787   43->0    { 803: 803}     │  │  │  │  ├── [109849010         123]out20150602.134103.test.1.1        ## b8cbc5933951405d4e6941d2d44b592b1ddec3f7 	++++++++++++++++++++
+ 788   43->0    { 804: 804}     │  │  │  │  ├── [109849011        6376]out20150602.131822.test.2          ## 6b27b7d3b6975a016324c97137388db97b29761f 	++
+ 789   43->0    { 805: 805}     │  │  │  │  ├── [109849012       20485]out20150602.131822.test.log        ## b46308b6453874a02dfcd7a8ca440629ca1def1b 	++
+ 790   43->0    { 806: 806}     │  │  │  │  ├── [109849013        1505]out20150602.131822.test.4          ## a393405da313cd48ea536c33be7973cdd16c1c72 	++
+ 791   43->0    { 807: 807}     │  │  │  │  ├── [109849014       17086]out20150602.131822.test.1.1        ## e8f3d3e31cafbf6ba4369d81d929273d068266ec 	++
+ 792   43->0    { 808: 808}     │  │  │  │  ├── [109849015         123]out20150602.134103.test.7          ## b8cbc5933951405d4e6941d2d44b592b1ddec3f7 	++++++++++++++++++++
+ 793   43->0    { 809: 809}     │  │  │  │  ├── [109849016         123]out20150602.134103.test.4          ## b8cbc5933951405d4e6941d2d44b592b1ddec3f7 	++++++++++++++++++++
+ 794   43->0    { 810: 810}     │  │  │  │  ├── [109849017         123]out20150602.134103.test.3          ## b8cbc5933951405d4e6941d2d44b592b1ddec3f7 	++++++++++++++++++++
+ 795   43->0    { 811: 811}     │  │  │  │  ├── [109849018         792]out20150602.131822.test.7          ## 6fdd8d96a4b8e4dabf28686c7f054a6631ed7bc4 	++
+ 796   43->0    { 812: 812}     │  │  │  │  ├── [109849019           1]out20150602.131822.test.sql1       ## adc83b19e793491b1c6ea0fd8b46cd9f32e592fc 	++++++++++++
+ 797   43->0    { 813: 813}     │  │  │  │  ├── [109849020           5]out20150602.131822.test.0          ## a34fc894c082b7bef96bb034a6609c1342f2c91e 	++++++
+ 798   43->0    { 814: 814}     │  │  │  │  ├── [109849021         123]out20150602.134103.test.2          ## b8cbc5933951405d4e6941d2d44b592b1ddec3f7 	++++++++++++++++++++
+ 799   43->0    { 815: 815}     │  │  │  │  ├── [109849022         123]out20150602.134103.test.ca1        ## b8cbc5933951405d4e6941d2d44b592b1ddec3f7 	++++++++++++++++++++
+ 800   43->0    { 816: 816}     │  │  │  │  └── [109849023           5]out20150602.134103.test.0          ## a34fc894c082b7bef96bb034a6609c1342f2c91e 	++++++
+ 801   42->0    { 817: 817}     │  │  │  ├── [109848989       20074]good.test.1.1                      ## 2ab2d1f508e357086304cf4d589e0b98e4260d0e 	++
+ 802   42->0    { 818: 818}     │  │  │  ├── [109848990           0]temp.db                            ## da39a3ee5e6b4b0d3255bfef95601890afd80709 	++
+ 803   42->0    { 819: 819}     │  │  │  ├── [109848991           4]good.test.creadd                   ## 92beb40d1a86a6509c300d948703802d656b31c9 	++++++
+ 804   42->0    { 820: 820}     │  │  │  ├── [109848992        1231]good.test.5                        ## 7dd573daab094fd762d2b80b09271ccd5f02d7e9 	++
+ 805   42->0    { 821: 821}     │  │  │  ├── [109848993           5]good.test.0                        ## a34fc894c082b7bef96bb034a6609c1342f2c91e 	++++++
+ 806   42->0    { 822: 822}     │  │  │  ├── [109848994         302]good.test.sql1                     ## 61aea3555ad547397bf72f55a58b52c9f8d0f443 	++
+ 807   42->0    { 823: 823}     │  │  │  ├── [109848995        1124]good.test.6                        ## f8c7b80d5b69ebb56338826c6ad4f786a859b8f0 	++
+ 808   42->0    { 824: 824}     │  │  │  ├── [109848996        1904]good.test.4                        ## 2410f026011d2238c1cf4a973d3f80b008357cc9 	++
+ 809   42->0    { 825: 825}     │  │  │  ├── [109848997        3701]good.test.8                        ## 73ec569950b53f53cefde8e865aa0b52a89b342f 	++
+ 810   42->0    { 826: 826}     │  │  │  ├── [109848998         974]good.test.7                        ## f1472a91b1ecab9946107075931252fd8551d0d0 	++
+ 811   42->0    { 827: 827}     │  │  │  ├── [109848999        2236]good.test.ca1                      ## e140b325d57ba8f796a24e94ab0153ceb739ba4b 	++
+ 812   42->0    { 828: 828}     │  │  │  └── [109849000         522]zocromas_duf.conf                  ## 530f96fe9125a237c5c1dc4a0f2fccbe44d00150 	++
+ 813   41->0    { 829: 829}     │  │  ├── [109848983         737]DCEMAIL.ABK.locate                 ## 56d6c2e0a568f51c0c320103a198a76799377b96 	++
+ 814   41->0    { 830: 830}     │  │  ├── [109848984           9]__.gitignore                       ## 8066a553ac1dbdd7f7c20138c7b5d2f7f29473e2 	++
+ 815   41->0    { 831: 831}     │  │  ├── [109848985        3206]test.txt                           ## 6a0829316fc35ec092e4b4894d4e4314fc44740c 	++
+ 816   41->44   { 832: 832}     │  │  └── [109953152  DIR =1]   sh
+ 817   44->0    { 833: 833}     │  │      └── [109849024        8892]test20140907.113444.sh             ## 3e2f4d94ce3c24236f678dc4069023f423f35364 	++
+ 818   18->0    { 834: 834}     │  ├── [109848262          26]zocversion.txt                     
+ 819   18->45   { 835: 835}     │  ├── [109953153  DIR =1]   shsq
+ 820   45->0    { 836: 836}     │  │  └── [109849025        2548]libsql.bash                        ## badf020cd6e078c8691596e0daf45737e24e8df1 	++
+ 821   18->0    { 838: 838}     │  └── [109848263       60322]aclocal.m4                         ## 26cc287a0f0292d88cb43b9834311cb3da1bb7c8 	++
+ 822   15->0    { 839: 839}     ├── [109848228        1256]test-history.txt                   ## f64dd8212c6300c08be103526337aa26fc59ee12 	++
+ 823   15->0    { 840: 840}     ├── [109848229          23]out1.cmds                          ## a8bed5788534352cca7e65fe92c2b40c59afd9b4 	++
+ 824   15->47   { 841: 841}     ├── [109953155  DIR =116] editing
+ 825   47->48   { 842: 842}     │  ├── [109953156  DIR =90]  .gvimvrb
+ 826   48->0    { 843: 843}     │  │  ├── [109849031       86017]SHN_GVIMER_PLUS-C4ED654877370BFA4E54474B94A3F436.redir## 03b65323dffcdbc7600db8d07f94140fe6446f9e 	++++
+ 827   48->0    { 844: 844}     │  │  ├── [109849032        8192]SHN_GVIMER_PLUS-CC7FEE589D4DF55412579FB89AEFE340.vrb## faae83f9b51f408d91916a2fecaf874f4784b69f 	++++
+ 828   48->0    { 845: 845}     │  │  ├── [109849033       57344]SHN_GVIMER_PLUS-669C74AB39EF1AA3C8E9D66ABCE7D992.vrb## aeaa10e0b37ce6ba5350bc880c3c536b081c7b9d 	++++
+ 829   48->0    { 846: 846}     │  │  ├── [109849034        9013]SHN_GVIMER_PLUS-31017DD9276BF0323982DA63E74F4B02.viminfo## 81b2e758181d1efa8197da5a62b50229a0fbf511 	++
+ 830   48->0    { 847: 847}     │  │  ├── [109849035       22009]SHN_GVIMER_PLUS-2B221E5EBAE4D694A2484777EB638628.viminfo## 03a490c9549fabb0a24d3c433b5a43bc9c449650 	++
+ 831   48->0    { 848: 848}     │  │  ├── [109849036        3905]SHN_GVIMER_PLUS-B07B83B8C14418C03A24DEFB00077060.vrb## fcde22bed6c6e7fadfe18212d5d2b39551c465bf 	++++
+ 832   48->0    { 849: 849}     │  │  ├── [109849037       77824]SHN_GVIMER_PLUS-C4E489F4898B013DD1D1E3F9341E1E41.vrb## 88e4dd2bcc11161f921d0d03307844a3e60be1df 	++++
+ 833   48->0    { 850: 850}     │  │  ├── [109849038        1593]SHN_GVIMER_PLUS-36DD4A55CED6136E10B7B29107150126.redir## 701f05e328b0e8fd723ac98873a780ea6cadfade 	++++
+ 834   48->0    { 851: 851}     │  │  ├── [109849039       63000]SHN_GVIMER_PLUS-CFCDFC7E612CA2A76A368C21C552D71B.redir## daa0774f7f346ce560deff78605a96eb871506e3 	++++
+ 835   48->0    { 852: 852}     │  │  ├── [109849040       23396]SHN_GVIMER_PLUS-8F799598D3D5F2834229AFE33267343E.viminfo## df9baaeff5fa49dcd8d72d30a4939807530de3a2 	++
+ 836   48->0    { 853: 853}     │  │  ├── [109849041        1593]SHN_GVIMER_PLUS-36DD4A55CED6136E10B7B29107150126.vrb## 701f05e328b0e8fd723ac98873a780ea6cadfade 	++++
+ 837   48->0    { 854: 854}     │  │  ├── [109849042       47465]SHN_GVIMER_PLUS-4AF613C90777DB3932FE71074F65263E.redir## dd2965c9432faee8eba74f5167ccd9786ce41d80 	++++
+ 838   48->0    { 855: 855}     │  │  ├── [109849043        3874]SHN_GVIMER_PLUS-32629E78E12FAE4ABB2EE0B25EBB1B36.redir## b5a06e3e18663ed7a231a2e28980d6c10d7f5c37 	++++
+ 839   48->0    { 856: 856}     │  │  ├── [109849044       31255]SHN_GVIMER_PLUS-462CCD42FD2E2F7EEC39BCABD1B9926D.viminfo## 76798df5f5ed279d07998a1d5e65380e3ab62c2d 	++
+ 840   48->0    { 857: 857}     │  │  ├── [109849045       86017]SHN_GVIMER_PLUS-C4ED654877370BFA4E54474B94A3F436.vrb## 03b65323dffcdbc7600db8d07f94140fe6446f9e 	++++
+ 841   48->0    { 858: 858}     │  │  ├── [109849046         512]SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D765011.vrb## faa95544b8e166beb3f337513cffbf8582dd0580 	++++
+ 842   48->0    { 859: 859}     │  │  ├── [109849047        8192]SHN_GVIMER_PLUS-DB1686AB89F0A1047C68B124431A0E81.redir## 2fcd8f498cc1b4d57496d0267ed146ef0c8f20c1 	++++
+ 843   48->0    { 860: 860}     │  │  ├── [109849048           1]SHN_GVIMER_PLUS-C426728CC2D5F59FAFBF4C235EC811681.vrb## adc83b19e793491b1c6ea0fd8b46cd9f32e592fc 	++++++++++++
+ 844   48->0    { 861: 861}     │  │  ├── [109849049       11346]SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D765011.viminfo## 6f3143c52b1c976563375436e8b7674e169187a2 	++
+ 845   48->0    { 862: 862}     │  │  ├── [109849050       47465]SHN_GVIMER_PLUS-4AF613C90777DB3932FE71074F65263E.vrb## dd2965c9432faee8eba74f5167ccd9786ce41d80 	++++
+ 846   48->0    { 863: 863}     │  │  ├── [109849051        3905]SHN_GVIMER_PLUS-B07B83B8C14418C03A24DEFB00077060.redir## fcde22bed6c6e7fadfe18212d5d2b39551c465bf 	++++
+ 847   48->0    { 864: 864}     │  │  ├── [109849052       10962]SHN_GVIMER_PLUS-1DB7DFBDD88A3FDFDFA796A8E7FFC76D.viminfo## bd35ba5796ceaf9cddca90c19c8f074ec8f2fe09 	++
+ 848   48->0    { 865: 865}     │  │  ├── [109849053       16957]SHN_GVIMER_PLUS-36DD4A55CED6136E10B7B29107150126.viminfo## d6a92bdf19e9905bdc7e74fc4bc1d585b5a5aa35 	++
+ 849   48->0    { 866: 866}     │  │  ├── [109849054         512]SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D765011.redir## faa95544b8e166beb3f337513cffbf8582dd0580 	++++
+ 850   48->0    { 867: 867}     │  │  ├── [109849055        3623]SHN_GVIMER_PLUS-2B221E5EBAE4D694A2484777EB6386281.vrb## cefd5d4bb40d5a1f69cd034f2c9c16a2f64b76a7 	++++
+ 851   48->0    { 868: 868}     │  │  ├── [109849056       28672]SHN_GVIMER_PLUS-E811691783F0CCC4887C34A774FB04A1.vrb## be36416c64211d25e8aa0490ecc171c38f10af4c 	++++
+ 852   48->0    { 869: 869}     │  │  ├── [109849057        4096]SHN_GVIMER_PLUS-28058D5455633722AE10A7ECEF833218.redir## 708fc10c106dd1197f7f64336f38676cd784e51b 	++++
+ 853   48->0    { 870: 870}     │  │  ├── [109849058       10351]SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D76501.vrb## f6c9d114a2613b1b9f3bde93112f510f203326a5 	++++
+ 854   48->0    { 871: 871}     │  │  ├── [109849059        6900]SHN_GVIMER_PLUS-190AD685A5245DC84ECA2B7FC9595245.vrb## f3c76e5c69d0a87f15ca5890dc0fad401de75f0f 	++++
+ 855   48->0    { 872: 872}     │  │  ├── [109849060       19149]SHN_GVIMER_PLUS-D4D90BAC0D7CAE23A1BADA0633626C35.viminfo## b1dea2b0b00030ee7f52339674b32166dced768e 	++
+ 856   48->0    { 873: 873}     │  │  ├── [109849061       14402]SHN_GVIMER_PLUS-C426728CC2D5F59FAFBF4C235EC811681.viminfo## 6f587c92be65749689ed85935b7d4384e5d60077 	++
+ 857   48->0    { 874: 874}     │  │  ├── [109849062        8192]SHN_GVIMER_PLUS-CC7FEE589D4DF55412579FB89AEFE340.redir## faae83f9b51f408d91916a2fecaf874f4784b69f 	++++
+ 858   48->0    { 875: 875}     │  │  ├── [109849063       16384]SHN_GVIMER_PLUS-E3A8CA3BF3D809E9059F8F3229101214.redir## 30f74f5f39af94b5584cfc5c23fcca0081ef40a0 	++++
+ 859   48->0    { 876: 876}     │  │  ├── [109849064       63000]SHN_GVIMER_PLUS-CFCDFC7E612CA2A76A368C21C552D71B.vrb## daa0774f7f346ce560deff78605a96eb871506e3 	++++
+ 860   48->0    { 877: 877}     │  │  ├── [109849065        7289]SHN_GVIMER_PLUS-32629E78E12FAE4ABB2EE0B25EBB1B36.viminfo## 6882f9786b0e33cb05e6a5efb7d2961631aa60b3 	++
+ 861   48->0    { 878: 878}     │  │  ├── [109849066       20108]SHN_GVIMER_PLUS-3D5C9FBD485FC6E55A63D6A50924A526.vrb## 276a5cb0b09e94586c07794e1bf59fb71c69ffee 	++++
+ 862   48->0    { 879: 879}     │  │  ├── [109849067       32644]SHN_GVIMER_PLUS-0DC33CB82D499314F2660FEB70A265DA.viminfo## 2080bfe8a80131fd4d64a9cf3405814a510c20a5 	++
+ 863   48->0    { 880: 880}     │  │  ├── [109849068       12866]SHN_GVIMER_PLUS-5F848ECF424EEEE0DED8656A7E9B2864.viminfo## c9b8396e8fb39642fe7a9bc0dee169f8d47dc80f 	++
+ 864   48->0    { 881: 881}     │  │  ├── [109849069       16632]SHN_GVIMER_PLUS-71381CAD76BC8CE276A7F52643BF5566.viminfo## aea9a3e25ea491968e16e427d23831c7e099a1b5 	++
+ 865   48->0    { 882: 882}     │  │  ├── [109849070       13595]SHN_GVIMER_PLUS-4AF613C90777DB3932FE71074F65263E.viminfo## 281513f4a3314676debf8d1d2e31cd7a5329884f 	++
+ 866   48->0    { 883: 883}     │  │  ├── [109849071       10351]SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D76501.redir## f6c9d114a2613b1b9f3bde93112f510f203326a5 	++++
+ 867   48->0    { 884: 884}     │  │  ├── [109849072       67809]SHN_GVIMER_PLUS-1DB7DFBDD88A3FDFDFA796A8E7FFC76D.vrb## 813b4ec1b28a3f4aed766c80f51da80e9ccebe55 	++++
+ 868   48->0    { 885: 885}     │  │  ├── [109849073           1]SHN_GVIMER_PLUS-F62CC14062E5E64F6D347105EEC1E1A61.redir## adc83b19e793491b1c6ea0fd8b46cd9f32e592fc 	++++++++++++
+ 869   48->0    { 886: 886}     │  │  ├── [109849074        4096]SHN_GVIMER_PLUS-28058D5455633722AE10A7ECEF833218.vrb## 708fc10c106dd1197f7f64336f38676cd784e51b 	++++
+ 870   48->0    { 887: 887}     │  │  ├── [109849075       19149]SHN_GVIMER_PLUS-799DE9196FAF493E9EEC7BD8C3A09EC8.viminfo## 2e2bb5667958cef36250d96395767b752089712f 	++
+ 871   48->0    { 888: 888}     │  │  ├── [109849076       18068]SHN_GVIMER_PLUS-1B274763FC2C601C79A73F9FA1B40221.viminfo## 89cc10957edb9c7d386705a140b25fbb427fe852 	++
+ 872   48->0    { 889: 889}     │  │  ├── [109849077       12988]SHN_GVIMER_PLUS-71381CAD76BC8CE276A7F52643BF55661.vrb## 936c1107caa7e05c364f97f1269326bcdf43f16f 	++++
+ 873   48->0    { 890: 890}     │  │  ├── [109849078       19002]SHN_GVIMER_PLUS-97BFF02A6580E5051409DF7CD4A0A282.viminfo## 71d342655c8ba0c8a8851e38c2ba26a820d3bbe9 	++
+ 874   48->0    { 891: 891}     │  │  ├── [109849079       28524]SHN_GVIMER_PLUS-C426728CC2D5F59FAFBF4C235EC81168.viminfo## 71facd536d7f69316996bed834e4e1e326c11570 	++
+ 875   48->0    { 892: 892}     │  │  ├── [109849080       36864]SHN_GVIMER_PLUS-81703724446B08A6ED1348D28A7D50DF.vrb## 17484dced061ca5535fc9431f3b31ab54c90feeb 	++++
+ 876   48->0    { 893: 893}     │  │  ├── [109849081        4113]SHN_GVIMER_PLUS-1B274763FC2C601C79A73F9FA1B40221.redir## a021bedda3f36c4683c3d6c43486374d637066a0 	++++
+ 877   48->0    { 894: 894}     │  │  ├── [109849082       28672]SHN_GVIMER_PLUS-E811691783F0CCC4887C34A774FB04A1.hardlink.redir## be36416c64211d25e8aa0490ecc171c38f10af4c 	++++
+ 878   48->0    { 895: 895}     │  │  ├── [109849083       13182]SHN_GVIMER_PLUS-2B221E5EBAE4D694A2484777EB6386281.viminfo## 402940abe39d8e44d77349b074f571894a6fd5f1 	++
+ 879   48->0    { 896: 896}     │  │  ├── [109849084       77824]SHN_GVIMER_PLUS-C4E489F4898B013DD1D1E3F9341E1E41.redir## 88e4dd2bcc11161f921d0d03307844a3e60be1df 	++++
+ 880   48->0    { 897: 897}     │  │  ├── [109849085        8363]SHN_GVIMER_PLUS-09867A351575E2C79FAAE2ECFDBC683F.viminfo## c6b6e68d804d91afb357bb5fd454d145bbb077c9 	++
+ 881   48->0    { 898: 898}     │  │  ├── [109849086        8787]SHN_GVIMER_PLUS-71381CAD76BC8CE276A7F52643BF55661.viminfo## 6bf28b6ce566811b36ed34970f488c0e84bb9add 	++
+ 882   48->0    { 899: 899}     │  │  ├── [109849087       57344]SHN_GVIMER_PLUS-FB6F952B3F30FA65680D69BF612091F5.redir## e6ef8c356859897ec7ab263779943481f1c10b52 	++++
+ 883   48->0    { 900: 900}     │  │  ├── [109849088       17118]SHN_GVIMER_PLUS-C9C3A50715E10ECC5CECD0C9474616C3.viminfo## c87b69d70417324bbbbab3c927a4b78adb8706d2 	++
+ 884   48->0    { 901: 901}     │  │  ├── [109849089        9070]SHN_GVIMER_PLUS-B07B83B8C14418C03A24DEFB00077060.viminfo## c83a157a63cc01c8a640a54b090d9cf52e0a3e61 	++
+ 885   48->0    { 902: 902}     │  │  ├── [109849090        4113]SHN_GVIMER_PLUS-1B274763FC2C601C79A73F9FA1B40221.vrb## a021bedda3f36c4683c3d6c43486374d637066a0 	++++
+ 886   48->0    { 903: 903}     │  │  ├── [109849091       14933]SHN_GVIMER_PLUS-C4ED654877370BFA4E54474B94A3F436.viminfo## f8b6cd647dd5aa2b5e309fbbd036437afdd0c0ea 	++
+ 887   48->0    { 904: 894}     │  │  ├── [109849082       28672]SHN_GVIMER_PLUS-E811691783F0CCC4887C34A774FB04A1.redir## be36416c64211d25e8aa0490ecc171c38f10af4c 	++++
+ 888   48->0    { 905: 904}     │  │  ├── [109849092       52475]SHN_GVIMER_PLUS-5F848ECF424EEEE0DED8656A7E9B2864.vrb## 4716c0386e6ffaf519d689ea5671ed8fe57a802f 	++++
+ 889   48->0    { 906: 905}     │  │  ├── [109849093       10894]SHN_GVIMER_PLUS-F62CC14062E5E64F6D347105EEC1E1A61.viminfo## b2c97931b3c9b0dc051880b96f501b026912505a 	++
+ 890   48->0    { 907: 906}     │  │  ├── [109849094       21282]SHN_GVIMER_PLUS-D4FF772863A24E8C1DD3F238EABDD28A.viminfo## 2ab8aefe992f749123c1df8c0c5ad40093f3e9d3 	++
+ 891   48->0    { 908: 907}     │  │  ├── [109849095       14557]SHN_GVIMER_PLUS-C8C81B539180F73ED05BD3AA7C211B80.viminfo## 56672cad9d0287aec7bce92cc7a528db9a0ae756 	++
+ 892   48->0    { 909: 908}     │  │  ├── [109849096       20108]SHN_GVIMER_PLUS-3D5C9FBD485FC6E55A63D6A50924A526.redir## 276a5cb0b09e94586c07794e1bf59fb71c69ffee 	++++
+ 893   48->0    { 910: 909}     │  │  ├── [109849097       57344]SHN_GVIMER_PLUS-669C74AB39EF1AA3C8E9D66ABCE7D992.redir## aeaa10e0b37ce6ba5350bc880c3c536b081c7b9d 	++++
+ 894   48->0    { 911: 910}     │  │  ├── [109849098        8192]SHN_GVIMER_PLUS-DB1686AB89F0A1047C68B124431A0E81.vrb## 2fcd8f498cc1b4d57496d0267ed146ef0c8f20c1 	++++
+ 895   48->0    { 912: 911}     │  │  ├── [109849099       19599]SHN_GVIMER_PLUS-7AB5DCEAAFD134A6D4BFDEA6A5018163.viminfo## d283afb50a0ab264cac7c4c972cde3d4b06c1044 	++
+ 896   48->0    { 913: 912}     │  │  ├── [109849100        6276]SHN_GVIMER_PLUS-31017DD9276BF0323982DA63E74F4B02.vrb## 7ce57a0ac634dc33067a30f0072e6517c6aa81a8 	++++
+ 897   48->0    { 914: 913}     │  │  ├── [109849101       52475]SHN_GVIMER_PLUS-5F848ECF424EEEE0DED8656A7E9B2864.redir## 4716c0386e6ffaf519d689ea5671ed8fe57a802f 	++++
+ 898   48->0    { 915: 914}     │  │  ├── [109849102       11491]SHN_GVIMER_PLUS-C3DEF0FF9493E75D8A05DD49D1D76501.viminfo## f1f1bf7a439bbf3cb85471717612457f875c1982 	++
+ 899   48->0    { 916: 915}     │  │  ├── [109849103       57344]SHN_GVIMER_PLUS-FB6F952B3F30FA65680D69BF612091F5.vrb## e6ef8c356859897ec7ab263779943481f1c10b52 	++++
+ 900   48->0    { 917: 916}     │  │  ├── [109849104       12988]SHN_GVIMER_PLUS-71381CAD76BC8CE276A7F52643BF55661.redir## 936c1107caa7e05c364f97f1269326bcdf43f16f 	++++
+ 901   48->0    { 918: 917}     │  │  ├── [109849105       25660]SHN_GVIMER_PLUS-F62CC14062E5E64F6D347105EEC1E1A6.viminfo## 8372a92168768fdc165dbfe231a47a8ece88d617 	++
+ 902   48->0    { 919: 918}     │  │  ├── [109849106        6900]SHN_GVIMER_PLUS-190AD685A5245DC84ECA2B7FC9595245.redir## f3c76e5c69d0a87f15ca5890dc0fad401de75f0f 	++++
+ 903   48->0    { 920: 919}     │  │  ├── [109849107        9757]SHN_GVIMER_PLUS-C93A0BC0398237EE94B8884C42A3FD47.viminfo## f7706585bc04f10e6381fe3d293c2e932fff3bf1 	++
+ 904   48->0    { 921: 920}     │  │  ├── [109849108           1]SHN_GVIMER_PLUS-C426728CC2D5F59FAFBF4C235EC811681.redir## adc83b19e793491b1c6ea0fd8b46cd9f32e592fc 	++++++++++++
+ 905   48->0    { 922: 921}     │  │  ├── [109849109        3623]SHN_GVIMER_PLUS-2B221E5EBAE4D694A2484777EB6386281.redir## cefd5d4bb40d5a1f69cd034f2c9c16a2f64b76a7 	++++
+ 906   48->0    { 923: 922}     │  │  ├── [109849110        6445]SHN_GVIMER_PLUS-3D5C9FBD485FC6E55A63D6A50924A526.viminfo## 4496bdcbd805c4bc99126867b43763998e6fb356 	++
+ 907   48->0    { 924: 923}     │  │  ├── [109849111       11404]SHN_GVIMER_PLUS-CFCDFC7E612CA2A76A368C21C552D71B.viminfo## e6f91c358e491a594991b28e28764f87c6663ebf 	++
+ 908   48->0    { 925: 924}     │  │  ├── [109849112       16384]SHN_GVIMER_PLUS-E3A8CA3BF3D809E9059F8F3229101214.vrb## 30f74f5f39af94b5584cfc5c23fcca0081ef40a0 	++++
+ 909   48->0    { 926: 925}     │  │  ├── [109849113       11809]SHN_GVIMER_PLUS-190AD685A5245DC84ECA2B7FC9595245.viminfo## fe78585b92341dfb18c2e85201c99af6108ece17 	++
+ 910   48->0    { 927: 926}     │  │  ├── [109849114       36864]SHN_GVIMER_PLUS-81703724446B08A6ED1348D28A7D50DF.redir## 17484dced061ca5535fc9431f3b31ab54c90feeb 	++++
+ 911   48->0    { 928: 927}     │  │  ├── [109849115        8384]SHN_GVIMER_PLUS-6B5863D025DDC6C253052495142CFBF3.viminfo## fbe901834e069932130da5d636b7090edf1765f2 	++
+ 912   48->0    { 929: 928}     │  │  ├── [109849116        3874]SHN_GVIMER_PLUS-32629E78E12FAE4ABB2EE0B25EBB1B36.vrb## b5a06e3e18663ed7a231a2e28980d6c10d7f5c37 	++++
+ 913   48->0    { 930: 929}     │  │  ├── [109849117        6276]SHN_GVIMER_PLUS-31017DD9276BF0323982DA63E74F4B02.redir## 7ce57a0ac634dc33067a30f0072e6517c6aa81a8 	++++
+ 914   48->0    { 931: 930}     │  │  ├── [109849118       67809]SHN_GVIMER_PLUS-1DB7DFBDD88A3FDFDFA796A8E7FFC76D.redir## 813b4ec1b28a3f4aed766c80f51da80e9ccebe55 	++++
+ 915   48->0    { 932: 931}     │  │  └── [109849119           1]SHN_GVIMER_PLUS-F62CC14062E5E64F6D347105EEC1E1A61.vrb## adc83b19e793491b1c6ea0fd8b46cd9f32e592fc 	++++++++++++
+ 916   47->0    { 933: 932}     │  ├── [109849026          31]vimrc-mastar.vim                   
+ 917   47->49   { 934: 933}     │  ├── [109953157  DIR =21]  mased
+ 918   49->0    { 935: 934}     │  │  ├── [109849120          36]ac.mased.vim                       
+ 919   49->0    { 936: 935}     │  │  ├── [109849121         573]cdef.mased.vim                     ## 90a0bafbe1bb42f5c90b8fbb3ffea47d5f4835a1 	++
+ 920   49->0    { 937: 936}     │  │  ├── [109849122         861]srcmod.mased.vim                   ## fdddb0fc6473d8b18286584cd0aa678cbd7580ea 	++
+ 921   49->0    { 938: 937}     │  │  ├── [109849123         376]srcpdi.mased.vim                   ## 27016ab1f04d354f2ae4b2ec3a68df2ebe6f8a0f 	++
+ 922   49->0    { 939: 938}     │  │  ├── [109849124         312]srcsql.mased.vim                   ## 0890089be9850bec72f487910cb53fbc18d192f7 	++
+ 923   49->0    { 940: 939}     │  │  ├── [109849125          39]vimrc.mased.vim                    
+ 924   49->0    { 941: 940}     │  │  ├── [109849126          92]srcevsql.mased.vim                 ## b4714b4e0e57bdcb7cd839db98f7a9cfcef72892 	++
+ 925   49->0    { 942: 941}     │  │  ├── [109849127         370]srctoexpire.mased.vim              ## a129bd67dfe9943545083316f8c6a413c7fe7bc1 	++
+ 926   49->0    { 943: 942}     │  │  ├── [109849128         633]src.mased.vim                      ## f50cdceed1bbf6b88129fa0a78e260c841cc1d05 	++
+ 927   49->0    { 944: 943}     │  │  ├── [109849129         672]srclevinfo.mased.vim               ## 8ce8d8d3e6a4153e432986a9ae5201b6ef0de753 	++
+ 928   49->0    { 945: 944}     │  │  ├── [109849130         463]srcsccb.mased.vim                  ## 39e467b11c00edac90e699768481b46b242b0ff8 	++
+ 929   49->0    { 946: 945}     │  │  ├── [109849131         341]srciface.mased.vim                 ## 61aa3ef42a4244a3586253855fcea9095ba35c25 	++
+ 930   49->0    { 947: 946}     │  │  ├── [109849132          94]srcupath.mased.vim                 ## ed9c416ca2f9236f02b8cc01627fbb82320088de 	++
+ 931   49->0    { 948: 947}     │  │  ├── [109849133        1222]srcconfig.mased.vim                ## fe0e535aaa5f67815a38d27378b5ac77dd073b27 	++
+ 932   49->0    { 949: 948}     │  │  ├── [109849134          37]shn.mased.vim                      
+ 933   49->0    { 950: 949}     │  │  ├── [109849135         149]srcufilter.mased.vim               ## b7d7fc979fee35ee544d82f6808c6330b206bead 	++
+ 934   49->0    { 951: 950}     │  │  ├── [109849136          36]sh.mased.vim                       
+ 935   49->0    { 952: 951}     │  │  ├── [109849137         873]srctypes.mased.vim                 ## cb6374a01124f19d273d44dad6a7fa01a6da03da 	++
+ 936   49->0    { 953: 952}     │  │  ├── [109849138         438]m.mased.vim                        ## 97937997d63f1243beeff20904448c2e76686146 	++
+ 937   49->0    { 954: 953}     │  │  ├── [109849139         644]srclow.mased.vim                   ## b8bc9c337d58b6972a11f30f0ef2abfe5874bdd0 	++
+ 938   49->0    { 955: 954}     │  │  └── [109849140         393]srcbegfin.mased.vim                ## 642f31801103f56df3754f2f9e8274c7b34ab250 	++
+ 939   47->0    { 956: 955}     │  ├── [109849027          29]gvim-funcs.vim                     
+ 940   47->0    { 957: 956}     │  ├── [109849028        6981]opened.20150531.txt                ## 5d3de948cf594ab3686cd9c58ab85ad74e92bade 	++
+ 941   47->0    { 958: 957}     │  ├── [109849029          32]gvim-vimenter.vim                  
+ 942   47->0    { 959: 958}     │  └── [109849030          32]gvimrc-mastar.vim                  
+ 943   15->0    { 960: 959}     ├── [109848230          11]m4zoc                              
+ 944   15->50   { 961: 960}     ├── [109953158  DIR =2]   boxes
+ 945   50->0    { 962: 961}     │  ├── [109849141          43]dropbox.com.duf                    
+ 946   50->0    { 963: 962}     │  └── [109849142          37]box.com.duf                        
+ 947   15->0    { 964: 963}     ├── [109848231          24]zocvdate.txt                       
+ 948   15->0    { 965: 964}     ├── [109848232           9]shn                                
+ 949   15->51   { 966: 965}     ├── [109953159  DIR =21]  human
+ 950   51->0    { 967: 966}     │  ├── [109849143           6]__.gitignore                       ## 37ccb20ee0e1ac92de14ebae49a693d05a8342af 	++
+ 951   51->53   { 969: 968}     │  ├── [109953161  DIR =9]   doc
+ 952   53->0    { 970: 969}     │  │  ├── [109849144        4185]x1.txt                             ## 9da14a23ce5e0122b08e4de6e402a77fd11010d0 	++
+ 953   53->0    { 971: 970}     │  │  ├── [109849145        5819]duf1.dia                           ## d12c973d4b7ee4bdff62d3c4bb4baf6c7364ce20 	++++
+ 954   53->0    { 972: 971}     │  │  ├── [109849146        4273]x3.txt                             ## 5f5e6742d629c8cb55dc11d99589e6c1f0b6744d 	++
+ 955   53->0    { 973: 972}     │  │  ├── [109849147        5848]duf1.dia~                          ## 40cb1ee2d3f0276699ab7a265bf06ee611b2febc 	++
+ 956   53->0    { 974: 973}     │  │  ├── [109849148        4986]x3a.txt                            ## deeb282720631c0333c70992eb699c3f9707c58a 	++++
+ 957   53->0    { 975: 974}     │  │  ├── [109849149        1916]x2.txt                             ## 91f7582ac61a48c31c5a4848d7ca240b8b4365b5 	++
+ 958   53->0    { 976: 975}     │  │  ├── [109849150        6346]duf.dia                            ## 6e83628c00b610a3f84e71dbfb2fdc5a2b975a67 	++
+ 959   53->0    { 977: 976}     │  │  ├── [109849151        5819]duf.dia~                           ## d12c973d4b7ee4bdff62d3c4bb4baf6c7364ce20 	++++
+ 960   53->0    { 978: 977}     │  │  └── [109849152        4986]x3a1.txt                           ## deeb282720631c0333c70992eb699c3f9707c58a 	++++
+ 961   51->55   { 980: 979}     │  └── [109953163  DIR =11]  examples
+ 962   55->0    { 981: 980}     │      ├── [109849153       26036]exif-data.c                        ## 941ba2a571d845223a3bc805162cd8997f12dc56 	++
+ 963   55->0    { 982: 981}     │      ├── [109849154        1177]2.c                                ## 28188ba51293cde779ab82f1aa20cdc6f6abaaa5 	++++
+ 964   55->0    { 983: 982}     │      ├── [109849155        2384]sqlite-func.c                      ## adaa52412d3937254b4b930d894876dacf98857c 	++
+ 965   55->0    { 984: 983}     │      ├── [109849156        1770]exifthumb.c                        ## ae92d3fe51606a7340646433d79af48bfb8c1b93 	++
+ 966   55->0    { 985: 984}     │      ├── [109849157        1419]configure.ac.20131026.110837       ## c3ce44aaecca4b17392010659ac8ef70fa51d05d 	++
+ 967   55->0    { 986: 985}     │      ├── [109849158        1177]1.c                                ## 28188ba51293cde779ab82f1aa20cdc6f6abaaa5 	++++
+ 968   55->0    { 987: 986}     │      ├── [109849159        2235]example3.c                         ## 2b2de665b6499362e9f313d4726f7ef7ae722f88 	++
+ 969   55->0    { 988: 987}     │      ├── [109849160        2981]3.c                                ## 509b300045c62babac21cac01b12862cfae10f50 	++
+ 970   55->0    { 989: 988}     │      ├── [109849161        3940]foreign-example.c                  ## 3df4aa6acc21671c38b256453b47aac4a133ce2d 	++
+ 971   55->0    { 990: 989}     │      ├── [109849162         853]0.c                                ## 42e05be5984874995acb7956b1e7e1ea7616562d 	++
+ 972   55->0    { 991: 990}     │      └── [109849163        1209]4.c                                ## 24da5371ad126dda9f5f0e2409262799250c4e3a 	++
+ 973   15->56   { 992: 991}     ├── [109953164  DIR =281] src
+ 974   56->0    { 993: 992}     │  ├── [109849164        8527]evsql_selector.c                   ## 5cd6c9f774f74716826454f04a9b95403d0029b4 	++
+ 975   56->0    { 994: 993}     │  ├── [109849165        3383]duf_status.c                       ## 70a0b8b9b7d62d713fbd236408408bc9e5c3f94a 	++
+ 976   56->0    { 995: 994}     │  ├── [109849166        5157]duf_filedata.c                     ## bacc5c324816158d7280dce303b7597f8d120b0e 	++
+ 977   56->0    { 996: 995}     │  ├── [109849167        2644]duf_match.c                        ## 96de76e51e62d65214622a1ec861c617cabd5c75 	++
+ 978   56->57   { 997: 996}     │  ├── [109953165  DIR =148] inc
+ 979   57->0    { 998: 997}     │  │  ├── [109849297         709]duf_pdi_reinit.h                   ## 306db072d991e71bc4767a6cdd254dd1c595c014 	++
+ 980   57->0    { 999: 998}     │  │  ├── [109849298       18328]Makefile.in                        ## a9ab669c8de894055172d9337be6c4c06b792b3e 	++
+ 981   57->0    {1000: 999}     │  │  ├── [109849299         372]duf_pdi_credel.h                   ## 9b2e163ac59218169330369d3e6db4a89d2f22ec 	++
+ 982   57->0    {1001:1000}     │  │  ├── [109849300         224]duf_ufilter_ref.h                  ## d66100ae9518130afd37e8786ee8521d2955312a 	++
+ 983   57->0    {1002:1001}     │  │  ├── [109849301        1987]duf_ufilter_types.h                ## ee8a425fdb5733572eae9f534395f6b7a08fdcb4 	++
+ 984   57->0    {1003:1002}     │  │  ├── [109849302         259]duf_levinfo_context.h              ## 105b6fbd2d71cfc09a3ee4e226fd4821cebd5497 	++
+ 985   57->0    {1004:1003}     │  │  ├── [109849303         187]duf_ufilter_bind.h                 ## ffc80a74e6679f698be6928aca72889eecb00dd4 	++
+ 986   57->0    {1005:1004}     │  │  ├── [109849304        2953]duf_option_defs.h                  ## fcec9cea2e89eab2469dc5137d294f42db73cf98 	++
+ 987   57->0    {1006:1005}     │  │  ├── [109849305        6623]duf_levinfo_ref_def.h              ## 1db525fc81299912e098135d0a99ad7e776bd595 	++
+ 988   57->0    {1007:1006}     │  │  ├── [109849306         463]duf_base_types.h                   ## be2ee2a19f4918b152d5983aa5edf1644c2d1b88 	++
+ 989   57->0    {1008:1007}     │  │  ├── [109849307         899]duf_config_types.h                 ## bbd205c589c8f64ca6a8b9a9a0b4c3c419d08208 	++
+ 990   57->0    {1009:1008}     │  │  ├── [109849308         339]duf_sql_field.h                    ## 33d990c7ac02e58d14fbae9599ec4580554c04a4 	++
+ 991   57->0    {1010:1009}     │  │  ├── [109849309         324]duf_dbg.h                          ## 1c7658eb5dc37e318418e1e87b19426266d084c2 	++
+ 992   57->0    {1011:1010}     │  │  ├── [109849310         684]duf_fileinfo_types.h               ## c9dedff2dc0b0bbdea60165fc380b1a9f3912e27 	++
+ 993   57->0    {1012:1011}     │  │  ├── [109849311         272]duf_option_typed.h                 ## 89edba9970f74ef7702c78d0a9517c2108e94964 	++
+ 994   57->0    {1013:1012}     │  │  ├── [109849312        5177]duf_option_types.h                 ## dd0e8c41402b765f1dc2faea50459ab4738a7c86 	++
+ 995   57->0    {1014:1013}     │  │  ├── [109849313         217]duf_options_string.h               ## b9b845ccc02b68366b68022f951b9e8032b4dab3 	++
+ 996   57->0    {1015:1014}     │  │  ├── [109849314         362]duf_option_misc.h                  ## f69ae00840ea852245ddf65c0cea4cdfc52b1f12 	++
+ 997   57->0    {1016:1015}     │  │  ├── [109849315        2060]sql_selected_defs.h                ## 91685626bf25c4fc81f6f7043bd2a9aa4a572b08 	++
+ 998   57->0    {1017:1016}     │  │  ├── [109849316         206]duf_options_env.h                  ## d2587159f02b71fc73ad322a00b6cdcb922b7a9a 	++
+ 999   57->0    {1018:1017}     │  │  ├── [109849317        1005]duf_sccb_eval_std.h                ## b99c9ac85712a081a05a845c3cf8a4dbdf55ce8e 	++
+1000   57->0    {1019:1018}     │  │  ├── [109849318         596]duf_sql_field2.h                   ## 8d6ea4d5b4497908cec1cc2050c76eb95d58a52c 	++
+1001   57->0    {1020:1019}     │  │  ├── [109849319          97]std_fieldsets.h                    ## 6cc0387dc6c8c7368ecc5bd9319844973a577fc0 	++
+1002   57->0    {1021:1020}     │  │  ├── [109849320        4718]sql_beginning_selected.h           ## 492871b35b11bf40c53769f2b2e0f4565223bc8c 	++
+1003   57->0    {1022:1021}     │  │  ├── [109849321         364]duf_sccb_begfin.h                  ## a3ac41d74909c31eda5f1b66da78fa9fda85a9f4 	++
+1004   57->0    {1023:1022}     │  │  ├── [109849322        2399]duf_trace_defs_if.h                ## 5dbe49a083e493efd504a41b37934678710e72f6 	++
+1005   57->0    {1024:1023}     │  │  ├── [109849323          97]std_selectors.h                    ## 6c1bcceecb9f870243a581872834c4be145c1a56 	++
+1006   57->0    {1025:1024}     │  │  ├── [109849324         176]duf_li_credel.h                    ## f39ea8fbe09b339e30750261530ca41c8efbfcf7 	++
+1007   57->0    {1026:1025}     │  │  ├── [109849325         134]duf_maindb_info.h                  ## 9a091b3831c5c73fc5655d9e020eac734c4fed41 	++
+1008   57->0    {1027:1026}     │  │  ├── [109849326         189]duf_eval_at_config.h               ## dd7161e83a51f28ec090553f86a4ef7cfcc5a204 	++
+1009   57->0    {1028:1027}     │  │  ├── [109849327         547]duf_option.h                       ## a85791b5830f575002bb78bbe4c48cf2b03399b3 	++
+1010   57->0    {1029:1028}     │  │  ├── [109849328         159]duf_config4trace_ref.h             ## 5c2e1d777b2eebcace9e667529d6c7b0749922da 	++
+1011   57->0    {1030:1029}     │  │  ├── [109849329         664]duf_levinfo.h                      ## d703153a845495c7b835c7f28e745e2b281619fe 	++
+1012   57->0    {1031:1030}     │  │  ├── [109849330        4386]sql_tables_defs.h                  ## 522abe7a86c3f98f66590949947263e1b2dd0024 	++
+1013   57->0    {1032:1031}     │  │  ├── [109849331         324]duf_item_scan2.h                   ## 30e4984cac1ae46d4fc3dc68e1cae864a2a3f8de 	++
+1014   57->0    {1033:1032}     │  │  ├── [109849332         443]duf_sql.h                          ## 65c5ea7ea6b789ceb2652693f321819fb2dfea5a 	++
+1015   57->0    {1034:1033}     │  │  ├── [109849333         940]duf_sql1.h                         ## ac525d44c01666c8d8b67fc08c907f2c4c6915d0 	++
+1016   57->0    {1035:1034}     │  │  ├── [109849334        1453]duf_mod_defs.h                     ## 45168a5c6607e275c31685235c6820152b2f3c4a 	++
+1017   57->0    {1036:1035}     │  │  ├── [109849335         292]duf_trace_defs_sys.h               ## a74cd5ccf61d9de92fb0f9c68d45a9e68ae89850 	++
+1018   57->0    {1037:1036}     │  │  ├── [109849336        2475]duf_print_defs.h                   ## 9a0219ea220d82ed5c519d8bad3ec16b7d2a17af 	++
+1019   57->0    {1038:1037}     │  │  ├── [109849337        1056]duf_action_table.h                 ## 12659d00f496d6066765160ce9049eff5882acea 	++
+1020   57->0    {1039:1038}     │  │  ├── [109849338        8609]duf_sql_const.h                    ## 8f124bd3509711b4a347dcb380a105c451a3ba3b 	++
+1021   57->0    {1040:1039}     │  │  ├── [109849339        1991]duf_format_types.h                 ## 08ea30578346958416b2cd03e848dcf1506d95d1 	++
+1022   57->0    {1041:1040}     │  │  ├── [109849340        1478]duf_option_names.h                 ## 70b830bc60f6feb9012f708b3b9b5e49aaf1ee70 	++
+1023   57->0    {1042:1041}     │  │  ├── [109849341         706]duf_pdi.h                          ## aa28a61c88417d7287a422683d2653ac38cf5672 	++
+1024   57->0    {1043:1042}     │  │  ├── [109849342         433]duf_levinfo_updown.h               ## 77638f695f6c8815b8da4c41ab872d488de4ea2c 	++
+1025   57->0    {1044:1043}     │  │  ├── [109849343         113]duf_dirent.h                       ## cbca96478b3b4031f7be2c10742c57bd4672e848 	++
+1026   57->0    {1045:1044}     │  │  ├── [109849344        4596]duf_hook_types.h                   ## 05f5539d930b2ce52575ba067c0271fb93fbc2f5 	++
+1027   57->0    {1046:1045}     │  │  ├── [109849345         177]duf_option_tmpdb.h                 ## 8e668684cad3111bf1b7c7a47d5020beb745d7c9 	++
+1028   57->0    {1047:1046}     │  │  ├── [109849346         655]duf_fun_types.h                    ## c44574b2a04c4622d5f0294eff7cd3f4c69b1c7f 	++
+1029   57->0    {1048:1047}     │  │  ├── [109849347         424]sql_beginning_types.h              ## fec28eaa80e5e33004f594b76eb0660022a7593a 	++
+1030   57->0    {1049:1048}     │  │  ├── [109849348         337]duf_pathinfo_credel.h              ## 4edf1619452e863d67d49e36819987b71909922e 	++
+1031   57->0    {1050:1049}     │  │  ├── [109849349         360]duf_filedata.h                     ## 98f43bc0ee4d6555ab56fb3ad92eb46233123929 	++
+1032   57->0    {1051:1050}     │  │  ├── [109849350         899]duf_record_types.h                 ## 20edb691b78d410afdb087adb8fefb8ae07179b9 	++
+1033   57->0    {1052:1051}     │  │  ├── [109849351         326]duf_maindb.h                       ## d6d7362692dbb5cf76019a66f07bbb4e0b8ca04e 	++
+1034   57->0    {1053:1052}     │  │  ├── [109849352        1873]duf_start_end.h                    ## 385a21e1c5e4e3902060263a17c906f78bd37fcd 	++
+1035   57->0    {1054:1053}     │  │  ├── [109849353        6997]duf_error_defs.h                   ## d6b89f215c479754379279a628494a414a551f05 	++
+1036   57->0    {1055:1054}     │  │  ├── [109849354        1952]duf_flags_types.h                  ## 2f16f72d15ead403598ee8f616a128b977839d71 	++
+1037   57->0    {1056:1055}     │  │  ├── [109849355         156]sql_beginning_common.h             ## 8e47bbffdb1dc5512a9d48c0f8084b2b3db2ab2e 	++
+1038   57->0    {1057:1056}     │  │  ├── [109849356        4729]duf_optable_def.h                  ## 37520658546f43978d474cecafa49460750e8c8d 	++
+1039   57->0    {1058:1057}     │  │  ├── [109849357         202]duf_options_cli.h                  ## a57a4733953b6cd12dbd61339f9497f7a25bd789 	++
+1040   57->0    {1059:1058}     │  │  ├── [109849358         344]duf_prepare_actions.h              ## 033be825ca1554da60ca3a84ce913b81c34dd8db 	++
+1041   57->0    {1060:1059}     │  │  ├── [109849359         486]duf_sccb_handle.h                  ## 94f4b766050ee29fe1d9d7014781da8fd2e00909 	++
+1042   57->0    {1061:1060}     │  │  ├── [109849360        2704]duf_cli_types.h                    ## 66114a45782f80e91316e02de861bdfa56e711da 	++
+1043   57->0    {1062:1061}     │  │  ├── [109849361         733]duf_option_descr.h                 ## 8ffde1a2396a423ac93732804cb2ed0ff87f0b2e 	++
+1044   57->0    {1063:1062}     │  │  ├── [109849362         357]duf_status.h                       ## b6f03ee96851669a49c4e7466f3103ebcf13c79b 	++
+1045   57->0    {1064:1063}     │  │  ├── [109849363         201]duf_item_types.h                   ## 41e300c929a3479c2cf459c5c4870e92b666071d 	++
+1046   57->0    {1065:1064}     │  │  ├── [109849364        1740]duf_error_types.h                  ## ea192a64feafda73cb5bb9b46927ab2048be1569 	++
+1047   57->0    {1066:1065}     │  │  ├── [109849365         367]std_mod_sets.h                     ## 728d311d37c387c374bd7884be1858811c9f8509 	++
+1048   57->0    {1067:1066}     │  │  ├── [109849366         373]duf_match.h                        ## 55a40bccbd91ed2acf1220a9a61563890e4d5f8e 	++
+1049   57->0    {1068:1067}     │  │  ├── [109849367        7017]duf_levinfo_ref.h                  ## b8e2a68a42b6d4f074fde1c1cf7ba2abf1b7ae21 	++
+1050   57->0    {1069:1068}     │  │  ├── [109849368        1060]duf_levinfo_openclose.h            ## 7453eb5e90e1d0aff0941b75869986c84a96b617 	++
+1051   57->0    {1070:1069}     │  │  ├── [109849369         634]duf_utils_print.h                  ## f938158d1e4808a8197e7d85810eaf7f1bfb07d1 	++
+1052   57->0    {1071:1070}     │  │  ├── [109849370         680]duf_sccb_eval.h                    ## 51e5e38a025fffd599e5ebaf083a0a1a983578ab 	++
+1053   57->0    {1072:1071}     │  │  ├── [109849371         226]duf_pdi_types.h                    ## 2721d6c60279a39dbcb93ec2c3c40f64fda12917 	++
+1054   57->0    {1073:1072}     │  │  ├── [109849372        2420]duf_sql_defs.h                     ## 90c61df1f60fa0ff2fcdae30ac9454ab178b1073 	++
+1055   57->0    {1074:1073}     │  │  ├── [109849373         199]duf_dirent_scan2.h                 ## 64eecd0ffcb0186f94685c61d2f2e5706be2f7f4 	++
+1056   57->0    {1075:1074}     │  │  ├── [109849374         539]duf_sccb.h                         ## 626115b2c91c5929ac19a5cb051b3e37352ddd53 	++
+1057   57->0    {1076:1075}     │  │  ├── [109849375         725]duf_options_file.h                 ## f829c4ac15bb050dffe76cf979a6d6687c8fa467 	++
+1058   57->0    {1077:1076}     │  │  ├── [109849376         295]duf_ufilter.h                      ## 53580b423e632321825defc6ad49a8be118cfccf 	++
+1059   57->0    {1078:1077}     │  │  ├── [109849377         101]duf_sys_wrap.h                     ## bf39bcd6300239513f96f5ef8b4cd6d83f8c1b8a 	++
+1060   57->0    {1079:1078}     │  │  ├── [109849378         136]duf_status_ref.h                   ## db5a1f5231213568e044a8bf9dba0d7bf7120823 	++
+1061   57->0    {1080:1079}     │  │  ├── [109849379        7835]duf_pathinfo_ref.h                 ## faafdfa7baf01e553ce091140747d6e96ce9746b 	++
+1062   57->0    {1081:1080}     │  │  ├── [109849380         660]duf_scan_types.h                   ## 0b67625e5f16a0860d167fd3bb355bc6730bcf96 	++
+1063   57->0    {1082:1081}     │  │  ├── [109849381        3975]duf_option_typed_defs.h            ## 76ae4e6c056f7458869e7af6c91722a23dcc6a85 	++
+1064   57->0    {1083:1082}     │  │  ├── [109849382         164]duf_sel_cb_leaf.h                  ## a19a825d57eb597af20bb861fd8cabec96367fb6 	++
+1065   57->0    {1084:1083}     │  │  ├── [109849383         245]duf_levinfo_credel.h               ## a8b9770d082558a9724791c4f29f33b955819046 	++
+1066   57->0    {1085:1084}     │  │  ├── [109849384         796]duf_trace_defs.h                   ## 1e5df3c347b49c325c8c2924ae8b1d94f26ac192 	++
+1067   57->0    {1086:1085}     │  │  ├── [109849385         375]duf_config.h                       ## 0830846ed97559dd4ef2b6c5807abc6e36ac24a9 	++
+1068   57->0    {1087:1086}     │  │  ├── [109849386         878]duf_trace_defs_what.h              ## b8d3e8c0d4a0ac4cfb470dece8ffb1f498ee8dca 	++
+1069   57->0    {1088:1087}     │  │  ├── [109849387         290]duf_option_old.h                   ## baf148d338f36768a44682b7c5b9ed30ab980420 	++
+1070   57->0    {1089:1088}     │  │  ├── [109849388         780]duf_sccbh_eval.h                   ## e3c0c91976ea1d59bf3780da6cc6663d36249289 	++
+1071   57->0    {1090:1089}     │  │  ├── [109849389         803]duf_status_types.h                 ## edc5c447ca4eda386d8c7878dad24252110638c6 	++
+1072   57->0    {1091:1090}     │  │  ├── [109849390         187]duf_options_interactive.h          ## 69c3b123a9da2264e086b36fa54a617f7960fa65 	++
+1073   57->0    {1092:1091}     │  │  ├── [109849391        1505]duf_pdi_ref.h                      ## 601933cad8ce947bec86c88d7774940e0fac6ddb 	++
+1074   57->0    {1093:1092}     │  │  ├── [109849392         156]sql_beginning_vacuum.h             ## fc879b2736141217e59e5a5117112daa233bfce0 	++
+1075   57->0    {1094:1093}     │  │  ├── [109849393         448]duf_levinfo_stat.h                 ## ce749874b003d1fec90a9f900ffe86592421e042 	++
+1076   57->0    {1095:1094}     │  │  ├── [109849394         174]duf_pstmt_levinfo.h                ## 7ded3a9d7d9bd5925a22dbbb9084abc06441ad6a 	++
+1077   57->0    {1096:1095}     │  │  ├── [109849395         492]duf_option_cmd.h                   ## ae4e16d364bdf84f7f0f962660110236bfb287a6 	++
+1078   57->0    {1097:1096}     │  │  ├── [109849396         868]duf_config_ref.h                   ## d98bc8051817a53000804670d55bc5c3d8501d01 	++
+1079   57->0    {1098:1097}     │  │  ├── [109849397         301]duf_pdi_context.h                  ## 33aa0c7f1c0576058e7a17b3563cae15c45fbbaf 	++
+1080   57->0    {1099:1098}     │  │  ├── [109849398         479]duf_sccb_def.h                     ## 195c5995daa5807470413522622dde8fd7d0b040 	++
+1081   57->0    {1100:1099}     │  │  ├── [109849399        9130]duf_sqlite.h                       ## 73ab2c80efd3db9118036ab8422c78d1681b5b77 	++
+1082   57->0    {1101:1100}     │  │  ├── [109849400         247]duf_leaf_scan2.h                   ## b0c130e8469de6fbd313bf46e18a8499a65f3f10 	++
+1083   57->0    {1102:1101}     │  │  ├── [109849401         550]duf_pdi_attach.h                   ## 5679c4adb11768f9c3b0f9d6e970a19ce03df85e 	++
+1084   57->0    {1103:1102}     │  │  ├── [109849402         415]duf_printb.h                       ## 3d5bb919130cce52d2c7ea8341b1d5d0738c3b8a 	++
+1085   57->0    {1104:1103}     │  │  ├── [109849403         192]duf_path2dirid.h                   ## 9db7ce783704a57aa293b3e7b9670a5c56f561ee 	++
+1086   57->0    {1105:1104}     │  │  ├── [109849404        6236]duf_pathinfo_ref_def.h             ## 55b3e6067e7c349086aab81f6eb60825155e198e 	++
+1087   57->0    {1106:1105}     │  │  ├── [109849405         229]duf_sql_types.h                    ## 2b474c4efed0db44ca8f66870144d6238eb37bf8 	++
+1088   57->0    {1107:1106}     │  │  ├── [109849406         417]duf_pdi_stmt.h                     ## 225dbbe35aa74e27734e65a4ba0258cd4b03f129 	++
+1089   57->0    {1108:1107}     │  │  ├── [109849407         436]mod_exif.h                         ## bc22296114fd348d2f4dbd24e58d0a5ac8ab661b 	++
+1090   57->0    {1109:1108}     │  │  ├── [109849408         389]duf_path2db.h                      ## aef08082175f045cff7090eca9f3b63e188ca86f 	++
+1091   57->0    {1110:1109}     │  │  ├── [109849409        2166]duf.h                              ## 0f13d526a052c6afed995c99b34a28d713e837f3 	++
+1092   57->0    {1111:1110}     │  │  ├── [109849410         621]duf_dir_scan2_stages.h             ## fb1dd24909932ca60c2993e79cb89c6a02c8f7f7 	++
+1093   57->0    {1112:1111}     │  │  ├── [109849411         823]duf_option_find.h                  ## 423779d0aaa7324a3c595226b5265eebd9c833ea 	++
+1094   57->0    {1113:1112}     │  │  ├── [109849412         186]duf_tags.h                         ## dc3ecf3908e8478587210cc62b2afdfc8292be52 	++
+1095   57->0    {1114:1113}     │  │  ├── [109849413        1848]duf_defs.h                         ## 79c741e865815cfdab92ecd1be0ac91552de4f37 	++
+1096   57->0    {1115:1114}     │  │  ├── [109849414         308]evsql_selector.h                   ## 24611bf5a0bfb9f9a2bfabcaa639a45a16cf6a49 	++
+1097   57->0    {1116:1115}     │  │  ├── [109849415         164]duf_sel_cb_node.h                  ## db0b42d087c60fdf48be14db097eb7d70458e387 	++
+1098   57->0    {1117:1116}     │  │  ├── [109849416         616]duf_dh.h                           ## d34a67fe07ea343266fa42a2f07fb957c96297f5 	++
+1099   57->0    {1118:1117}     │  │  ├── [109849417        2394]duf_levinfo_types.h                ## fb619e1e8a64448bb4117d3dcce5659a1da40fde 	++
+1100   57->0    {1119:1118}     │  │  ├── [109849418        1278]duf_pdi_sccb_eval.h                ## fc5e4a30d2a4e732790f65b6aaeb8e9624160d9a 	++
+1101   57->0    {1120:1119}     │  │  ├── [109849419         340]duf_context.h                      ## b8d8167c90310e57e20129b260ba3a160443c8e1 	++
+1102   57->0    {1121:1120}     │  │  ├── [109849420         591]duf_print.h                        ## 48d8a2447fe7a6fe8b7d18d493ba7aefcbc9cc5b 	++
+1103   57->0    {1122:1121}     │  │  ├── [109849421        2888]duf_debug_defs.h                   ## 10a6d3348753e496aa4ed42f5dfe98aa1fe13910 	++
+1104   57->0    {1123:1122}     │  │  ├── [109849422         780]duf_utils.h                        ## 4cdef6ab7f9460f2bf25a0d2e7caffcc082d8c3f 	++
+1105   57->0    {1124:1123}     │  │  ├── [109849423         388]duf_sccbh_shortcuts.h              ## 81d2d31a9ef8d7f3c961613a7917dbca07ccd69e 	++
+1106   57->0    {1125:1124}     │  │  ├── [109849424         246]duf_options.h                      ## a2b0880fe4583b8a3e4053fb3bb669c6d793ccb5 	++
+1107   57->0    {1126:1125}     │  │  ├── [109849425         159]duf_utils_path.h                   ## 681d0f989db8922fc2bc02678a2301993dfbc47a 	++
+1108   57->0    {1127:1126}     │  │  ├── [109849426        1573]duf_trace_types.h                  ## f9ae51d23cde2b10b02f9b75dec1cc131d71d036 	++
+1109   57->0    {1128:1127}     │  │  ├── [109849427        2727]duf_dodefs.h                       ## d92e3c54f6d051f9c4dd1f222cafa2f5b9542903 	++
+1110   57->0    {1129:1128}     │  │  ├── [109849428        1036]duf_errors.h                       ## 8bb98c47725f201125127c225894cad8918025cd 	++
+1111   57->0    {1130:1129}     │  │  ├── [109849429         205]sql_beginning_create.h             ## 1ca4f3e7cea5bb893c67b18541b9f527b7b76424 	++
+1112   57->0    {1131:1130}     │  │  ├── [109849430         182]duf_fileinfo.h                     ## 898687d3034e38d4b4541bcddcc4aab03272b87d 	++
+1113   57->0    {1132:1131}     │  │  ├── [109849431         550]duf_option_extended.h              ## 1ce451eb26161c8ce88e1d74578864903bd77bb9 	++
+1114   57->0    {1133:1132}     │  │  ├── [109849432         258]duf_service.h                      ## ef2304c23c75716d9d12a66fff048e7c2d3a7a3c 	++
+1115   57->0    {1134:1133}     │  │  ├── [109849433         190]sql_beginning_tables.h             ## 46f9b51787bb9c2e9e818f1f60d2f1b6800ea5bd 	++
+1116   57->0    {1135:1134}     │  │  ├── [109849434        9236]duf_options_enum.h                 ## a1e5b2192e4fe4e310251357aa7120e228f79ae9 	++
+1117   57->0    {1136:1135}     │  │  ├── [109849435        1002]duf_trace.h                        ## dab0fe5473dda8018131271d44ac2546daa6cfd0 	++
+1118   57->0    {1137:1136}     │  │  ├── [109849436         231]duf_sccb_eval_dirs.h               ## 225df39aae2c171be24a5fa09c368f5858dfadc4 	++
+1119   57->0    {1138:1137}     │  │  ├── [109849437         331]duf_maintenance.h                  ## a330bdfefc9833ca04f93f889ac018fe6df064f0 	++
+1120   57->0    {1139:1138}     │  │  ├── [109849438         326]duf_option_sccb.h                  ## 1a650894bdf04c4be22cfeabc3faedef9931b9ad 	++
+1121   57->0    {1140:1139}     │  │  ├── [109849439        2733]duf_trace_defs_base.h              ## a6709e1073bd28be8ea4ee812ca07589ab21ebc4 	++
+1122   57->0    {1141:1140}     │  │  ├── [109849440        1371]evsql_begfin.h                     ## c8e65054b7812af2c3ee3f1f3c87518ddfb0c6fe 	++
+1123   57->0    {1142:1141}     │  │  ├── [109849441        1251]duf_def.h                          ## a0006a4498e3dfc1f43a234542ead910d907d7ca 	++
+1124   57->0    {1143:1142}     │  │  ├── [109849442        5645]duf_sql2.h                         ## 44fb6e32a38e5e4041057237ab65837ee9cbd83d 	++
+1125   57->0    {1144:1143}     │  │  ├── [109849443         596]duf_option_help.h                  ## 1f31174749929bf679f4cc8f3e3c848d39b0d9a5 	++
+1126   57->0    {1145:1144}     │  │  └── [109849444        2918]Makefile.am                        ## 0dd642d333dd61ba7bf5dd6844d48edae077b80c 	++
+1127   56->0    {1146:1145}     │  ├── [109849168        3657]duf_ufilter_bind.c                 ## aeff9cff221c95563c4187085b6a81d93ba645cf 	++
+1128   56->0    {1147:1146}     │  ├── [109849169        2630]duf_sccb.c                         ## bb5a12d2a0fe80aa95948a7110d304a4ab5b075b 	++
+1129   56->0    {1148:1147}     │  ├── [109849170        1130]duf_utils_path.c                   ## b47e5591055ce6fbcacb84ee04c71f516b2414dc 	++
+1130   56->0    {1149:1148}     │  ├── [109849171        9061]duf_maindb_info.c                  ## 32359dd9513d6c806ce93246891a80e97a066c88 	++
+1131   56->0    {1150:1149}     │  ├── [109849172       14485]duf_option_old.c                   ## 9d5c7ca6f98d932ab91271d3dcdb9bdb1d48f4b8 	++
+1132   56->0    {1151:1150}     │  ├── [109849173        4756]duf_pdi_ref.c                      ## cb59171886b574aac56aa8fe78bf7029fe1149e3 	++
+1133   56->0    {1152:1151}     │  ├── [109849174        2716]data_optable_flag_obsolete.c       ## 5a136cebc4e62da636d7c9a7de79ec7cfa441e6c 	++
+1134   56->0    {1153:1152}     │  ├── [109849175       14019]data_optable_trace.c               ## 552ffe8c7f2a39a0a163ef9cd4f5ba5fa4080e28 	++
+1135   56->0    {1154:1153}     │  ├── [109849176         496]sql_beginning_common.c             ## fe1e21554c362e287e11cdbff0f58f6e8df76300 	++
+1136   56->0    {1155:1154}     │  ├── [109849177        2501]duf_pdi_attach.c                   ## f7ede3649e6e7ee424619680c5505504a0e97fe5 	++
+1137   56->0    {1156:1155}     │  ├── [109849178        6448]duf_sccb_handle.c                  ## 44c5e9998461a01fe7a90d0e474bc5753a348f84 	++
+1138   56->0    {1157:1156}     │  ├── [109849179        4844]duf_option_cmd.c                   ## 62654276e9486a707d044d643a2160dd8e9f1639 	++
+1139   56->0    {1158:1157}     │  ├── [109849180        1114]data_optable_uplus.c               ## e7afe9d0507083e181ace57baeaf216cdfa70ac7 	++
+1140   56->0    {1159:1158}     │  ├── [109849181        1577]duf_service.c                      ## c28a83aaa4d756fbfd0389e2a9f67cf173fbbce0 	++
+1141   56->0    {1160:1159}     │  ├── [109849182        2814]duf_action_table.c                 ## dafb0d6c13e429d848ee52f238fdcf8db1e55c92 	++
+1142   56->0    {1161:1160}     │  ├── [109849183        2298]duf_sccb_begfin.c                  ## d4ba6baed04053ace64ada366179d5aa79fb0566 	++
+1143   56->0    {1162:1161}     │  ├── [109849184        3480]duf_prepare_actions.c              ## 6da613ca3bd1c2604bfe2196a2d710783b7e43b5 	++
+1144   56->0    {1163:1162}     │  ├── [109849185        2039]data_optable_sccb.c                ## 863c006d7d94630c40739c1e163d228d2dc8e301 	++
+1145   56->0    {1164:1163}     │  ├── [109849186        5334]duf_levinfo_openclose.c            ## ba2f976a2c281b1a180941b528d728a5537db419 	++
+1146   56->0    {1165:1164}     │  ├── [109849187         385]sql_beginning_vacuum.c             ## fc1bd54065f68fc042393099a2d9de306b6b1d08 	++
+1147   56->0    {1166:1165}     │  ├── [109849188        2249]duf_leaf_scan2.c                   ## dfcb4d38d1993282fddaf4de3b740f69dc8e57e2 	++
+1148   56->0    {1167:1166}     │  ├── [109849189        4466]duf_levinfo.c                      ## e25fa2fdfc54e21c569fdd14b69bfc57d6953654 	++
+1149   56->0    {1168:1167}     │  ├── [109849190        5624]duf_options_cli.c                  ## 594e5aaca4bfdcc7a39250a0b8ec965d08638849 	++
+1150   56->0    {1169:1168}     │  ├── [109849191        4172]mod_integrity_uni.c                ## 41d0139f4296aa457bf2e8492fddbbbf6e2465fc 	++
+1151   56->0    {1170:1169}     │  ├── [109849192        3221]duf_option_descr.c                 ## f0b5bc1540fd8a33de695babb72a571450917457 	++
+1152   56->0    {1171:1170}     │  ├── [109849193       19393]duf_printb.c                       ## dbb13b19ac8bacba8f12edf59a5035d1f7a34868 	++
+1153   56->0    {1172:1171}     │  ├── [109849194        3099]duf_sccb_eval.c                    ## ae7f39847a75665cea3ba779157930046473ccd2 	++
+1154   56->0    {1173:1172}     │  ├── [109849195        6079]duf_pathinfo_ref.c                 ## 37c19c99cf584540548beb3d7c8df2f64c3fcd21 	++
+1155   56->0    {1174:1173}     │  ├── [109849196         743]duf_pdi_context.c                  ## 649db70e99ef5235fc8d3ab691a725592809fbc8 	++
+1156   56->0    {1175:1174}     │  ├── [109849197        7713]duf_option_find.c                  ## 977b9cefb3df118a776d58cc934ac90bb2d1556c 	++
+1157   56->0    {1176:1175}     │  ├── [109849198       18739]duf_print.c                        ## 7da8b0827cbf95d65c30a15c1b1525cab8717a21 	++
+1158   56->0    {1177:1176}     │  ├── [109849199        5414]data_optable_format.c              ## bbab48d94ec8213980ab7c5a698d3d10d00582aa 	++
+1159   56->0    {1178:1177}     │  ├── [109849200        8457]duf_sccbh_eval.c                   ## 814c603e0160a37b188ebfb04f91daadead8fac8 	++
+1160   56->0    {1179:1178}     │  ├── [109849201        3581]duf_pdi_reinit.c                   ## 6ddd5175dd77f1c41ead1c5c749789b5cb6d445b 	++
+1161   56->0    {1180:1179}     │  ├── [109849202        2040]duf_levinfo_credel.c               ## f96d2635fe9b51dc1e56529cd70a2805154656ed 	++
+1162   56->0    {1181:1180}     │  ├── [109849203        8524]duf_pdi.c                          ## a5b4457a16da1a9cbceec790085762590ec524a3 	++
+1163   56->0    {1182:1181}     │  ├── [109849204         757]duf_levinfo_context.c              ## 4e35beb9b5b91a83569eba56d5851de4ccdcd9a1 	++
+1164   56->0    {1183:1182}     │  ├── [109849205        1974]data_optable_sflag.c               ## 862638b0f8dad340388848c5092f4cefa01724c3 	++
+1165   56->0    {1184:1183}     │  ├── [109849206        1562]duf_li_credel.c                    ## 678e6c51176efc0f6c98ea2ba0aaf403e604ef7b 	++
+1166   56->0    {1185:1184}     │  ├── [109849207        3354]data_optable_str.c                 ## 17baaf89d0585d23a0bfc9342ff982ffa2b68ecf 	++
+1167   56->0    {1186:1185}     │  ├── [109849208        3029]duf_pdi_stmt.c                     ## 0f09ca6e67da4292b6cf15a0240c57109f4cb4e1 	++
+1168   56->0    {1187:1186}     │  ├── [109849209        1939]duf_fileinfo.c                     ## 59e25223efdc9701a81841a8944e5a150d0860dd 	++
+1169   56->0    {1188:1187}     │  ├── [109849210        1785]duf_pathinfo_credel.c              ## 9a908e7edca22c035978db57efb3937073fd023a 	++
+1170   56->0    {1189:1188}     │  ├── [109849211       12906]duf_sql.c                          ## 00066a8fe65c96839d425bbbd9100ca8ed23f127 	++
+1171   56->0    {1190:1189}     │  ├── [109849212        7973]mod_dumplet.c                      ## e157bc9db85eadbadc9215c4a6023b6ca6e6e618 	++
+1172   56->0    {1191:1190}     │  ├── [109849213        2849]data_optable.c                     ## 4ebc68e6cdcedc44a591b3dc7cdc5b2e5aa115de 	++
+1173   56->0    {1192:1191}     │  ├── [109849214       10538]duf_options_table.c                ## 40012b5f4c3c88b5c1ac91ddc043ea8dbd09a66b 	++
+1174   56->0    {1193:1192}     │  ├── [109849215        8204]duf_option_names.c                 ## d747e83f4bc09f87da5d7339e3452ddce2c603ae 	++
+1175   56->0    {1194:1193}     │  ├── [109849216        9070]mod_filedata_uni.c                 ## bd985bfaaf939a1a6c8d994c27166b4d025c382c 	++
+1176   56->0    {1195:1194}     │  ├── [109849217       32368]mod_exif_uni.c                     ## fee5fe57a2a912b770aa033c9ef57f6f65385e59 	++
+1177   56->0    {1196:1195}     │  ├── [109849218        9181]data_optable_flag.c                ## b0735a1990eeafef146823a55a306467772d812d 	++
+1178   56->0    {1197:1196}     │  ├── [109849219        1155]duf_pstmt_levinfo.c                ## f5a570c1adcb39599faef29fb378d9daad4f4576 	++
+1179   56->0    {1198:1197}     │  ├── [109849220        2605]duf_options_string.c               ## 0d5b09329f7d33eea9ceb8b7785012e8d89442b1 	++
+1180   56->0    {1199:1198}     │  ├── [109849221        4894]evsql_begfin.c                     ## 44fc53f7662553483383d950e19f725f0cda36a6 	++
+1181   56->0    {1200:1199}     │  ├── [109849222         901]duf_sys_wrap.c                     ## 733420553f3ffa94025ed9c63e013f2f93378f68 	++
+1182   56->0    {1201:1200}     │  ├── [109849223        1681]data_optable_info.c                ## 8ccbf5fc0aa7ec11810e12523cd9822a6ecf7a11 	++
+1183   56->0    {1202:1201}     │  ├── [109849224       13209]mod_md5_uni.c                      ## 489c45d8a74f88c88bcc32b314ae473c99301ba1 	++
+1184   56->0    {1203:1202}     │  ├── [109849225       13868]duf_errors.c                       ## 2365212762036c13d85a09e1e29ec156aa957a48 	++
+1185   56->0    {1204:1203}     │  ├── [109849226        4975]duf_filedata.c.new                 ## 624a5bc770ac0e74173f884d206f58da639f69bd 	++
+1186   56->0    {1205:1204}     │  ├── [109849227       21497]duf_maindb.c                       ## 243af1514a69414093d25b4d1046067012501f61 	++
+1187   56->0    {1206:1205}     │  ├── [109849228        2228]data_optable_interactive.c         ## 2c855bd2178f6fc5157fe88ac3efffc35b1e6fac 	++
+1188   56->0    {1207:1206}     │  ├── [109849229        7551]std_mod_sets.c                     ## d9069065dbbcaa9ae0f58787934b6d12e2c025f4 	++
+1189   56->0    {1208:1207}     │  ├── [109849230       54818]duf_option_help.c                  ## ae913afb928a011b9c7d57a67503222b7bf4e453 	++
+1190   56->0    {1209:1208}     │  ├── [109849231        4488]duf_eval_at_config.c               ## 8649b4dbd1e03bf976e50e6f3d024109186fd00c 	++
+1191   56->0    {1210:1209}     │  ├── [109849232        4577]duf_sel_cb_leaf.c                  ## 574bbd151b02e73a830fb0cd5de56158a9ad5ab3 	++
+1192   56->0    {1211:1210}     │  ├── [109849233        7897]duf_dbg.c                          ## f5810b7743466d8c2c6fcf30e67180c4690995d2 	++
+1193   56->0    {1212:1211}     │  ├── [109849234        1089]duf_ufilter_ref.c                  ## a632a30917d9fe24a20dbaa5a65b3507df415152 	++
+1194   56->0    {1213:1212}     │  ├── [109849235        3727]duf_ufilter.c                      ## cb9ed354c8ed5f3a2a82c6f4ccd1152d4d459827 	++
+1195   56->0    {1214:1213}     │  ├── [109849236        9320]mod_tagit.c                        ## e3c249567ee75750636fb575101ae2afd85d2522 	++
+1196   56->0    {1215:1214}     │  ├── [109849237       19699]duf_option_typed.c                 ## f2983ac66eb68b0ceb22c8fff7d3bc57564c8482 	++
+1197   56->0    {1216:1215}     │  ├── [109849238        1267]duf_sql_field.c                    ## 297b4c3d640439af96d9f4beff80c66c9d95944a 	++
+1198   56->0    {1217:1216}     │  ├── [109849239       16589]data_optable_filter.c              ## ed5d1d2c164f087a088fba0e3e896958292a6819 	++
+1199   56->0    {1218:1217}     │  ├── [109849240        1244]duftest.c                          ## 5a3129b8475e9704584aa2387781310e61466376 	++
+1200   56->0    {1219:1218}     │  ├── [109849241        3773]duf_utils_print.c                  ## 94ddf70977cc5bdaaece1bcac05f3c23c54da567 	++
+1201   56->0    {1220:1219}     │  ├── [109849242        3066]data_optable_io.c                  ## 50856ee7bfab05eb186e97d1f5c4843bf63ad6ff 	++
+1202   56->0    {1221:1220}     │  ├── [109849243       14155]std_fieldsets.c                    ## 1f25158730315a0be19cc5cb41182983c12314ca 	++
+1203   56->0    {1222:1221}     │  ├── [109849244        5285]data_optable_help.c                ## 447f006f8926902a18f9f112be38d6870e47ef27 	++
+1204   56->0    {1223:1222}     │  ├── [109849245        6045]duf_utils.c                        ## af1bbf1c8d61223b5b59af9c677f514d052c9e5b 	++
+1205   56->0    {1224:1223}     │  ├── [109849246        8512]duf_options.c                      ## f706a9a3c0d01969174489f4df2878c739e073ec 	++
+1206   56->0    {1225:1224}     │  ├── [109849247        4649]data_optable_redo_and_obsolete.c   ## 1e2e053bc31b060b4444018570836ade80a4a698 	++
+1207   56->0    {1226:1225}     │  ├── [109849248        1600]duf_dirent.c                       ## f98e79331e189214694130893a358f2a748b222e 	++
+1208   56->0    {1227:1226}     │  ├── [109849249        5086]duf_option.c                       ## 00b52e656e57dc84f27a6296a9ba56ea9e8db0fe 	++
+1209   56->0    {1228:1227}     │  ├── [109849250       10397]duf_config.c                       ## bb4dbe9c534157b55a49299d204002025d02fb8c 	++
+1210   56->0    {1229:1228}     │  ├── [109849251        4141]duf_path2dirid.c                   ## 83753a2a278a4dd87c0eb55cc18e2c443e144a3c 	++
+1211   56->0    {1230:1229}     │  ├── [109849252        3520]sql_beginning_tables.c             ## dc9b4deeb9aadc0b718df7f5ee2ef623d112a1af 	++
+1212   56->0    {1231:1230}     │  ├── [109849253        9617]mod_directories_uni.c              ## f1d21935b99c7d0021008e818ac3f902e49f160b 	++
+1213   56->0    {1232:1231}     │  ├── [109849254        2074]duf_option_extended.c              ## 65408f39ca20a15b395702f1321d53e4038ae781 	++
+1214   56->0    {1233:1232}     │  ├── [109849255        5204]duf_sccb_eval_dirs.c               ## 408a2974e791faa0f0bfd7a27d287a12f26cd177 	++
+1215   56->0    {1234:1233}     │  ├── [109849256        3864]duf_tags.c                         ## 2c677d46819ef409cb7fb0daae7e863658985141 	++
+1216   56->0    {1235:1234}     │  ├── [109849257        3132]duf_option_sccb.c                  ## 0a5ef98fb578d06f01fe98a991a608cf25a3851e 	++
+1217   56->0    {1236:1235}     │  ├── [109849258        2525]duf_levinfo_stat.c                 ## c3b5a393b2dde88389637e3ee7b608d603f5f6a2 	++
+1218   56->0    {1237:1236}     │  ├── [109849259        6770]sql_update_selected.c              ## c0c764020955750d42937c1dbc64293b6e39342d 	++
+1219   56->0    {1238:1237}     │  ├── [109849260        6630]duf_dir_scan.c.20140411            ## e9bbcda1daf1d87444fa3a27aa07ff1b4ab3c121 	++
+1220   56->0    {1239:1238}     │  ├── [109849261        2040]duf_option_tmpdb.c                 ## 24e1a91015ec8bd16fdd6b5ed8de373354433383 	++
+1221   56->0    {1240:1239}     │  ├── [109849262        4236]duf_options_interactive.c          ## 497095b8ad7103419f7dfb3d986138cbbd2efcd6 	++
+1222   56->0    {1241:1240}     │  ├── [109849263        3184]duf_sel_cb_node.c                  ## 4ba0e083f8c9c75118af8b86e24dbdec5d123794 	++
+1223   56->0    {1242:1241}     │  ├── [109849264        3748]data_optable_experimental.c        ## 5cc7a18eabba532acd42a7736ee98c4fb7dbce2c 	++
+1224   56->0    {1243:1242}     │  ├── [109849265        3167]duf_sql_field2.c                   ## 074e06fe43ceb7cd01e89aa2a92b1942aa5fec3b 	++
+1225   56->0    {1244:1243}     │  ├── [109849266       14777]duf_path2db.c                      ## 81f0508d78d6a76b8bcb2fe496d50a68b63adf08 	++
+1226   56->0    {1245:1244}     │  ├── [109849267        1639]data_optable_debug.c               ## 4d05fc8872e716694b72334a95eb088369740720 	++
+1227   56->0    {1246:1245}     │  ├── [109849268       24982]sql_beginning_create.c             ## a5d9bbe6674583be74bedfeaad34fe354c31e04a 	++
+1228   56->0    {1247:1246}     │  ├── [109849269        6607]mod_template_uni.c                 ## 6384e9e77ad536644b2cb24bcc812c5466ac2da4 	++
+1229   56->0    {1248:1247}     │  ├── [109849270        4299]duf_dirent_scan2.c                 ## 1592ad0b1fe762f9b0d951963564b64a77161899 	++
+1230   56->0    {1249:1248}     │  ├── [109849271        4830]duf_item_scan2.c                   ## 92ac997460b5a1c0a74f0f4249fddb6f86f33a3b 	++
+1231   56->0    {1250:1249}     │  ├── [109849272       10993]mod_sd5_uni.c                      ## 2169e13f258bc28cf5c9f550e678b1b4892e8fc5 	++
+1232   56->0    {1251:1250}     │  ├── [109849273        2131]duf_option_misc.c                  ## 6c0ba994e636f6902b66d9c78b3cf7eb9269feec 	++
+1233   56->0    {1252:1251}     │  ├── [109849274        7039]duf_levinfo_updown.c               ## 5ab9fc297384941baafaea117f18b32e0c19446e 	++
+1234   56->0    {1253:1252}     │  ├── [109849275        9192]mod_dir_print_uni.c                ## d908b6ca6d202c226e57208b8f28123496612958 	++
+1235   56->0    {1254:1253}     │  ├── [109849276        9937]mod_dummy_uni.c                    ## 14f5b43f70fd734e4c6707c92e89354d54abf587 	++
+1236   56->0    {1255:1254}     │  ├── [109849277        9911]duf_options_file.c                 ## 822a5121032839c78eaab9fe5580f5181ccfb7af 	++
+1237   56->0    {1256:1255}     │  ├── [109849278        6173]sql_beginning_selected.c           ## fb71165c7b0b639b1d502c03eb60127be486d2cd 	++
+1238   56->0    {1257:1256}     │  ├── [109849279       21314]duf_sqlite.c                       ## f9eb2456a51ce45611430ba48df442c1d4d94b0a 	++
+1239   56->0    {1258:1257}     │  ├── [109849280       10058]duf_dh.c                           ## 0db212d4f493a1d3596329117e67cf8f222a4486 	++
+1240   56->0    {1259:1258}     │  ├── [109849281       17123]duf_levinfo_ref.c                  ## bf2db7c8bbc89ca500f07e16c572be834b4046ba 	++
+1241   56->0    {1260:1259}     │  ├── [109849282        1952]duf_sccb_eval_std.c                ## 3c0f661264df0f25d83af09e8ab16b760c9dedcb 	++
+1242   56->0    {1261:1260}     │  ├── [109849283       13563]mod_tree_print_uni.c               ## 2ec909cec1bc6df39bf2e004caea1de25b497262 	++
+1243   56->0    {1262:1261}     │  ├── [109849284        4535]duf.c                              ## f9e9bdfc2adbc6f8d27f2e710998bdba2d882514 	++
+1244   56->0    {1263:1262}     │  ├── [109849285        2282]duf_options_env.c                  ## 7914759ff8f61ed6e1798520ea9a65af923b6087 	++
+1245   56->0    {1264:1263}     │  ├── [109849286        2677]duf_pdi_credel.c                   ## 8e688229b77440d4ac9f257db1948a28fcd09cac 	++
+1246   56->0    {1265:1264}     │  ├── [109849287        3564]duf_dir_scan2_stages.c             ## f2ca4bbda7ce5ac57cc0efbaef994365bc0c125f 	++
+1247   56->0    {1266:1265}     │  ├── [109849288        4318]duf_pdi_sccb_eval.c                ## 672e20ab2f4668b2d46588890d17a35137c72614 	++
+1248   56->0    {1267:1266}     │  ├── [109849289        9854]mod_save_to.c                      ## dcc712a43dd1fd6300201ae9ca32053b2ce82ec3 	++
+1249   56->0    {1268:1267}     │  ├── [109849290       11404]mod_collect_mime_uni.c             ## c251aaadc7d6773418ea2c1a50ea389238252c45 	++
+1250   56->0    {1269:1268}     │  ├── [109849291        5599]mod_filenames_uni.c                ## 8ab3b266b7b0eeaf362ff1b843a3da39db0e1ab0 	++
+1251   56->0    {1270:1269}     │  ├── [109849292        3694]Makefile.am                        ## 7aefbb62ccf93bad99e883776f5d35170c515da8 	++
+1252   56->0    {1271:1270}     │  ├── [109849293         999]duf_context.c                      ## 47ec312a497c875690a1be83f9d6b672b6bbe7e7 	++
+1253   56->0    {1272:1271}     │  ├── [109849294        2325]std_selectors.c                    ## 858d223244e4a758d2fc69e8f6dcec74d74a7184 	++
+1254   56->0    {1273:1272}     │  ├── [109849295        5209]duf_trace.c                        ## a2e70de47f045c45cc7cd800f6199008238ed902 	++
+1255   56->0    {1274:1273}     │  └── [109849296       10755]mod_crc32_uni.c                    ## ff36447900740ce298ec7dd2be75a087dd4268dd 	++
+1256   15->0    {1275:1274}     ├── [109848233          23]out2.cmds                          ## 9d6f3a99e5cb3f1674d57706939a7b5330826de1 	++
+1257   15->58   {1276:1275}     ├── [109953166  DIR =3]   debug
+1258   58->0    {1277:1276}     │  ├── [109849445         332]debug_zocromas_duf.cmd.tmp         ## c9e8f486b6d5e7408a435ee4ef02214843b234e3 	++
+1259   58->0    {1278:1277}     │  ├── [109849446           6]__.gitignore                       ## 855ddba356673682de1291207d9110be4699279d 	++
+1260   58->0    {1279:1278}     │  └── [109849447         251]debug_zocromas_duf.cmd             ## 14c146294f5493e39c8491299ab71c4bfebe037e 	++
+1261   15->59   {1280:1279}     ├── [109953167  DIR =2]   autom4te.cache
+1262   59->0    {1281:1280}     │  ├── [109849448       27093]requests                           ## 9e07121ce1722594b204513012c98748b32228b2 	++
+1263   59->0    {1282:1281}     │  └── [109849449       70044]traces.1                           ## 66202e237fcbf85d963908faa61658540910e80d 	++
+1264   15->0    {1283:1282}     ├── [109848234         793]test02.cmds                        ## d18d73050644998d6b957e00ae5f43591ca74e3f 	++
+1265   15->60   {1284:1283}     ├── [109953168  DIR =43]  test
+1266   60->0    {1285:1284}     │  ├── [109849450        1774]test.sh                            ## e5fab2a86f8ef9464635bb4431324d3947d17b01 	++
+1267   60->61   {1286:1285}     │  ├── [109953169  DIR =38]  duf
+1268   61->0    {1287:1286}     │  │  ├── [109849454        1264]good.test.2                        ## 779b8ed67139f63ea75719e07ecd729b667dd3dc 	++
+1269   61->0    {1288:1287}     │  │  ├── [109849455         694]test_set1.txt                      ## 32637b49f31e0bcba5d7ed1a3e2862ff3aea63b4 	++
+1270   61->0    {1289:1288}     │  │  ├── [109849456          28]__.gitignore                       ## 6e975cb7e4d5a0551efbde2e0cab354e458f49ae 	++
+1271   61->62   {1290:1289}     │  │  ├── [109953170  DIR =23]  20150602
+1272   62->0    {1291:1290}     │  │  │  ├── [109849469         992]out20150602.131822.test.5          ## 40fa7c58ddb1443879df30b82b954985794ea309 	++
+1273   62->0    {1292:1291}     │  │  │  ├── [109849470         123]out20150602.131822.test.ca1        ## b8cbc5933951405d4e6941d2d44b592b1ddec3f7 	++++++++++++++++++++
+1274   62->0    {1293:1292}     │  │  │  ├── [109849471           1]out20150602.134103.test.sql1       ## adc83b19e793491b1c6ea0fd8b46cd9f32e592fc 	++++++++++++
+1275   62->0    {1294:1293}     │  │  │  ├── [109849472         123]out20150602.134103.test.1          ## b8cbc5933951405d4e6941d2d44b592b1ddec3f7 	++++++++++++++++++++
+1276   62->0    {1295:1294}     │  │  │  ├── [109849473         834]out20150602.131822.test.6          ## f8abfc33a724618cc3fe355f01438225b7263c03 	++
+1277   62->0    {1296:1295}     │  │  │  ├── [109849474         123]out20150602.134103.test.6          ## b8cbc5933951405d4e6941d2d44b592b1ddec3f7 	++++++++++++++++++++
+1278   62->0    {1297:1296}     │  │  │  ├── [109849475           4]out20150602.131822.test.creadd     ## 92beb40d1a86a6509c300d948703802d656b31c9 	++++++
+1279   62->0    {1298:1297}     │  │  │  ├── [109849476         123]out20150602.134103.test.5          ## b8cbc5933951405d4e6941d2d44b592b1ddec3f7 	++++++++++++++++++++
+1280   62->0    {1299:1298}     │  │  │  ├── [109849477           4]out20150602.134103.test.creadd     ## 92beb40d1a86a6509c300d948703802d656b31c9 	++++++
+1281   62->0    {1300:1299}     │  │  │  ├── [109849478         123]out20150602.134103.test.1.1        ## b8cbc5933951405d4e6941d2d44b592b1ddec3f7 	++++++++++++++++++++
+1282   62->0    {1301:1300}     │  │  │  ├── [109849479        6376]out20150602.131822.test.2          ## 6b27b7d3b6975a016324c97137388db97b29761f 	++
+1283   62->0    {1302:1301}     │  │  │  ├── [109849480       20485]out20150602.131822.test.log        ## b46308b6453874a02dfcd7a8ca440629ca1def1b 	++
+1284   62->0    {1303:1302}     │  │  │  ├── [109849481        1505]out20150602.131822.test.4          ## a393405da313cd48ea536c33be7973cdd16c1c72 	++
+1285   62->0    {1304:1303}     │  │  │  ├── [109849482       17086]out20150602.131822.test.1.1        ## e8f3d3e31cafbf6ba4369d81d929273d068266ec 	++
+1286   62->0    {1305:1304}     │  │  │  ├── [109849483         123]out20150602.134103.test.7          ## b8cbc5933951405d4e6941d2d44b592b1ddec3f7 	++++++++++++++++++++
+1287   62->0    {1306:1305}     │  │  │  ├── [109849484         123]out20150602.134103.test.4          ## b8cbc5933951405d4e6941d2d44b592b1ddec3f7 	++++++++++++++++++++
+1288   62->0    {1307:1306}     │  │  │  ├── [109849485         123]out20150602.134103.test.3          ## b8cbc5933951405d4e6941d2d44b592b1ddec3f7 	++++++++++++++++++++
+1289   62->0    {1308:1307}     │  │  │  ├── [109849486         792]out20150602.131822.test.7          ## 6fdd8d96a4b8e4dabf28686c7f054a6631ed7bc4 	++
+1290   62->0    {1309:1308}     │  │  │  ├── [109849487           1]out20150602.131822.test.sql1       ## adc83b19e793491b1c6ea0fd8b46cd9f32e592fc 	++++++++++++
+1291   62->0    {1310:1309}     │  │  │  ├── [109849488           5]out20150602.131822.test.0          ## a34fc894c082b7bef96bb034a6609c1342f2c91e 	++++++
+1292   62->0    {1311:1310}     │  │  │  ├── [109849489         123]out20150602.134103.test.2          ## b8cbc5933951405d4e6941d2d44b592b1ddec3f7 	++++++++++++++++++++
+1293   62->0    {1312:1311}     │  │  │  ├── [109849490         123]out20150602.134103.test.ca1        ## b8cbc5933951405d4e6941d2d44b592b1ddec3f7 	++++++++++++++++++++
+1294   62->0    {1313:1312}     │  │  │  └── [109849491           5]out20150602.134103.test.0          ## a34fc894c082b7bef96bb034a6609c1342f2c91e 	++++++
+1295   61->0    {1314:1313}     │  │  ├── [109849457       20074]good.test.1.1                      ## 2ab2d1f508e357086304cf4d589e0b98e4260d0e 	++
+1296   61->0    {1315:1314}     │  │  ├── [109849458           0]temp.db                            ## da39a3ee5e6b4b0d3255bfef95601890afd80709 	++
+1297   61->0    {1316:1315}     │  │  ├── [109849459           4]good.test.creadd                   ## 92beb40d1a86a6509c300d948703802d656b31c9 	++++++
+1298   61->0    {1317:1316}     │  │  ├── [109849460        1231]good.test.5                        ## 7dd573daab094fd762d2b80b09271ccd5f02d7e9 	++
+1299   61->0    {1318:1317}     │  │  ├── [109849461           5]good.test.0                        ## a34fc894c082b7bef96bb034a6609c1342f2c91e 	++++++
+1300   61->0    {1319:1318}     │  │  ├── [109849462         302]good.test.sql1                     ## 61aea3555ad547397bf72f55a58b52c9f8d0f443 	++
+1301   61->0    {1320:1319}     │  │  ├── [109849463        1124]good.test.6                        ## f8c7b80d5b69ebb56338826c6ad4f786a859b8f0 	++
+1302   61->0    {1321:1320}     │  │  ├── [109849464        1904]good.test.4                        ## 2410f026011d2238c1cf4a973d3f80b008357cc9 	++
+1303   61->0    {1322:1321}     │  │  ├── [109849465        3701]good.test.8                        ## 73ec569950b53f53cefde8e865aa0b52a89b342f 	++
+1304   61->0    {1323:1322}     │  │  ├── [109849466         974]good.test.7                        ## f1472a91b1ecab9946107075931252fd8551d0d0 	++
+1305   61->0    {1324:1323}     │  │  ├── [109849467        2236]good.test.ca1                      ## e140b325d57ba8f796a24e94ab0153ceb739ba4b 	++
+1306   61->0    {1325:1324}     │  │  └── [109849468         522]zocromas_duf.conf                  ## 530f96fe9125a237c5c1dc4a0f2fccbe44d00150 	++
+1307   60->0    {1326:1325}     │  ├── [109849451         737]DCEMAIL.ABK.locate                 ## 56d6c2e0a568f51c0c320103a198a76799377b96 	++
+1308   60->0    {1327:1326}     │  ├── [109849452           9]__.gitignore                       ## 8066a553ac1dbdd7f7c20138c7b5d2f7f29473e2 	++
+1309   60->0    {1328:1327}     │  ├── [109849453        3206]test.txt                           ## 6a0829316fc35ec092e4b4894d4e4314fc44740c 	++
+1310   60->63   {1329:1328}     │  └── [109953171  DIR =1]   sh
+1311   63->0    {1330:1329}     │      └── [109849492        8892]test20140907.113444.sh             ## 3e2f4d94ce3c24236f678dc4069023f423f35364 	++
+1312   15->0    {1331:1330}     ├── [109848235          26]zocversion.txt                     
+1313   15->64   {1332:1331}     ├── [109953172  DIR =1]   shsq
+1314   64->0    {1333:1332}     │  └── [109849493        2548]libsql.bash                        ## badf020cd6e078c8691596e0daf45737e24e8df1 	++
+1315   15->0    {1335:1334}     └── [109848236       60322]aclocal.m4                         ## 26cc287a0f0292d88cb43b9834311cb3da1bb7c8 	++

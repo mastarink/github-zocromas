@@ -59,20 +59,38 @@ struct masxfs_scanner_s
   masxfs_levinfo_flags_t flags;
   masxfs_depth_t maxdepth;
 };
-
-struct masxfs_xstatc_s
+struct masxfs_xstatd_s
 {
   unsigned long nsamesize;
   unsigned long nsamedigest;
   unsigned long digestid;
-  unsigned long parentid;
-  const char *hex_digest;
 };
+
+struct masxfs_xstati_s
+{
+  unsigned long parentid;
+  unsigned long nameid;
+  unsigned long dataid;
+};
+
 struct masxfs_xstat_s
 {
-  unsigned long nsamesize;
-  unsigned long nsamedigest;
+  masxfs_xstatd_t dg;
+/* unsigned long nsamesize;   */
+/* unsigned long nsamedigest; */
+/* unsigned long digestid;    */
+  masxfs_xstati_t id;
   char *hex_digest;
+};
+
+struct masxfs_xstatc_s
+{
+  masxfs_xstatd_t dg;
+/* unsigned long nsamesize;   */
+/* unsigned long nsamedigest; */
+/* unsigned long digestid;    */
+  const char *chex_digest;
+  masxfs_xstati_t id;
 };
 
 struct masxfs_levinfo_s

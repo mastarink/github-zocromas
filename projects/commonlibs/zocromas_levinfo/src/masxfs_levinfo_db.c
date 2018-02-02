@@ -64,6 +64,7 @@ masxfs_levinfo_db_open_as( masxfs_levinfo_t * li, masxfs_entry_type_t detype )
   }
   rRET;
 }
+
 /* result: set li->db.node_id's by li names */
 static int
 _masxfs_levinfo_db_open( masxfs_levinfo_t * li )
@@ -165,7 +166,9 @@ masxfs_levinfo__db_stat( masxfs_levinfo_t * li, masxfs_entry_filter_t * entry_pf
       rC( masxfs_levinfo_db_opendir( li - 1, entry_pfilter ) );
     assert( masxfs_levinfo_db_opened_dir( li - 1 ) );
     if ( !li->db.stat )
+    {
       rC( masxfs_levinfo_db_readdir( li - 1, entry_pfilter, NULL /* &has_data */  ) );
+    }
     else
       rSETGOOD;
     if ( pstat )
@@ -226,7 +229,7 @@ masxfs_levinfo_db_store_id( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags,
   const char *ename = masxfs_levinfo_name_ref( li, flags );
   masxfs_levinfo_flags_t take_flags = ( flags | MASXFS_CB_MODE_FS ) & ~MASXFS_CB_MODE_DB;
 
-  unsigned long long parent_id = masxfs_levinfo_parent_id( li );
+  unsigned long long parent_id = masxfs_levinfo_up_id( li, flags );
 
   masxfs_entry_type_t detype = masxfs_levinfo_detype( li, flags );
 
@@ -291,7 +294,7 @@ masxfs_levinfo_db_store_id( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags,
           node_id = mas_qstd_mstmt_selinsget_parents_id( qstd, name_id );
           rC( mas_qstd_ret_code( qstd ) );
 
-          masxfs_levinfo_set_node_id( li, node_id );
+          masxfs_levinfo_set_nodeid( li, node_id );
         }
       }
     }
