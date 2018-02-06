@@ -37,8 +37,8 @@
 /* TODO move to qstd?! */
 /* make pmstmt to fetch record(s) by name and parent_id or parent_id only */
 static int
-masxfs_levinfo_db_prepare_execute_store( mysqlpfs_mstmt_t ** pmstmt, const char *name, unsigned long long parent_id,
-                                         masxfs_entry_filter_t * entry_pfilter )
+masxfs_levinfo_db_prepare_execute_store_xx( mysqlpfs_mstmt_t ** pmstmt, const char *name, unsigned long long parent_id,
+                                            masxfs_entry_filter_t * entry_pfilter )
 {
   rDECLBAD;
   if ( pmstmt )
@@ -50,7 +50,7 @@ masxfs_levinfo_db_prepare_execute_store( mysqlpfs_mstmt_t ** pmstmt, const char 
     {
       ( *pmstmt ) = mas_qstd_mstmt_init_prepare( mas_qstd_instance(  ), name ? STD_MSTMT_SELECT_EVERYTHINGXX_PN : STD_MSTMT_SELECT_EVERYTHINGXX_P );
       {
-        int np = 0;
+        unsigned np = 0;
 
         rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, parent_id, FALSE ) );
         QRG( rCODE );
@@ -101,8 +101,8 @@ masxfs_levinfo_db_prepare_execute_store( mysqlpfs_mstmt_t ** pmstmt, const char 
 /* TODO move to qstd */
 /* allocates stat */
 static int
-masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_stat_t * stat, masxfs_xstatc_t * xstatc, unsigned long long *pnode_id,
-                         int *phas_data )
+masxfs_levinfo_db_fetch_xx( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_stat_t * stat, masxfs_xstatc_t * xstatc,
+                            unsigned long long *pnode_id, int *phas_data )
 {
   rDECLBAD;
   int has_data = 0;
@@ -138,7 +138,7 @@ masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_st
     if ( rGOOD && has_data )
     {
       unsigned is_null = 0;
-      int nr = 0;
+      unsigned nr = 0;
 
       rC( mas_qstd_mstmt_get_result_string_na( mstmt, nr++, &name ) );
       rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &inode, &is_null ) );
@@ -208,6 +208,208 @@ masxfs_levinfo_db_fetch( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_st
   rRET;
 }
 
+static int
+masxfs_levinfo_db_fetch_n( mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_stat_t * stat, masxfs_xstatc_t * xstatc,
+                           unsigned long long *pnode_id, int *phas_data )
+{
+  rDECLBAD;
+  int has_data = 0;
+
+  if ( mstmt )
+  {
+    const char *name = NULL;
+
+    unsigned long long inode = 0;
+    unsigned long long dev = 0;
+    unsigned long long rdev = 0;
+    unsigned long long node_id = 0;
+    unsigned long long mode = 0;
+    unsigned long long nlink = 0;
+    unsigned long long uid = 0;
+    unsigned long long gid = 0;
+    unsigned long long size = 0;
+    unsigned long long blksize = 0;
+    unsigned long long blocks = 0;
+    unsigned long long atim_tv_sec = 0;
+    unsigned long long mtim_tv_sec = 0;
+    unsigned long long ctim_tv_sec = 0;
+
+    unsigned long long parentid = 0;
+    unsigned long long nameid = 0;
+    unsigned long long dataid = 0;
+
+    rC( mas_qstd_mstmt_fetch( mstmt, &has_data ) );
+    if ( rGOOD && has_data )
+    {
+      unsigned is_null = 0;
+      unsigned nr = 0;
+
+      rC( mas_qstd_mstmt_get_result_string_na( mstmt, nr++, &name ) );
+      rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &inode, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &node_id, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &dev, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &mode, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &nlink, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &uid, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &gid, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &size, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &blksize, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &blocks, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &rdev, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &atim_tv_sec, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &mtim_tv_sec, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &ctim_tv_sec, &is_null ) );
+
+      rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &parentid, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &nameid, &is_null ) );
+      rC( mas_qstd_mstmt_get_result_longlong( mstmt, nr++, &dataid, &is_null ) );
+      assert( nr == STD_MSTMT_SELECT_EVERYTHINGNM_NRESULTS );
+      if ( rGOOD && stat )
+      {
+        memset( stat, 0, sizeof( masxfs_stat_t ) );
+
+        stat->st_dev = ( dev_t ) dev;
+        stat->st_ino = ( ino_t ) inode;
+        stat->st_mode = ( mode_t ) mode;
+        stat->st_nlink = ( nlink_t ) nlink;
+        stat->st_uid = ( uid_t ) uid;
+        stat->st_gid = ( gid_t ) gid;
+        stat->st_size = size;
+        stat->st_blksize = ( blksize_t ) blksize;
+        stat->st_blocks = ( blkcnt_t ) blocks;
+        stat->st_rdev = ( dev_t ) rdev;
+        stat->st_atim.tv_sec = atim_tv_sec;
+        stat->st_mtim.tv_sec = mtim_tv_sec;
+        stat->st_ctim.tv_sec = ctim_tv_sec;
+      }
+      if ( rGOOD && xstatc )
+      {
+        xstatc->id.parentid = parentid;
+        xstatc->id.nameid = nameid;
+        xstatc->id.dataid = dataid;
+      }
+      if ( pname )
+        *pname = name;
+      if ( pnode_id )
+        *pnode_id = node_id;
+    }
+    else
+    {
+    /* WARN( "NO DATA" ); */
+    }
+  }
+  if ( phas_data )
+    *phas_data = has_data;
+  rRET;
+}
+
+static int
+masxfs_levinfo_db_prepare_execute_store_1( mysqlpfs_mstmt_t ** pmstmt, unsigned long long any_id, mas_qstd_id_t opid, mas_qstd_nfields_t nfid )
+{
+  rDECLBAD;
+  if ( pmstmt )
+  {
+    rSETGOOD;
+    assert( !( *pmstmt ) );
+
+    if ( !( *pmstmt ) )
+    {
+      ( *pmstmt ) = mas_qstd_mstmt_init_prepare( mas_qstd_instance(  ), opid );
+      {
+        unsigned np = 0;
+
+        rC( mas_qstd_mstmt_set_param_longlong( ( *pmstmt ), np++, any_id, FALSE ) );
+        QRG( rCODE );
+        assert( np == nfid );
+      /* assert( np == numpar ); */
+        rC( mas_qstd_mstmt_execute_store( ( *pmstmt ) ) );
+        QRG( rCODE );
+      }
+    }
+  }
+  QRG( rCODE );
+  rRET;
+}
+
+static int
+masxfs_levinfo_db_prepare_execute_store_nm( mysqlpfs_mstmt_t ** pmstmt, unsigned long long name_id )
+{
+  rDECLBAD;
+  rC( masxfs_levinfo_db_prepare_execute_store_1( pmstmt, name_id, STD_MSTMT_SELECT_EVERYTHINGNM, STD_MSTMT_SELECT_EVERYTHINGNM_NFIELDS ) );
+  QRG( rCODE );
+  rRET;
+}
+
+static int
+masxfs_levinfo_db_prepare_execute_store_nd( mysqlpfs_mstmt_t ** pmstmt, unsigned long long node_id )
+{
+  rDECLBAD;
+  rC( masxfs_levinfo_db_prepare_execute_store_1( pmstmt, node_id, STD_MSTMT_SELECT_EVERYTHINGND, STD_MSTMT_SELECT_EVERYTHINGND_NFIELDS ) );
+  QRG( rCODE );
+  rRET;
+}
+
+static int
+masxfs_levinfo_db_closemstmt( mysqlpfs_mstmt_t * mstmt )
+{
+  rDECLBAD;
+  if ( mstmt )
+  {
+    rSETGOOD;
+    mas_qstd_mstmt_free_result( mstmt );
+    mas_qstd_mstmt_delete( mstmt );
+  }
+  rRET;
+}
+
+masxfs_levinfo_t *
+masxfs_levinfo_nameid2lia( unsigned long long nameid )
+{
+  rDECLBAD;
+  int has_data = 0;
+  unsigned long long cur_node_id = 0;
+
+  {
+    const char *dename = NULL;
+
+    masxfs_stat_t stat = { 0 };
+    masxfs_xstatc_t xstatc = { 0 };
+    masxfs_entry_type_t detype _uUu_ = MASXFS_ENTRY_NONE_NUM;
+    mysqlpfs_mstmt_t *mstmt = NULL;
+    unsigned long long node_id = 0;
+
+    {
+      masxfs_levinfo_db_prepare_execute_store_nm( &mstmt, nameid );
+      rC( masxfs_levinfo_db_fetch_n( mstmt, &dename, &stat, &xstatc, &node_id, &has_data ) );
+      masxfs_levinfo_db_closemstmt( mstmt );
+      mstmt = NULL;
+      detype = dename && rGOOD ? masxfs_levinfo_stat2entry( &stat ) : MASXFS_ENTRY_UNKNOWN_NUM;
+    }
+    cur_node_id = xstatc.id.parentid;
+    WARN( "AHA %s : parent:%llu", dename, cur_node_id );
+  }
+  while ( cur_node_id )
+  {
+    mysqlpfs_mstmt_t *mstmt = NULL;
+    unsigned long long node_id = 0;
+    const char *dename = NULL;
+    masxfs_stat_t stat = { 0 };
+    masxfs_xstatc_t xstatc = { 0 };
+    masxfs_entry_type_t detype _uUu_ = MASXFS_ENTRY_NONE_NUM;
+
+    {
+      masxfs_levinfo_db_prepare_execute_store_nd( &mstmt, cur_node_id );
+      rC( masxfs_levinfo_db_fetch_n( mstmt, &dename, &stat, &xstatc, &node_id, &has_data ) );
+      masxfs_levinfo_db_closemstmt( mstmt );
+      mstmt = NULL;
+      detype = dename && rGOOD ? masxfs_levinfo_stat2entry( &stat ) : MASXFS_ENTRY_UNKNOWN_NUM;
+      cur_node_id = xstatc.id.parentid;
+    }
+    WARN( "OHO %s : parent:%llu", dename, cur_node_id );
+  }
+  return NULL;
+}
+
 int
 masxfs_levinfo_db_opened_dir( const masxfs_levinfo_t * li )
 {
@@ -227,7 +429,7 @@ masxfs_levinfo_db_opendir( masxfs_levinfo_t * li, masxfs_entry_filter_t * entry_
       if ( !masxfs_levinfo_db_opened( li ) )
         rC( masxfs_levinfo_db_open( li ) );
       QRLI( li, rCODE );
-      rC( masxfs_levinfo_db_prepare_execute_store( &li->db.scan.mstmt, li[1].name, ( long long ) li->db.node_id, entry_pfilter ) );
+      rC( masxfs_levinfo_db_prepare_execute_store_xx( &li->db.scan.mstmt, li[1].name, ( long long ) li->db.node_id, entry_pfilter ) );
       QRLI( li, rCODE );
       assert( rBAD || masxfs_levinfo_db_opened( li ) );
     }
@@ -245,12 +447,9 @@ masxfs_levinfo_db_closedir( masxfs_levinfo_t * li )
   if ( li )
   {
     rSETGOOD;
-    if ( li->db.scan.mstmt )
-    {
-      mas_qstd_mstmt_free_result( li->db.scan.mstmt );
-      mas_qstd_mstmt_delete( li->db.scan.mstmt );
-      li->db.scan.mstmt = NULL;
-    }
+
+    masxfs_levinfo_db_closemstmt( li->db.scan.mstmt );
+    li->db.scan.mstmt = NULL;
   }
   rRET;
 }
@@ -287,7 +486,7 @@ masxfs_levinfo_db_readdir( masxfs_levinfo_t * li, masxfs_entry_filter_t * entry_
 
       do
       {
-        rC( masxfs_levinfo_db_fetch( li->db.scan.mstmt, &dename, &stat, &xstatc, &node_id, &has_data ) );
+        rC( masxfs_levinfo_db_fetch_xx( li->db.scan.mstmt, &dename, &stat, &xstatc, &node_id, &has_data ) );
         detype = dename && rGOOD ? masxfs_levinfo_stat2entry( &stat ) : MASXFS_ENTRY_UNKNOWN_NUM;
       } while ( rGOOD && dename && has_data && !masxfs_levinfo_name_valid( dename, detype, entry_pfilter ) );
       if ( rGOOD )

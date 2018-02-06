@@ -379,7 +379,7 @@ mas_qstd_mstmt_delete_array( mysqlpfs_mstmt_t ** mstmts )
 }
 
 static int
-mas_qstd_mstmt_init_prepare_results_everything( mysqlpfs_mstmt_t * mstmt, int *pnr )
+mas_qstd_mstmt_init_prepare_results_everything( mysqlpfs_mstmt_t * mstmt, unsigned *pnr )
 {
   rDECLBAD;
   rC( mas_qstd_mstmt_bind_param( mstmt ) );
@@ -398,6 +398,10 @@ mas_qstd_mstmt_init_prepare_results_everything( mysqlpfs_mstmt_t * mstmt, int *p
   rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* atim */
   rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* mtim */
   rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* ctim */
+  
+  rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* parent_id */
+  rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* name_id */
+  rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* data_id */
 /*
  *   +  name
  *      parent_id
@@ -432,7 +436,7 @@ mas_qstd_mstmt_init_prepare_results_everything( mysqlpfs_mstmt_t * mstmt, int *p
 }
 
 static int
-mas_qstd_mstmt_init_prepare_results_everythingx( mysqlpfs_mstmt_t * mstmt, int *pnr )
+mas_qstd_mstmt_init_prepare_results_everythingx( mysqlpfs_mstmt_t * mstmt, unsigned *pnr )
 {
   rDECLBAD;
   rC( mas_qstd_mstmt_bind_param( mstmt ) );
@@ -454,6 +458,7 @@ mas_qstd_mstmt_init_prepare_results_everythingx( mysqlpfs_mstmt_t * mstmt, int *
   rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* nsamesize */
   rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* nsamesha1 */
   rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* sha1_id */
+
   rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* parent_id */
   rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* name_id */
   rC( mas_qstd_mstmt_prepare_result_longlong( mstmt, ( *pnr )++ ) ); /* data_id */
@@ -507,7 +512,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
     {
     case STD_MSTMT_INSERT_NAMES:
       {
-        int np = 0;
+        unsigned np = 0;
         char *insop = "INSERT INTO " QSTD_TABLE_NAMES "(name,parent_id,data_id) VALUES (?,?,?)";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_NAMES_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
@@ -525,8 +530,8 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_SELECT_NAMES_ID:
       {
-        int np = 0;
-        int nr = 0;
+        unsigned np = 0;
+        unsigned nr = 0;
         char *selop = "SELECT id FROM " QSTD_TABLE_NAMES " AS fn "   /* "LEFT JOIN "QSTD_TABLE_PARENTS" AS p ON (fn.parent_id=p.id)" */
                 " WHERE BINARY name=? AND fn.parent_id<=>?";
 
@@ -547,7 +552,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_INSERT_PARENTS:
       {
-        int np = 0;
+        unsigned np = 0;
         char *insop = "INSERT INTO " QSTD_TABLE_PARENTS "(dir_id) VALUES (?)";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_PARENTS_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
@@ -562,8 +567,8 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_SELECT_PARENTS_ID:
       {
-        int np = 0;
-        int nr = 0;
+        unsigned np = 0;
+        unsigned nr = 0;
         char *selop = "SELECT id FROM " QSTD_TABLE_PARENTS " WHERE dir_id<=>?";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_PARENTS_NFIELDS, STD_MSTMT_SELECT_PARENTS_NRESULTS, selop );
@@ -583,7 +588,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_INSERT_SIZES:
       {
-        int np = 0;
+        unsigned np = 0;
         char *insop = "INSERT IGNORE INTO " QSTD_TABLE_SIZES "(size) VALUES (?)";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_SIZES_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
@@ -598,8 +603,8 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_SELECT_SIZES_ID:
       {
-        int np = 0;
-        int nr = 0;
+        unsigned np = 0;
+        unsigned nr = 0;
         char *selop = "SELECT size FROM " QSTD_TABLE_SIZES " WHERE size=?";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_SIZES_NFIELDS, STD_MSTMT_SELECT_SIZES_NRESULTS, selop );
@@ -619,7 +624,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_INSERT_DATAS:
       {
-        int np = 0;
+        unsigned np = 0;
         char *insop = "INSERT IGNORE INTO " QSTD_TABLE_DATAS "(dev,inode,nlink) VALUES (?,?,?)";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_INSERT_DATAS_NFIELDS, STD_MSTMT_INSERT_NRESULTS, insop );
@@ -636,8 +641,8 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_SELECT_DATAS_ID:
       {
-        int np = 0;
-        int nr = 0;
+        unsigned np = 0;
+        unsigned nr = 0;
         char *selop = "SELECT id FROM " QSTD_TABLE_DATAS " WHERE dev=? AND inode=?";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_DATAS_NFIELDS, STD_MSTMT_SELECT_DATAS_NRESULTS, selop );
@@ -658,7 +663,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_INSERT_PROPS:
       {
-        int np = 0;
+        unsigned np = 0;
 
       /*                                             0       1      2    3   4   5    6    7    8    9    a       b    */
         char *insop = "INSERT  INTO " QSTD_TABLE_PROPS "(data_id,mode,uid,gid,atim,mtim,ctim,size,rdev,blksize,blocks,detype) " /* */
@@ -687,8 +692,8 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_SELECT_PROPS_ID:
       {
-        int np = 0;
-        int nr = 0;
+        unsigned np = 0;
+        unsigned nr = 0;
         char *selop = "SELECT id FROM " QSTD_TABLE_PROPS " WHERE data_id=?";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 1, selop );
@@ -708,7 +713,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_INSERT_SHA1:
       {
-        int np = 0;
+        unsigned np = 0;
 
         char *insop = "INSERT  INTO " QSTD_TABLE_SHA1 "(digest) VALUES (?)";
 
@@ -723,7 +728,7 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_INSERT_SHA1DREF:
       {
-        int np = 0;
+        unsigned np = 0;
 
         char *insop = "INSERT  INTO " QSTD_TABLE_SHA1DREF "(data_id,digest_id) VALUES (?,?)";
 
@@ -739,8 +744,8 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_SELECT_SHA1_ID:
       {
-        int np = 0;
-        int nr = 0;
+        unsigned np = 0;
+        unsigned nr = 0;
         char *selop = "SELECT id FROM " QSTD_TABLE_SHA1 " WHERE digest=?";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 1, selop );
@@ -760,8 +765,8 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_SELECT_SHA1DREF:
       {
-        int np = 0;
-        int nr = 0;
+        unsigned np = 0;
+        unsigned nr = 0;
         char *selop = "SELECT id FROM " QSTD_TABLE_SHA1DREF " WHERE data_id=?";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, 1, 1, selop );
@@ -781,8 +786,8 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_SELECT_NODES_ID:
       {
-        int np = 0;
-        int nr = 0;
+        unsigned np = 0;
+        unsigned nr = 0;
         char *selop = "SELECT node_id FROM " QSTD_VIEW_DIRS " WHERE parent_id=? AND BINARY name=?";
 
         mstmt = mas_mysqlpfs_mstmt_create_setup( pfs, STD_MSTMT_SELECT_NODES_NFIELDS, STD_MSTMT_SELECT_NODES_NRESULTS, selop );
@@ -803,11 +808,12 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_SELECT_EVERYTHING_PN:
       {
-        int np = 0;
-        int nr = 0;
+        unsigned np = 0;
+        unsigned nr = 0;
         char *selop = "SELECT "                                      /* */
                 "  name, inode, node_id "                            /* */
                 ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev, atim, mtim, ctim" /* */
+                ", parent_id, name_id, data_id"                      /* */
                 "   FROM " QSTD_VIEW_ALL                             /* */
                 "    WHERE parent_id=? AND name=? "                  /* */
               /* "     AND (detype!='REG' OR (nsamesha1>10 AND nsamesize>1)) "              (* *) */
@@ -848,11 +854,12 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_SELECT_EVERYTHING_P:
       {
-        int np = 0;
-        int nr = 0;
+        unsigned np = 0;
+        unsigned nr = 0;
         char *selop = "SELECT "                                      /* */
                 "  name, inode, node_id "                            /* */
                 ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev, atim, mtim, ctim" /* */
+                ", parent_id, name_id, data_id"                      /* */
                 "   FROM " QSTD_VIEW_ALL                             /* */
                 "    WHERE parent_id=? "                             /* */
               /* "     AND (detype!='REG' OR (nsamesha1>10 AND nsamesize>1)) "              (* *) */
@@ -895,11 +902,12 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_SELECT_EVERYTHINGND:
       {
-        int np = 0;
-        int nr = 0;
+        unsigned np = 0;
+        unsigned nr = 0;
         char *selop = "SELECT "                                      /* */
                 "  name, inode, node_id "                            /* */
                 ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev, atim, mtim, ctim" /* */
+                ", parent_id, name_id, data_id"                      /* */
                 "   FROM " QSTD_VIEW_ALL                             /* */
                 "    WHERE node_id=? "                               /* */
                 ;
@@ -919,11 +927,12 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_SELECT_EVERYTHINGNM:
       {
-        int np = 0;
-        int nr = 0;
+        unsigned np = 0;
+        unsigned nr = 0;
         char *selop = "SELECT "                                      /* */
                 "  name, inode, node_id "                            /* */
                 ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev, atim, mtim, ctim" /* */
+                ", parent_id, name_id, data_id"                      /* */
                 "   FROM " QSTD_VIEW_ALL                             /* */
                 "    WHERE name_id=? "                               /* */
                 ;
@@ -943,11 +952,12 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_SELECT_EVERYTHINGDT:
       {
-        int np = 0;
-        int nr = 0;
+        unsigned np = 0;
+        unsigned nr = 0;
         char *selop = "SELECT "                                      /* */
                 "  name, inode, node_id "                            /* */
                 ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev, atim, mtim, ctim" /* */
+                ", parent_id, name_id, data_id"                      /* */
                 "   FROM " QSTD_VIEW_ALL                             /* */
                 "    WHERE data_id=? "                               /* */
                 ;
@@ -967,8 +977,8 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_SELECT_EVERYTHINGX_PN:
       {
-        int np = 0;
-        int nr = 0;
+        unsigned np = 0;
+        unsigned nr = 0;
         char *selop = "SELECT "                                      /* */
                 "  name, inode, node_id "                            /* */
                 ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev, atim, mtim, ctim" /* */
@@ -998,8 +1008,8 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_SELECT_EVERYTHINGX_P:
       {
-        int np = 0;
-        int nr = 0;
+        unsigned np = 0;
+        unsigned nr = 0;
         char *selop = "SELECT "                                      /* */
                 "  name, inode, node_id "                            /* */
                 ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev, atim, mtim, ctim" /* */
@@ -1027,8 +1037,8 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_SELECT_EVERYTHINGXX_PN:
       {
-        int np = 0;
-        int nr = 0;
+        unsigned np = 0;
+        unsigned nr = 0;
         char *selop = "SELECT "                                      /* */
                 "  name, inode, node_id "                            /* */
                 ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev, atim, mtim, ctim" /* */
@@ -1077,8 +1087,8 @@ mas_qstd_mstmt_init_prepare( mas_qstd_t * qstd, mas_qstd_id_t stdid )
       break;
     case STD_MSTMT_SELECT_EVERYTHINGXX_P:
       {
-        int np = 0;
-        int nr = 0;
+        unsigned np = 0;
+        unsigned nr = 0;
         char *selop = "SELECT "                                      /* */
                 "  name, inode, node_id "                            /* */
                 ", dev, mode, nlink, uid, gid, size, blksize, blocks, rdev, atim, mtim, ctim" /* */

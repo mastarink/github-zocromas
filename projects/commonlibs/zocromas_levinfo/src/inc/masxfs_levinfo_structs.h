@@ -63,14 +63,14 @@ struct masxfs_xstatd_s
 {
   unsigned long nsamesize;
   unsigned long nsamedigest;
-  unsigned long digestid;
+  unsigned long long digestid;
 };
 
 struct masxfs_xstati_s
 {
-  unsigned long parentid;
-  unsigned long nameid;
-  unsigned long dataid;
+  unsigned long long parentid;
+  unsigned long long nameid;
+  unsigned long long dataid;
 };
 
 struct masxfs_xstat_s

@@ -15,6 +15,7 @@ void masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const
 void masxfs_levinfo_reset_lia( masxfs_levinfo_t * pi, masxfs_depth_t sz, masxfs_levinfo_flags_t flags );
 void masxfs_levinfo_reset( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags );
 void masxfs_levinfo_delete_lia( masxfs_levinfo_t * pi, masxfs_depth_t sz, masxfs_levinfo_flags_t flags );
+void masxfs_levinfo_delete_lia_tail( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags );
 
 int
 masxfs_levinfo_init_valid( masxfs_levinfo_t * li, masxfs_depth_t lidepth, masxfs_entry_filter_t * entry_pfilter, const char *dename,

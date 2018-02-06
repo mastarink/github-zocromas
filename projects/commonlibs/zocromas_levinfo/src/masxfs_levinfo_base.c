@@ -40,9 +40,8 @@ masxfs_levinfo_create( void )
 }
 
 void
-masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *name, size_t len,
-                       masxfs_entry_type_t detype /*, ino_t d_inode _uUu_ */ ,
-                       unsigned long long node_id, masxfs_stat_t * stat, masxfs_xstatc_t * xstatc _uUu_ )
+masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *name, size_t len, masxfs_entry_type_t detype,
+                       unsigned long long node_id, masxfs_stat_t * stat, masxfs_xstatc_t * xstatc )
 {
   if ( li && name )
   {
@@ -70,14 +69,15 @@ masxfs_levinfo_n_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char
       mas_free( li->db.xstat );
       li->db.xstat = NULL;
     }
+  /* WARN( "xstatc:%p", xstatc ); */
     if ( xstatc )
     {
       li->db.xstat = mas_malloc( sizeof( masxfs_xstat_t ) );
       li->db.xstat->dg = xstatc->dg;
       li->db.xstat->id = xstatc->id;
-      /* li->db.xstat->nsamesize = xstatc->x.nsamesize;     */
-      /* li->db.xstat->nsamedigest = xstatc->x.nsamedigest; */
-      /* li->db.xstat->nameid = xstatc->x.nameid;           */
+    /* li->db.xstat->nsamesize = xstatc->x.nsamesize;     */
+    /* li->db.xstat->nsamedigest = xstatc->x.nsamedigest; */
+    /* li->db.xstat->nameid = xstatc->x.nameid;           */
       li->db.xstat->hex_digest = mas_strdup( xstatc->chex_digest );
     }
   }
@@ -94,7 +94,7 @@ masxfs_levinfo_init( masxfs_levinfo_t * li, masxfs_depth_t lidepth, const char *
 
 /* flags: only MASXFS_CB_MODE_FS or/and MASXFS_CB_MODE_DB used */
 void
-masxfs_levinfo_reset( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags _uUu_ )
+masxfs_levinfo_reset( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
 {
   if ( li )
   {
@@ -156,6 +156,18 @@ masxfs_levinfo_delete_lia( masxfs_levinfo_t * li, masxfs_depth_t sz, masxfs_levi
   {
     masxfs_levinfo_reset_lia( li, sz, flags );
     mas_free( li );
+  }
+}
+
+void
+masxfs_levinfo_delete_lia_tail( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags )
+{
+  if ( li )
+  {
+    masxfs_depth_t sz = li->lidepth;
+    masxfs_levinfo_t *li0 = li - sz;
+
+    masxfs_levinfo_delete_lia( li0, sz, flags );
   }
 }
 
