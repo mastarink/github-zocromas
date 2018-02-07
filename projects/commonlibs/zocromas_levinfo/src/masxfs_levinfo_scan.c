@@ -89,14 +89,6 @@ masxfs_levinfo_scanf_entry_single_internal_1cb( masxfs_levinfo_t * lithis, masxf
         int fun_called = 0;
         masxfs_depth_t depth = masxfs_levinfo_depth_ref( lithis, flags );
 
-        if ( lithis->db.xstat && 0 == strcmp( lithis->name, "good.test.7" ) )
-        {
-          masxfs_levinfo_t *liatail=NULL;
-
-          liatail = masxfs_levinfo_nameid2lia( lithis->db.xstat->id.nameid );
-          WARN( "%d node_id:%lld; name_id:%lld;  %s", cb->cb_type, lithis->db.node_id, lithis->db.xstat->id.nameid, lithis->name );
-          masxfs_levinfo_delete_lia_tail( liatail, flags );
-        }
         if ( !cb->fun_counter && depth )
           cb->fun_top_depth = depth - 1;
 #if 1
@@ -246,6 +238,16 @@ masxfs_levinfo_scanf_entry_single_internal_scanner( masxfs_levinfo_t * lithis, m
             lithis[-1].child_count_pair[indx]++;
         }
       }
+
+        if ( ! ( flags & MASXFS_CB_COUNT ) && lithis->db.xstat && 0 == strcmp( lithis->name, "good.test.7" ) )
+        {
+          masxfs_levinfo_t *liatail=NULL;
+
+          liatail = masxfs_levinfo_nameid2lia( lithis->db.xstat->id.nameid );
+          WARN( "node_id:%lld; name_id:%lld;  %s", lithis->db.node_id, lithis->db.xstat->id.nameid, lithis->name );
+          masxfs_levinfo_delete_lia_tail( liatail, flags );
+        }
+
 
       for ( masxfs_entry_callback_t * cb = scanner->cbs; cb && rGOOD && cb->cb_type != MASXFS_CBTYPE_NONE; cb++ )
       {
