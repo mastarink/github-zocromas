@@ -152,6 +152,7 @@ dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
  * */
 #define LFLAGS d->levinfo_flags
 #define DFLAGS d->dufnx_flags
+#define XFLAGS d->xtraflags
 #define FDV MUCS_FLAG_ONLY_DEF_NVALUE
 /* FDV : short for MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE */
   mucs_option_static_t soptions[] = {
@@ -163,6 +164,9 @@ dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
     , {.name = "tree",.rt = 'O',.p = &LFLAGS,.def_nvalue.v_ulong = MASXFS_CB_PREFIX,.flags = FDV}
     , {.name = "list",.rt = 'O',.p = &DFLAGS,.def_nvalue.v_ulong = MASDUFNX_LIST,.flags = FDV}
     , {.name = "collect",.rt = 'O',.p = &DFLAGS,.def_nvalue.v_ulong = MASDUFNX_COLLECT,.flags = FDV}
+    
+    , {.name = "same",.rt = 'O',.p = &XFLAGS,.def_nvalue.v_ulong = MASDUFNX_X_SAME,.flags = FDV}
+    , {.name = "fileinfo",.rt = 'O',.p = &XFLAGS,.def_nvalue.v_ulong = MASDUFNX_X_FILEINFO,.flags = FDV}
 
     , {.name = "no-empty-dirs",.rt = 'O',.cust_ptr = &LFLAGS,.def_nvalue.v_ulong = MASXFS_CB_SKIP_EMPTY,.flags = FDV}
     , {.name = "empty-dirs",.rt = MUCS_RTYP_ULONG_NOR,.cust_ptr = &LFLAGS,.def_nvalue.v_ulong = MASXFS_CB_SKIP_EMPTY,.flags = FDV}
@@ -186,6 +190,8 @@ dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
   /*  .def_nvalue.v_ulong = MASXFS_CB_CAN_UPDATE_DB,.f = MUCS_FLAG_NO_VALUE | MUCS_FLAG_USE_DEF_NVALUE},                   */
     , {NULL}
   };
+#undef XFLAGS
+#undef DFLAGS
 #undef LFLAGS
 #undef FDV
   mucs_option_interface_t *interface =

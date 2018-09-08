@@ -11,6 +11,7 @@ set breakpoint pending on
 
 
 # b masxfs_levinfo_db.c:140
+# b tree.c:111
 run
 
 # display pdi.pathinfo->levinfo[d].itemname

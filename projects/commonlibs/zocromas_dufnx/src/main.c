@@ -4,6 +4,11 @@
 
 #include "dufnx.h"
 
+/*
+run    --drop-tables  --create-tables --fromfs  --collect mastest ; # ./sql1.sh 'select count(*) from dufnx_allfull'
+run  --fromdb --tree  --list --digest --stat  mastest
+*/
+
 int
 main( int argc, char *argv[] )
 {

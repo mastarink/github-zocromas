@@ -139,8 +139,8 @@ _mas_expand_string_cb_arg( const char *str, mas_arg_get_cb_arg_t cb, const char 
   const char *beg = NULL;
   const char *start = NULL;
   const char *end = NULL;
-  const const char *cstr;
-  const const char *scstr;
+  const char *cstr;
+  const char *scstr;
   char *snew = NULL;
   const char *nxt = NULL;
 

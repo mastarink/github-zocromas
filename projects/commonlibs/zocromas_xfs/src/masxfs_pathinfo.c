@@ -38,7 +38,7 @@ masxfs_pathinfo_open( masxfs_pathinfo_t * pi, masxfs_levinfo_flags_t flags )
 #endif
 
 int
-masxfs_pathinfo_scanf_scanner( masxfs_pathinfo_t * pi, masxfs_scanner_t * scanner, void *userdata )
+masxfs_pathinfo_scanf_scanner( masxfs_pathinfo_t * pi, masxfs_scanner_t * scanner, void *userdata, void *userdata2 )
 {
   rDECLBAD;
   int rc = 0;
@@ -57,7 +57,7 @@ masxfs_pathinfo_scanf_scanner( masxfs_pathinfo_t * pi, masxfs_scanner_t * scanne
     {
       masxfs_depth_t reldepth = 1 - pi->pidepth;
 
-      rC( masxfs_levinfo_scanf_tree_scanner( pi->levinfo, scanner, userdata, reldepth ) );
+      rC( masxfs_levinfo_scanf_tree_scanner( pi->levinfo, scanner, userdata, userdata2, reldepth ) );
     }
     else
     {
@@ -65,7 +65,7 @@ masxfs_pathinfo_scanf_scanner( masxfs_pathinfo_t * pi, masxfs_scanner_t * scanne
       masxfs_depth_t reldepth = 0;
 
       flags |= pi->flags;
-      rC( masxfs_levinfo_scanf_tree_scanner( li, scanner, userdata, reldepth ) );
+      rC( masxfs_levinfo_scanf_tree_scanner( li, scanner, userdata, userdata2, reldepth ) );
     }
     if ( rGOOD )
     {
@@ -77,19 +77,19 @@ masxfs_pathinfo_scanf_scanner( masxfs_pathinfo_t * pi, masxfs_scanner_t * scanne
 }
 
 int
-masxfs_pathinfo_scanf_cbs( masxfs_pathinfo_t * pi, masxfs_entry_filter_t * entry_pfilter, masxfs_entry_callback_t * cbs, void *userdata,
+masxfs_pathinfo_scanf_cbs( masxfs_pathinfo_t * pi, masxfs_entry_filter_t * entry_pfilter, masxfs_entry_callback_t * cbs, void *userdata, void *userdata2,
                            masxfs_levinfo_flags_t flags )
 {
   masxfs_scanner_t scanner = {.entry_pfilter = entry_pfilter,.cbs = cbs,.flags = flags };
-  return masxfs_pathinfo_scanf_scanner( pi, &scanner, userdata );
+  return masxfs_pathinfo_scanf_scanner( pi, &scanner, userdata, userdata2 );
 }
 
 int
-masxfs_pathinfo_scan_cbs( masxfs_pathinfo_t * pi, masxfs_type_flags_t typeflags, masxfs_entry_callback_t * cbs, void *userdata,
+masxfs_pathinfo_scan_cbs( masxfs_pathinfo_t * pi, masxfs_type_flags_t typeflags, masxfs_entry_callback_t * cbs, void *userdata, void *userdata2,
                           masxfs_levinfo_flags_t flags )
 {
   masxfs_entry_filter_t entry_filter = {.typeflags = typeflags };
-  return masxfs_pathinfo_scanf_cbs( pi, &entry_filter, cbs, userdata, flags );
+  return masxfs_pathinfo_scanf_cbs( pi, &entry_filter, cbs, userdata, userdata2, flags );
 }
 
 masxfs_levinfo_t *

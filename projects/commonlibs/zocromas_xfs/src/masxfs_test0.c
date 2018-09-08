@@ -42,14 +42,15 @@ struct rlimit lim = { 0 };
 
 static int num = 0;
 static int _uUu_
-fscallback_dir( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *userdata _uUu_, masxfs_depth_t reldepth _uUu_ )
+fscallback_dir( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *userdata _uUu_, void *userdata2 _uUu_, masxfs_depth_t reldepth _uUu_ )
 {
 /* INFO(  "entry directory: '%s'\n   -- %s",  ename ? ename : "", epath ? epath : ""); */
   return 0;
 }
 
 static int _uUu_
-fscallback2( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *userdata _uUu_, unsigned long serial _uUu_, masxfs_depth_t reldepth _uUu_ )
+fscallback2( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *userdata _uUu_, void *userdata2 _uUu_, unsigned long serial _uUu_,
+             masxfs_depth_t reldepth _uUu_ )
 {
   num++;
 /* EXAM( !epath, TRUE, "%d ? %d" ); */
@@ -67,7 +68,8 @@ fscallback2( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *userd
 }
 
 static int _uUu_
-fscallback( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *userdata _uUu_, unsigned long serial _uUu_, masxfs_depth_t reldepth _uUu_ )
+fscallback( masxfs_levinfo_t * li _uUu_, unsigned long flags _uUu_, void *userdata _uUu_, void *userdata2 _uUu_, unsigned long serial _uUu_,
+            masxfs_depth_t reldepth _uUu_ )
 {
   num++;
 /* INFO( "a. %-2d. -- '%s%s'", num, ename ? ename : "", epath ? epath : "" ); */
@@ -277,19 +279,20 @@ masxfs_test_0( int nseries _uUu_, const char *series_suffix _uUu_, int variant _
 #endif
     INFO( "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-" );
     num = 0;
-    masxfs_scanpath_real2( NULL, MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, callbacks, NULL,
+    masxfs_scanpath_real2( NULL, MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, callbacks, NULL /*userdata */ , NULL /*userdata2 */ ,
                            ( masxfs_cb_flag_bit_t ) MASXFS_CB_RECURSIVE | MASXFS_CB_SINGLE_CB | MASXFS_CB_MODE_FS );
     INFO( "NNNNNNNNNN %d", num );
 
     INFO( "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-" );
     num = 0;
-    masxfs_scanpath_real( "./mastest", MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, callbacks, NULL,
+    masxfs_scanpath_real( "./mastest", MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, callbacks, NULL /*userdata */ , NULL /*userdata2 */ ,
                           ( masxfs_cb_flag_bit_t ) MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS );
     INFO( "NNNNNNNNNN %d", num );
 
     INFO( "-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-" );
     num = 0;
-    masxfs_scanpath_real( "./mastest/tree/Makefile.in", MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, callbacks, NULL,
+    masxfs_scanpath_real( "./mastest/tree/Makefile.in", MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR, callbacks, NULL /*userdata */ ,
+                          NULL /*userdata2 */ ,
                           ( masxfs_cb_flag_bit_t ) MASXFS_CB_RECURSIVE | MASXFS_CB_MODE_FS );
     INFO( "NNNNNNNNNN %d", num );
 

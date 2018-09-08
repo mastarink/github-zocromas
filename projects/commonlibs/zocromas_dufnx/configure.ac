@@ -25,7 +25,7 @@ m4_include([m4zoc/varscheck.m4])
 # PKG_CHECK_MODULES(SQLITE3, [sqlite3 >= 3.8])
 
 # AX_LIB_MYSQL([10.0])
-MYSQL_CLIENT([10.0.0], [client])
+MYSQL_CLIENT([6.1.1], [client])
 
 #  PKG_CHECK_MODULES(GLIB, [glib-2.0 >= 2.3])
 #### AC_SUBST(GLIB_CFLAGS)
@@ -36,7 +36,7 @@ MYSQL_CLIENT([10.0.0], [client])
 # PKG_CHECK_MODULES(ZLIB, [zlib >= 1.2.8])
 # AC_SUBST(ZLIB_CFLAGS)
 
-PKG_CHECK_MODULES([DEPS],  [zocromas_mas_wrap zocromas_mas_tools zocromas_xfs zocromas_qstd zocromas_levinfo zocromas_mulconfnt zocromas_minierr zocromas_regerr])
+PKG_CHECK_MODULES([DEPS],  [zocromas_mas_wrap > 0.0.5 zocromas_mas_tools > 0.0.5 zocromas_xfs zocromas_qstd zocromas_levinfo zocromas_mulconfnt zocromas_minierr zocromas_regerr])
 AS_IF([test "x$enable_mas_test" = "xyes"], [
 PKG_CHECK_MODULES([DEPSTEST],  [zocromas_mysqlpfs  zocromas_exam])
 ])

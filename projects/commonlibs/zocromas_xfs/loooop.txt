@@ -1,0 +1,5 @@
+qstd req. xfs 
+xfs req. levinfo
+levinfo req. qstd
+Looop!!!!!!
+Solution: first configure zocromas_qstd withoit "--enable-mas-test", edit configure_opts.default for it : "--disable-mas-test"

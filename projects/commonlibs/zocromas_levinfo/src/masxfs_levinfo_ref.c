@@ -51,14 +51,11 @@ masxfs_levinfo_prefix_ref( masxfs_levinfo_t * li, char *p1, char *p2, char *p3, 
 {
   const char *prefix = NULL;
 
-  if ( li )
+  if ( li && ( tflags & MASXFS_CB_PREFIX ) )
   {
-    if ( ( tflags & MASXFS_CB_PREFIX ) )
-    {
-      if ( li->prefix )
-        mas_free( li->prefix );
-      prefix = li->prefix = masxfs_levinfo_prefix( li, p1, p2, p3, p4, top_depth, 0 /* test! - not flags */  );
-    }
+    if ( li->prefix )
+      mas_free( li->prefix );
+    prefix = li->prefix = masxfs_levinfo_prefix( li, p1, p2, p3, p4, top_depth, 0 /* test! - not flags */  );
   }
   return prefix;
 }

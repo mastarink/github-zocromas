@@ -46,10 +46,12 @@
 #include "tree.h"
 
 static int
-fillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv _uUu_, unsigned long serial _uUu_, masxfs_depth_t reldepth _uUu_ )
+fillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, void *userdata2 _uUu_, unsigned long serial _uUu_,
+        masxfs_depth_t reldepth _uUu_ )
 {
   rDECLGOOD;
 
+  mas_qstd_t *qstd _uUu_ = ( mas_qstd_t * ) userdata;
   masxfs_entry_type_t detype = masxfs_levinfo_detype( li, flags );
 
   if ( detype == MASXFS_ENTRY_REG_NUM && ( flags & MASXFS_CB_DIGESTS ) )
@@ -95,9 +97,11 @@ fillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *qstdv _uUu_, 
 
 /* of type: masxfs_scan_fun_simple_t */
 static int _uUu_
-treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, unsigned long serial, masxfs_depth_t reldepth _uUu_ )
+treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, void *userdata2 _uUu_, unsigned long serial,
+        masxfs_depth_t reldepth _uUu_ )
 {
   FILE *fil = ( FILE * ) userdata;
+  mas_dufnx_xtraflags_t *pxtraflags = ( mas_dufnx_xtraflags_t * ) userdata2;
   static masxfs_depth_t top_depth = 0;
 
   size_t size = masxfs_levinfo_size_ref( li, flags );
@@ -113,6 +117,8 @@ treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, uns
   unsigned long node_id = masxfs_levinfo_nodeid_ref( li, flags );
   unsigned long name_id = masxfs_levinfo_nameid_ref( li, flags );
   unsigned long data_id = masxfs_levinfo_dataid_ref( li, flags );
+
+  mas_dufnx_xtraflags_t xtraflags = pxtraflags ? *pxtraflags : 0;
 
   if ( !serial && depth )
     top_depth = depth - 1;
@@ -155,17 +161,17 @@ treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, uns
     if ( li->detype == MASXFS_ENTRY_DIR_NUM )
     {
 
-      fprintf( fil, "%4ld %4ld->%-4ld {%4ld:%4ld} %s[", serial, parent_id, node_id, name_id, data_id, treeprefix ? treeprefix : "" );
+      fprintf( fil, "%4ld %4ld->%-4ld {%4ld:%4ld} %s [", serial, parent_id, node_id, name_id, data_id, treeprefix ? treeprefix : "" );
       if ( masxfs_levinfo_has_stat( li, flags ) )
         fprintf( fil, "%-10ld ", inode );
-      snprintf( lab, sizeof( lab ), "DIR =%ld]", li->leaf_count );
+      snprintf( lab, sizeof( lab ), "DIR =%ld] ", li->leaf_count );
       fprintf( fil, "%-10s%-s", lab, name );
     }
     else
     {
       fprintf( fil, "%4ld %4ld->%-4ld {%4ld:%4ld} %s", serial, parent_id, node_id, name_id, data_id, treeprefix ? treeprefix : "" );
       if ( masxfs_levinfo_has_stat( li, flags ) )
-        fprintf( fil, "[%-10ld %10ld]", inode, size );
+        fprintf( fil, "[%-10ld %10ld] ", inode, size );
       fprintf( fil, "%-35s", name );
     }
     if ( flags & MASXFS_CB_DIGESTS )
@@ -174,9 +180,9 @@ treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, uns
 
       if ( digest )
         fprintf( fil, "## %-40s", digest ? digest : "" );
-      if ( nsamedigest )
-        fprintf( fil, " \t%s", hh );
     }
+    if ( ( xtraflags && MASDUFNX_X_SAME ) && nsamedigest )
+      fprintf( fil, " \t%s", hh );
     fprintf( fil, "\n" );
 //  fprintf(fil, "#(%5ld) %s\n", li->leaf_count, li->name);
 #else
@@ -188,8 +194,8 @@ treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, uns
 }
 
 static int _uUu_
-treestatcb( const char *ename, struct stat *st, void *userdata, unsigned depth _uUu_, unsigned long serial, const char *treeprefix,
-            masxfs_depth_t reldepth _uUu_ )
+treestatcb( const char *ename, struct stat *st, void *userdata, void *userdata2 _uUu_, unsigned depth _uUu_, unsigned long serial,
+            const char *treeprefix, masxfs_depth_t reldepth _uUu_ )
 {
   FILE *fil = ( FILE * ) userdata;
 
@@ -200,7 +206,8 @@ treestatcb( const char *ename, struct stat *st, void *userdata, unsigned depth _
 }
 
 static int
-dufnx_tree( const char *real_path, masxfs_entry_filter_t * entry_pfilter, FILE * fil, masxfs_levinfo_flags_t inflags, mas_dufnx_mysql_data_t * mysql )
+dufnx_tree( const char *real_path, masxfs_entry_filter_t * entry_pfilter, FILE * fil, masxfs_levinfo_flags_t inflags, mas_dufnx_mysql_data_t * mysql,
+            mas_dufnx_xtraflags_t xtraflags _uUu_ )
 {
   rDECLGOOD;
 
@@ -252,7 +259,7 @@ dufnx_tree( const char *real_path, masxfs_entry_filter_t * entry_pfilter, FILE *
   masxfs_entry_filter_t entry_filter = *entry_pfilter;
 
   entry_filter.typeflags = MASXFS_ENTRY_REG | MASXFS_ENTRY_LNK | MASXFS_ENTRY_DIR;
-  rC( masxfs_pathinfo_scanf_cbs( pi, &entry_filter, callbacks, fil /* userdata */ , walkflags | xflags2 ) );
+  rC( masxfs_pathinfo_scanf_cbs( pi, &entry_filter, callbacks, fil /* userdata */ , &xtraflags /* userdata2 */ , walkflags | xflags2 ) );
 #endif
   masxfs_pathinfo_delete( pi, MASXFS_CB_MODE_ALL );
   rRET;
@@ -289,7 +296,7 @@ dufnx_data_path2db( const char *path, int npos, void *userdata, void *extradata 
         cflags = cflags & ~( MASXFS_CB_SKIP_EMPTY );                 // No for fill
 
         WARN( "(%d) ******** fill scan ******* %lx : %lx", rCODE, flagsfs | xflags1, pdufnx_data->levinfo_flags | flagsfs | xflags1 );
-        rC( masxfs_pathinfo_scanf_cbs( pi, &entry_filter, &callback, qstd, cflags | flagsfs | xflags1 ) );
+        rC( masxfs_pathinfo_scanf_cbs( pi, &entry_filter, &callback, qstd /*userdata */ , pdufnx_data /*userdata2 */ , cflags | flagsfs | xflags1 ) );
         WARN( "******** /fill scan *******" );
       }
       rC( mas_qstd_end_transaction( qstd ) );
@@ -302,7 +309,7 @@ dufnx_data_path2db( const char *path, int npos, void *userdata, void *extradata 
 }
 
 int
-dufnx_data_tree( const char *path, int npos, void *userdata, void *extradata _uUu_ )
+dufnx_data_tree( const char *path, int npos, void *userdata, void *extradata )
 {
   rDECLGOOD;
   if ( npos > 0 )
@@ -339,7 +346,7 @@ dufnx_data_tree( const char *path, int npos, void *userdata, void *extradata _uU
           }
         }
       }
-      rC( dufnx_tree( real_path, &pdufnx_data->entry_filter, save, pdufnx_data->levinfo_flags, &pdufnx_data->mysql ) );
+      rC( dufnx_tree( real_path, &pdufnx_data->entry_filter, save, pdufnx_data->levinfo_flags, &pdufnx_data->mysql, pdufnx_data->xtraflags ) );
       if ( ofile )
       {
         fclose( ofile );

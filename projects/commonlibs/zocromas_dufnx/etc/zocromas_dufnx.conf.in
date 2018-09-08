@@ -36,7 +36,8 @@
 mysql-user=masdufnt
 mysql-password=i2xV9KrTA54HRpj4e
 mysql-db=masdufntdb
-mysql-server=mysql.mastar.lan
+#mysql-server=mysql.mastar.lan
+mysql-server=localhost
 mysql-port=3306
 mysql-table-prefix=dufnx_
 

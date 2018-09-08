@@ -18,7 +18,7 @@
 #include "qstd_mstmt_sha1.h"
 
 unsigned long long
-mas_qstd_mstmt_selget_sha1_id( mas_qstd_t * qstd, const const unsigned char *sha1 )
+mas_qstd_mstmt_selget_sha1_id( mas_qstd_t * qstd, const unsigned char *sha1 )
 {
   rDECLBAD;
   unsigned long long theid = 0;
@@ -89,7 +89,7 @@ mas_qstd_mstmt_selget_sha1dref( mas_qstd_t * qstd, unsigned long long data_id, u
 }
 
 unsigned long long
-mas_qstd_mstmt_insget_sha1_id( mas_qstd_t * qstd, unsigned long long data_id _uUu_, const const unsigned char *sha1 )
+mas_qstd_mstmt_insget_sha1_id( mas_qstd_t * qstd, unsigned long long data_id _uUu_, const unsigned char *sha1 )
 {
   rDECLBAD;
   QRGP( qstd );

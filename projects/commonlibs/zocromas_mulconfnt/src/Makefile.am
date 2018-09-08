@@ -27,7 +27,7 @@ libzocromas_mulconfnt_la_SOURCES = \
 #	mulconfnt_error_base.c
 #	mulconfnt_error.c
 
-libzocromas_mulconfnt_la_LDFLAGS=@AM_LDFLAGS@ @DEPS_LIBS@ @READLINE_LIBS@
+libzocromas_mulconfnt_la_LDFLAGS=@AM_LDFLAGS@ @READLINE_LIBS@ @DEPS_LIBS@
 libzocromas_mulconfnt_la_CFLAGS=@AM_CFLAGS@ @DEPS_CFLAGS@
 
 if MAS_TEST
