@@ -29,7 +29,7 @@ minierr_enable( mas_minierr_type_t et )
 }
 
 void
-minierr_vdie( int line, const char *func, const char *file, mas_minierr_type_t et, int fexit, unsigned flags, const char *sid, const char *fmt,
+minierr_vdie( int line, const char *func, const char *file, int wraplines, mas_minierr_type_t et, int fexit, unsigned flags, const char *sid, const char *fmt,
               va_list args )
 {
   char *pf = strrchr( file, '/' );
@@ -105,10 +105,12 @@ minierr_vdie( int line, const char *func, const char *file, mas_minierr_type_t e
     if ( flags & ( MAS_MIER_FLAG_LINE | MAS_MIER_FLAG_FUNC | MAS_MIER_FLAG_FILE ) )
       MAS_MIER_PRN( " --" );
     MAS_MIER_PRN( " " );
+    for (int i=0;i<wraplines;i++)fputs( "\n", stderr );
     fputs( buffer, stderr );
 /* fprintf( stderr, "%-50s", buffer ); */
     vfprintf( stderr, fmt, args );
-    fprintf( stderr, "\n" );
+//  fprintf( stderr, "\n" );
+    for (int i=0;i<wraplines+1;i++)fputs( "\n", stderr );
 
 #ifdef MAS_TRACEMEM
     if ( flags & MAS_MIER_FLAG_EXIT )
@@ -130,11 +132,11 @@ minierr_vdie( int line, const char *func, const char *file, mas_minierr_type_t e
 }
 
 void
-minierr_die( int line, const char *func, const char *file, mas_minierr_type_t et, int fexit, unsigned flags, const char *sid, const char *fmt, ... )
+minierr_die( int line, const char *func, const char *file, int wraplines, mas_minierr_type_t et, int fexit, unsigned flags, const char *sid, const char *fmt, ... )
 {
   va_list args;
 
   va_start( args, fmt );
-  minierr_vdie( line, func, file, et, fexit, flags, sid, fmt, args );
+  minierr_vdie( line, func, file, wraplines, et, fexit, flags, sid, fmt, args );
   va_end( args );
 }

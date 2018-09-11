@@ -31,6 +31,7 @@
 #include <mastar/levinfo/masxfs_levinfo_ref_xstat.h>
 
 #include <mastar/levinfo/masxfs_levinfo_path.h>
+#include <mastar/levinfo/masxfs_levinfo_db_dir.h>
 #include <mastar/levinfo/masxfs_levinfo_digest.h>
 #include <mastar/levinfo/masxfs_levinfo_db.h>
 
@@ -97,8 +98,7 @@ fillcb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, voi
 
 /* of type: masxfs_scan_fun_simple_t */
 static int _uUu_
-treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, void *userdata2 _uUu_, unsigned long serial,
-        masxfs_depth_t reldepth _uUu_ )
+treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, void *userdata2, unsigned long serial, masxfs_depth_t reldepth _uUu_ )
 {
   FILE *fil = ( FILE * ) userdata;
   mas_dufnx_xtraflags_t *pxtraflags = ( mas_dufnx_xtraflags_t * ) userdata2;
@@ -119,6 +119,8 @@ treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, voi
   unsigned long data_id = masxfs_levinfo_dataid_ref( li, flags );
 
   mas_dufnx_xtraflags_t xtraflags = pxtraflags ? *pxtraflags : 0;
+
+//char *path = masxfs_levinfo_db_nameid2path( name_id, 512, flags );
 
   if ( !serial && depth )
     top_depth = depth - 1;
@@ -145,33 +147,61 @@ treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, voi
     memset( hh, 0, sizeof( hh ) );
     if ( nsamedigest == 0 )
       hh[0] = 0;
-    else if ( nsamedigest > 31 )
+    else if ( nsamedigest > 5 )
       sprintf( hh, "# %lu", nsamedigest );
     else
+    {
+      for ( unsigned long i = 0; i < 5; i++ )
+        hh[i] = ' ';
       for ( unsigned long i = 0; i < nsamedigest; i++ )
-        hh[i] = '+';
+        hh[i + 5] = '+';
+    }
 /* /usr/bin/tree -U --inodes -s -a mastest | nl -ba -nrn -w4 > tree-U--inodes-s-a.tree */
     const char *epath _uUu_ = masxfs_levinfo_path_ref( li, flags );
     const char *name = epath && li->detype != MASXFS_ENTRY_DIR_NUM ? epath : ( ename ? ename : "" );
-    char lab[128] = "";
 
     const char *treeprefix = masxfs_levinfo_prefix_ref( li, "    ", "└── ", "│  ", "├── ", top_depth + 1, flags );
+    int done = 0;
 
     assert( parentid == parent_id );
     if ( li->detype == MASXFS_ENTRY_DIR_NUM )
     {
+      if ( !( xtraflags & MASDUFNX_X_NODIRS ) )
+      {
+        done = 1;
+        if ( xtraflags & MASDUFNX_X_SERIAL )
+          fprintf( fil, "%4ld", serial );
 
-      fprintf( fil, "%4ld %4ld->%-4ld {%4ld:%4ld} %s [", serial, parent_id, node_id, name_id, data_id, treeprefix ? treeprefix : "" );
-      if ( masxfs_levinfo_has_stat( li, flags ) )
-        fprintf( fil, "%-10ld ", inode );
-      snprintf( lab, sizeof( lab ), "DIR =%ld] ", li->leaf_count );
-      fprintf( fil, "%-10s%-s", lab, name );
+        if ( xtraflags & MASDUFNX_X_DIRINFO )
+          fprintf( fil, " %4ld->%-4ld {%4ld:%4ld}", parent_id, node_id, name_id, data_id );
+        fprintf( fil, " %s [", treeprefix ? treeprefix : "" );
+        if ( ( xtraflags & MASDUFNX_X_DIRINFO ) && masxfs_levinfo_has_stat( li, flags ) )
+          fprintf( fil, "%-10ld ", inode );
+
+        {
+          char lab[128] = "";
+
+          snprintf( lab + strlen( lab ), sizeof( lab ) - strlen( lab ), " DIR" );
+          if ( xtraflags & MASDUFNX_X_DIRINFO )
+            snprintf( lab + strlen( lab ), sizeof( lab ) - strlen( lab ), "    =%ld", li->leaf_count );
+          snprintf( lab + strlen( lab ), sizeof( lab ) - strlen( lab ), "] " );
+          fprintf( fil, "%-10s%-s", lab, name );
+        }
+      }
     }
     else
     {
-      fprintf( fil, "%4ld %4ld->%-4ld {%4ld:%4ld} %s", serial, parent_id, node_id, name_id, data_id, treeprefix ? treeprefix : "" );
-      if ( masxfs_levinfo_has_stat( li, flags ) )
-        fprintf( fil, "[%-10ld %10ld] ", inode, size );
+      done = 1;
+      if ( xtraflags & MASDUFNX_X_SERIAL )
+        fprintf( fil, "%4ld", serial );
+      if ( xtraflags & MASDUFNX_X_FILEINFO )
+        fprintf( fil, " %4ld->%-4ld {%4ld:%4ld}", parent_id, node_id, name_id, data_id );
+      fprintf( fil, " %s", treeprefix ? treeprefix : "" );
+
+      if ( ( xtraflags & MASDUFNX_X_FILEINFO ) && masxfs_levinfo_has_stat( li, flags ) )
+        fprintf( fil, " [%-10ld %10ld] ", inode, size );
+      else
+        fprintf( fil, "            " );
       fprintf( fil, "%-35s", name );
     }
     if ( flags & MASXFS_CB_DIGESTS )
@@ -181,15 +211,18 @@ treecb( masxfs_levinfo_t * li, masxfs_levinfo_flags_t flags, void *userdata, voi
       if ( digest )
         fprintf( fil, "## %-40s", digest ? digest : "" );
     }
-    if ( ( xtraflags && MASDUFNX_X_SAME ) && nsamedigest )
+    if ( ( xtraflags & MASDUFNX_X_SAME ) && nsamedigest )
       fprintf( fil, " \t%s", hh );
-    fprintf( fil, "\n" );
+//  fprintf( fil, "; path=%s", path );
+    if ( done )
+      fprintf( fil, "\n" );
 //  fprintf(fil, "#(%5ld) %s\n", li->leaf_count, li->name);
 #else
     fprintf( fil, "%4d. %s %ld fd:%d D:%ld i:%ld '%s'\n", serial, treeprefix ? treeprefix : "", size, fd, ( long ) depth, inode,
              ename ? ename : "" /*, epath ? epath : "" */  );
 #endif
   }
+//mas_free( path );
   return 0;
 }
 
@@ -314,10 +347,9 @@ dufnx_data_tree( const char *path, int npos, void *userdata, void *extradata )
   rDECLGOOD;
   if ( npos > 0 )
   {
-    char *real_path;
     mas_dufnx_data_t *pdufnx_data = ( mas_dufnx_data_t * ) userdata;
+    char *real_path = mas_normalize_path_cwd_dots( path, FALSE );
 
-    real_path = mas_normalize_path_cwd_dots( path, FALSE );
     if ( pdufnx_data->dufnx_flags & MASDUFNX_COLLECT )
     {
       rC( dufnx_data_path2db( real_path, npos, userdata, extradata ) );
@@ -343,6 +375,7 @@ dufnx_data_tree( const char *path, int npos, void *userdata, void *extradata )
           if ( r < 0 && errno == ENOENT )
           {
             save = ofile = fopen( pdufnx_data->savefname, "w" );
+            WARN( "save:%s OPENED", pdufnx_data->savefname );
           }
         }
       }

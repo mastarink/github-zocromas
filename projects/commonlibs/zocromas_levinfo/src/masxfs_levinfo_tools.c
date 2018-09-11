@@ -222,9 +222,9 @@ masxfs_levinfo_name_valid( const char *name, masxfs_entry_type_t detype, masxfs_
       int m = fnmatch( entry_pfilter->glob, name, FNM_PATHNAME | FNM_PERIOD );
 
       if ( m == FNM_NOMATCH )
-        b = 0;
+        b = 0; /* no match */
       else if ( m == 0 )
-        b = 1;
+        b = 1; /* match */
       else
       {
         WARN( "fnmatch error %d for %s : %s", b, entry_pfilter->glob, name );

@@ -23,5 +23,5 @@ static void
 constructor_main( void )
 {
   masregerrs_set_max_print( 15 );
-  INFO( "START" );
+//INFO( "START" );
 }

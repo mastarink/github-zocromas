@@ -21,6 +21,7 @@
 
 #include "qstd_mstmt_nodes.h"
 
+/* get node_id by parent_id and name */
 unsigned long long
 mas_qstd_mstmt_selget_node_id( mas_qstd_t * qstd, unsigned long long parent_id, const char *name )
 {
@@ -31,17 +32,17 @@ mas_qstd_mstmt_selget_node_id( mas_qstd_t * qstd, unsigned long long parent_id, 
     int np = 0;
     int nr = 0;
     int has_data = 0;
-    mysqlpfs_mstmt_t *mstmt_s = mas_qstd_mstmt_get( qstd, STD_MSTMT_SELECT_NODES_ID );
+    mysqlpfs_mstmt_t *mstmt_s = mas_qstd_mstmt_get( qstd, STD_MSTMT_SELECT_NODES_ID ); /* statement by parent_id and name */
 
     QRGP( mstmt_s );
     rC( mas_qstd_ret_code( qstd ) );
     /* rC( mas_qstd_mstmt_ret_code( mstmt_s ) ); */
     QRG( rCODE );
-    rC( mas_qstd_mstmt_set_param_longlong( mstmt_s, np++, parent_id, FALSE ) );
+    rC( mas_qstd_mstmt_set_param_longlong( mstmt_s, np++, parent_id, FALSE ) ); /* set parent_id to filter */
     QRG( rCODE );
-    rC( mas_qstd_mstmt_set_param_string( mstmt_s, np++, name ) );
+    rC( mas_qstd_mstmt_set_param_string( mstmt_s, np++, name ) ); /* set name to filter */
     QRG( rCODE );
-    rC( mas_qstd_mstmt_execute_store( mstmt_s ) );
+    rC( mas_qstd_mstmt_execute_store( mstmt_s ) ); /* get records */
     QRG( rCODE );
 
 

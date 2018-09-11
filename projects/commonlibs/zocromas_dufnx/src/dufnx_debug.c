@@ -9,7 +9,7 @@ mastest_print_allocated( const char *msg, int line, const char *func )
   struct mallinfo mi;
 
   mi = mallinfo(  );
-  INFO( "\n\x1b[0;1;44;37m-=< %s %d bytes at %d:%s >=-\x1b[0m", msg, mi.uordblks, line, func );
+  INFOB(3, "\x1b[0;1;44;37m-=< %s %d bytes at %d:%s >=-\x1b[0m", msg, mi.uordblks, line, func );
 }
 
 static void constructor_main(  ) __attribute__ ( ( constructor( 2001 ) ) );
@@ -28,7 +28,7 @@ constructor_main( void )
       mas_mem_disable_print_usage = 0;
     }
   }
-  INFO( "START MEM" );
+//INFO( "START MEM" );
 #endif
 }
 

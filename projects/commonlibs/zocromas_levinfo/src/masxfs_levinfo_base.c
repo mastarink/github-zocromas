@@ -20,7 +20,7 @@
 masxfs_levinfo_t *
 masxfs_levinfo_create_array( masxfs_depth_t sz )
 {
-  masxfs_levinfo_t *li = mas_calloc( sz, sizeof( masxfs_levinfo_t ) );
+  masxfs_levinfo_t *li = mas_calloc( sz, sizeof( masxfs_levinfo_t ) ); /* calloc: The memory is set to zero */
 
   return li;
 }
@@ -164,10 +164,9 @@ masxfs_levinfo_delete_lia_tail( masxfs_levinfo_t * li, masxfs_levinfo_flags_t fl
 {
   if ( li )
   {
-    masxfs_depth_t sz = li->lidepth;
-    masxfs_levinfo_t *li0 = li - sz;
+    masxfs_levinfo_t *li0 = li - li->lidepth; /*depth + 1 = size */
 
-    masxfs_levinfo_delete_lia( li0, sz, flags );
+    masxfs_levinfo_delete_lia( li0, li->lidepth + 1, flags );
   }
 }
 

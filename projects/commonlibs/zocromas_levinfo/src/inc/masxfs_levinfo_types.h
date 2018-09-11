@@ -2,6 +2,7 @@
 # define MASXFS_LEVINFO_TYPES_H
 
 # include <dirent.h>
+# include <mastar/mysqlpfs/mysqlpfs_types.h>
 
 typedef struct stat masxfs_stat_t;
 typedef struct dirent masxfs_dirent_t;
@@ -35,6 +36,9 @@ typedef int ( *masxfs_scan_fun_simple_t ) ( masxfs_levinfo_t * li, masxfs_levinf
 typedef int ( *masxfs_scan_fun_stat_t ) ( const char *name, struct stat * st, void *userdata, void *userdata2, unsigned depth,
                                           unsigned long fun_counter, const char *prefix, masxfs_depth_t reldepth );
 // ?? typedef int ( *masxfs_li_scanner_t ) ( masxfs_levinfo_t * li, masxfs_entry_callback_t * cb, void *userdata, masxfs_levinfo_flags_t flags );
+//
+typedef int ( *masxfs_scan_fun_fetch_t ) (mysqlpfs_mstmt_t * mstmt, const char **pname, masxfs_stat_t * stat, masxfs_xstatc_t * xstatc,
+                            unsigned long long *pnode_id, int *phas_data);
 
 typedef int ( *masxfs_li_handler_t ) ( masxfs_levinfo_t * li );
 

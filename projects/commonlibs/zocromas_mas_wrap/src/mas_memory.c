@@ -139,6 +139,7 @@ unsigned long memory_freed_cnt = 0;
 unsigned long memory_balance = 0;
 unsigned long memory_balance_cnt = 0;
 
+/* calloc: The memory is set to zero */
 void *
 mas_other_calloc( size_t nmemb, size_t size )
 {
@@ -389,6 +390,7 @@ _mas_free( const char *func __attribute__ ( ( unused ) ), int line __attribute__
   }
 }
 
+/* calloc: The memory is set to zero */
 void *
 _mas_calloc( const char *func, int line, size_t nmemb, size_t isize )
 {
@@ -405,7 +407,7 @@ _mas_calloc( const char *func, int line, size_t nmemb, size_t isize )
 
     size = isize * nmemb;
     ptr = _mas_malloc( func, line, size );
-    memset( ptr, 0, size );
+    memset( ptr, 0, size );                                          /* calloc: The memory is set to zero - sys doc*/
   }
   return ptr;
 }

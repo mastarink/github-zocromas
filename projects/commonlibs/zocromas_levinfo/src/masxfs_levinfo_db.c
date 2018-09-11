@@ -91,7 +91,7 @@ _masxfs_levinfo_db_open( masxfs_levinfo_t * li )
 
       if ( !li->db.node_id )
       {
-        li->db.node_id = mas_qstd_mstmt_selget_node_id( qstd, li[-1].db.node_id, li->name );
+        li->db.node_id = mas_qstd_mstmt_selget_node_id( qstd, li[-1].db.node_id, li->name ); /* get node_id by parent_id and name */
         if ( rGOOD )
           rC( mas_qstd_ret_code( qstd ) );
       }

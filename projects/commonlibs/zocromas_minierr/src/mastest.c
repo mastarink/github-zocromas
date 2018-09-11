@@ -12,6 +12,7 @@ main( int argc __attribute__ ( ( unused ) ), char *argv[] __attribute__ ( ( unus
 {
 /* minierr(); */
   INFO( "This is warn %s, %d", "message", 1 );
+  INFOB( 3, "This is warn %s, %d", "message", 1 );
   WARN( "This is warn %s, %d", "message", 1 );
   DIE( "This is die %s %d; must exit", "message", 1 );
   WARN( "This is warn %s %d; shold not appear", "message", 2 );

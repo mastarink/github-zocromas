@@ -19,6 +19,8 @@
 
 #include "masxfs_levinfo_io.h"
 
+#include "masxfs_levinfo_path.h"                                     // TEST
+
 #include "masxfs_levinfo_db_dir.h"                                   /* XXX TEMP XXX */
 
 #include "masxfs_levinfo_scan.h"
@@ -240,13 +242,18 @@ masxfs_levinfo_scanf_entry_single_internal_scanner( masxfs_levinfo_t * lithis, m
             lithis[-1].child_count_pair[indx]++;
         }
       }
-
       if ( !( flags & MASXFS_CB_COUNT ) && lithis->db.xstat && 0 == strcmp( lithis->name, "good.test.7" ) )
       {
         masxfs_levinfo_t *liatail = NULL;
 
-        liatail = masxfs_levinfo_nameid2lia( lithis->db.xstat->id.nameid );
-        WARN( "node_id:%lld; name_id:%lld;  %s", lithis->db.node_id, lithis->db.xstat->id.nameid, lithis->name );
+        liatail = masxfs_levinfo_db_nameid2lia( lithis->db.xstat->id.nameid, 512 );
+
+        {
+          char *test_path = masxfs_levinfo_li2path_up( liatail, '\0' );
+
+          WARN( "restored path test => %s", test_path );
+          mas_free( test_path );
+        }
         masxfs_levinfo_delete_lia_tail( liatail, flags );
       }
 
@@ -553,12 +560,12 @@ masxfs_levinfo_scanf_tree_scanner( masxfs_levinfo_t * li, masxfs_scanner_t * sca
     }
     if ( li )
     {
-      WARN( "== TREE SCANNER ==================================" );
+//    WARN( "== TREE SCANNER ==================================" );
 
       rC( masxfs_levinfo_scanf_entry_scanner( li, scanner, 0, userdata, userdata2, reldepth ) );
     /* *li->child_count_pair={0}; */
       memset( li->child_count_pair, 0, sizeof( li->child_count_pair ) );
-      WARN( "entry_scanner_cnt:%u", entry_scanner_cnt );
+//    WARN( "entry_scanner_cnt:%u", entry_scanner_cnt );
     }
     else
       QRLI( li, rCODE );

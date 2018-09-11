@@ -60,6 +60,8 @@
  * run  --stat               --fromdb --tree --list --digest   mastest
  * run  --stat               --fromfs --tree --list            mastest
  * run                       --fromdb        --list --digest   mastest
+ * 20180908.125642
+ * run  --fromdb   --list  --stat --same --serial --fileinfo --digest mastest
  * */
 
 static int
@@ -167,6 +169,9 @@ dufnx_config_interface( mas_dufnx_data_t * pdufnx_data )
     
     , {.name = "same",.rt = 'O',.p = &XFLAGS,.def_nvalue.v_ulong = MASDUFNX_X_SAME,.flags = FDV}
     , {.name = "fileinfo",.rt = 'O',.p = &XFLAGS,.def_nvalue.v_ulong = MASDUFNX_X_FILEINFO,.flags = FDV}
+    , {.name = "dirinfo",.rt = 'O',.p = &XFLAGS,.def_nvalue.v_ulong = MASDUFNX_X_DIRINFO,.flags = FDV}
+    , {.name = "nodirs",.rt = 'O',.p = &XFLAGS,.def_nvalue.v_ulong = MASDUFNX_X_NODIRS,.flags = FDV}
+    , {.name = "serial",.rt = 'O',.p = &XFLAGS,.def_nvalue.v_ulong = MASDUFNX_X_SERIAL,.flags = FDV}
 
     , {.name = "no-empty-dirs",.rt = 'O',.cust_ptr = &LFLAGS,.def_nvalue.v_ulong = MASXFS_CB_SKIP_EMPTY,.flags = FDV}
     , {.name = "empty-dirs",.rt = MUCS_RTYP_ULONG_NOR,.cust_ptr = &LFLAGS,.def_nvalue.v_ulong = MASXFS_CB_SKIP_EMPTY,.flags = FDV}
@@ -243,7 +248,7 @@ dufnx( int argc, char *argv[] )
 
   rC( mucs_option_interface_lookup_all_multipass( interface, &dufnx_data, 2 ) );
 
-  WARN( "=======================================" );
+//WARN( "=======================================" );
   mucs_config_option_interface_delete( interface );
   interface = NULL;
 
